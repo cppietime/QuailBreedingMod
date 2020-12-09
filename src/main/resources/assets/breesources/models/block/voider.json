@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "breesources:block/voider_side",
+    "north": "breesources:block/voider_side",
+    "south": "breesources:block/voider_side",
+    "east": "breesources:block/voider_side",
+    "west": "breesources:block/voider_side",
+    "up": "breesources:block/voider_top",
+    "down": "breesources:block/voider_bottom"
+  }
+}

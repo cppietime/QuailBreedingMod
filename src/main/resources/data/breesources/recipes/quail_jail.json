@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WWW",
+    "WXW",
+    "WWW"
+  ],
+  "key": {
+    "W": {
+      "tag": "minecraft:planks"
+    },
+    "X": {
+      "item": "minecraft:iron_bars"
+    }
+  },
+  "result": {
+    "item": "breesources:quail_jail"
+  }
+}

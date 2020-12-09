@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "ingredient": {
+    "tag": "breesources:eggs"
+  },
+  "result": "breesources:fried_egg",
+  "experience": 0.35,
+  "cookingTime": 600
+}
