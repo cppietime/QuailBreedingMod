@@ -41,7 +41,7 @@ public class QuailType {
     }
 
     public QuailType(String name, String itemID, int amt, int rAmt, int time){
-        this(name, itemID, amt, rAmt, time, null, 0);
+        this(name, itemID, amt, rAmt, time, "", 0);
     }
 
     public QuailType getOffspring(QuailType other, Random rand){
@@ -64,6 +64,8 @@ public class QuailType {
             type.layRandomAmount = configType.amountRand.get();
             type.layTime = configType.time.get();
             type.deathAmount = configType.onDieAmount.get();
+            type.layItem = configType.dropItem.get();
+            type.deathItem = configType.deathItem.get();
         }
         registerPairs();
     }
@@ -105,7 +107,7 @@ public class QuailType {
             CACTUS = new QuailType("cactus", "minecraft:cactus", 1, 0, 2400),
             LAPIS = new QuailType("lapis", "minecraft:lapis_lazuli", 1, 2, 2400),
             FLOWER = new QuailType("flower", "FLOWERS", 1, 0, 2400, "minecraft:rabbit", 1),
-            IRON = new QuailType("iron", "minecraft:iron_ingot", 1, 2, 2400),
+            IRON = new QuailType("iron", "minecraft:iron_ingot", 1, 0, 2400, "minecraft:poppy", 1),
             REDSTONE = new QuailType("redstone", "minecraft:redstone", 1, 2, 2400),
             SOULSAND = new QuailType("soulsand", "minecraft:soul_sand", 1, 0, 2400),
             WHEAT = new QuailType("wheat", "minecraft:wheat", 1, 0, 2400, "minecraft:wheat_seeds", 1),
@@ -123,7 +125,7 @@ public class QuailType {
             REDSHROOM = new QuailType("redshroom", "minecraft:red_mushroom", 1, 0, 6000),
             BROWNSHROOM = new QuailType("brownshroom", "minecraft:brown_mushroom", 1, 0, 6000),
             ENDSTONE = new QuailType("endstone", "minecraft:end_stone", 1, 0, 6000, "minecraft:purpur_block", 1),
-            GOLD = new QuailType("gold", "minecraft:gold_nugget", 1, 2, 6000),
+            GOLD = new QuailType("gold", "minecraft:gold_ingot", 1, 0, 6000),
             LAVA = new QuailType("lava", "breesources:lava_bubble", 1, 0, 6000),
             GUNPOWDER = new QuailType("gunpowder", "minecraft:gunpowder", 1, 0, 6000),
             SPIDEREYE = new QuailType("spidereye", "minecraft:spider_eye", 1, 0, 6000),
@@ -157,7 +159,7 @@ public class QuailType {
             NAUTILUS = new QuailType("nautilus", "minecraft:nautilus_shell", 1, 0, 24000, "minecraft:trident", 1),
             PRISM = new QuailType("prism", "minecraft:prismarine_shard", 2, 3, 24000, "minecraft:prismarine_crystals", 2),
             MEMBRANE = new QuailType("membrane", "minecraft:phantom_membrane", 1, 0, 24000, "minecraft:elytra", 1),
-            WITHER_ROSE = new QuailType("wither_rose", "minecraft:wither_rose", 1, 0, 30000),
+            WITHER_ROSE = new QuailType("wither_rose", "minecraft:wither_rose", 1, 0, 30000, "minecraft:wither_skeleton_skull", 1),
             CHORUS = new QuailType("chorus", "minecraft:chorus_fruit", 3, 4, 24000, "minecraft:chorus_flower", 1),
             BLUE_ICE = new QuailType("blue_ice", "minecraft:blue_ice", 1, 0, 24000),
             WARPED_STEM = new QuailType("warped_stem", "minecraft:warped_stem", 1, 0, 24000, "minecraft:shroomlight", 1),

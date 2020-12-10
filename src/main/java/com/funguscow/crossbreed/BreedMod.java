@@ -3,16 +3,18 @@ package com.funguscow.crossbreed;
 import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.entity.QuailEntity;
 import com.funguscow.crossbreed.entity.QuailType;
-import com.funguscow.crossbreed.init.ModBlocks;
-import com.funguscow.crossbreed.init.ModEntities;
-import com.funguscow.crossbreed.init.ModItems;
-import com.funguscow.crossbreed.init.ModSounds;
+import com.funguscow.crossbreed.gui.ResizableChestScreen;
+import com.funguscow.crossbreed.init.*;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.inventory.container.ChestContainer;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -50,6 +52,8 @@ public class BreedMod
         ModBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModEntities.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModSounds.SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ModContainers.CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ModTileEntities.TILE_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -62,6 +66,7 @@ public class BreedMod
             QuailType.matchConfig();
             ModItems.matchConfig();
             ModEntities.registerPlacements();
+            ModContainers.registerScreens();
         });
     }
 

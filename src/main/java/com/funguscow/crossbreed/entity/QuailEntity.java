@@ -1,5 +1,6 @@
 package com.funguscow.crossbreed.entity;
 
+import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.init.ModEntities;
 import com.funguscow.crossbreed.init.ModSounds;
 import net.minecraft.block.BlockState;
@@ -27,6 +28,7 @@ import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +38,9 @@ import java.util.Random;
 /**
  * A quail entity to be bred and produce various resources
  */
-public class QuailEntity extends AnimalEntity {
+public class QuailEntity extends ModAnimalEntity {
+
+    private static final Lazy<Integer> breedingTimeout = Lazy.of(QuailConfig.COMMON.quailBreedingTime::get);
 
     public static class Gene {
         private static final float MUTATION_SIGMA = 0.05f;
@@ -241,6 +245,10 @@ public class QuailEntity extends AnimalEntity {
         dataManager.set(BREED_NAME, breed.name);
     }
 
+    protected int getBreedingTimeout(){
+        return breedingTimeout.get();
+    }
+
     @Override
     public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, ILivingEntityData spawnDataIn, CompoundNBT dataTag) {
         randomBreed();
@@ -372,7 +380,7 @@ public class QuailEntity extends AnimalEntity {
         if(this.removed || this.dead)
             return;
         super.onDeath(source);
-        if(breed.deathItem == null)
+        if(breed.deathItem == null || breed.deathItem.equals(""))
             return;
         int lootingLevel = ForgeHooks.getLootingLevel(this, source.getTrueSource(), source);
         int amount = breed.deathAmount + rand.nextInt(breed.deathAmount + lootingLevel);

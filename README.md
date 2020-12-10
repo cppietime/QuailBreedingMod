@@ -4,6 +4,7 @@ Four types of quails can be found naturally spawning in the wild (tier 0):
 - Painted Quail,
 - Elegant Quail, and
 - Northern Bobwhite
+
 Quails, like chickens, lay eggs (quail eggs!), and can be bred using any type of seed. While breeding two quails of the same type will always produce a child of the same, two quails of different types, when bred together, may have a chance to yield another type. There are 8 tiers of quail types. Each type has its own drop to replace their eggs, and some have extra properties like the ability to be milked, or extra loot dropped upon death. These pairings can be found below.
 
 Both chicken and quail eggs can now be smelted or cooked to produce a fried egg - a food item. Also, both can be combined with a water bucket to produce another food: pickled eggs. Quail eggs can also be used to craft cakes in place of chicken eggs.  
