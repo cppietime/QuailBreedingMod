@@ -3,6 +3,7 @@ package com.funguscow.crossbreed.item;
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.entity.QuailEntity;
 import com.funguscow.crossbreed.init.ModEntities;
+import com.funguscow.crossbreed.tileentities.NestTileEntity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
@@ -11,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
@@ -49,23 +51,58 @@ public class JailItem extends Item {
 
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
-        if(!(context.getWorld() instanceof ServerWorld))
+        World world = context.getWorld();
+        if(!(world instanceof ServerWorld))
             return ActionResultType.SUCCESS;
         ItemStack itemStack = context.getItem();
         PlayerEntity player = context.getPlayer();
+        if(player == null)
+            return ActionResultType.PASS;
         CompoundNBT jailTag = itemStack.getChildTag("Jailed");
-        if(jailTag == null)
-            return ActionResultType.FAIL;
-        QuailEntity released = (QuailEntity)ModEntities.QUAIL.get().spawn((ServerWorld)context.getWorld(), itemStack, player, context.getPos().offset(context.getFace()), SpawnReason.SPAWN_EGG, true, false);
-        released.readAdditional(jailTag);
-        ItemStack emptied = new ItemStack(itemStack.getItem());
-        itemStack.shrink(1);
-        if(reusable && !player.isCreative()){
-            emptied.removeChildTag("Jailed");
-            if(!player.addItemStackToInventory(emptied))
-                player.dropItem(emptied, false);
+        TileEntity tileEntity = world.getTileEntity(context.getPos());
+        if(!(tileEntity instanceof NestTileEntity)) { // When using to release a quail
+            if (jailTag == null)
+                return ActionResultType.PASS;
+            QuailEntity released = (QuailEntity) ModEntities.QUAIL.get().spawn((ServerWorld) world, itemStack, player, context.getPos().offset(context.getFace()), SpawnReason.SPAWN_EGG, true, false);
+            if(released != null)
+                released.readAdditional(jailTag);
+            ItemStack emptied = new ItemStack(itemStack.getItem());
+            itemStack.shrink(1);
+            if (reusable && !player.isCreative()) {
+                emptied.removeChildTag("Jailed");
+                if (!player.addItemStackToInventory(emptied))
+                    player.dropItem(emptied, false);
+            }
+            return itemStack.isEmpty() ? ActionResultType.PASS : ActionResultType.func_233537_a_(player.world.isRemote);
         }
-        return itemStack.isEmpty() ? ActionResultType.PASS : ActionResultType.func_233537_a_(player.world.isRemote);
+        else{ // When using on a nest
+            NestTileEntity nestEntity = (NestTileEntity)tileEntity;
+            if(jailTag == null){ // Withdraw quail
+                CompoundNBT quail = nestEntity.getQuail();
+                if(quail == null) // Empty so just quit
+                    return ActionResultType.PASS;
+                ItemStack jailed = new ItemStack(itemStack.getItem());
+                jailed.setTagInfo("Jailed", quail);
+                if(!player.isCreative())
+                    itemStack.shrink(1);
+                if (!player.addItemStackToInventory(jailed))
+                    player.dropItem(jailed, false);
+                return itemStack.isEmpty() ? ActionResultType.PASS : ActionResultType.func_233537_a_(player.world.isRemote);
+            }
+            else{ // Deposit a quail
+                if(jailTag.getInt("Age") < 0) // If a baby
+                    return ActionResultType.PASS;
+                nestEntity.putQuail(jailTag);
+                ItemStack emptied = new ItemStack(itemStack.getItem());
+                itemStack.shrink(1);
+                if (reusable && !player.isCreative()) {
+                    emptied.removeChildTag("Jailed");
+                    if (!player.addItemStackToInventory(emptied))
+                        player.dropItem(emptied, false);
+                }
+                return itemStack.isEmpty() ? ActionResultType.PASS : ActionResultType.func_233537_a_(player.world.isRemote);
+            }
+        }
     }
 
     @Override

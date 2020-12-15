@@ -27,7 +27,6 @@ public class GenericEggEntity extends ProjectileItemEntity {
 
     private static final DataParameter<String> ITEM_ID = EntityDataManager.createKey(GenericEggEntity.class, DataSerializers.STRING);
 
-    private String itemID = "minecraft:egg";
     private int spawnChance;
     private int manySpawnChance;
     private String animal;
@@ -46,7 +45,6 @@ public class GenericEggEntity extends ProjectileItemEntity {
             int spawnChance,
             int manySpawnChance,
             String animalType){
-        this.itemID = itemID;
         dataManager.set(ITEM_ID, itemID);
         this.spawnChance = spawnChance;
         this.manySpawnChance = manySpawnChance;
@@ -99,6 +97,8 @@ public class GenericEggEntity extends ProjectileItemEntity {
 
                 for(int j = 0; j < i; ++j) {
                     AnimalEntity animalEntity = ((EntityType<? extends AnimalEntity>) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(animal))).create(this.world);
+                    if(animalEntity == null)
+                        continue;
                     animalEntity.setGrowingAge(-24000);
                     animalEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, 0.0F);
                     this.world.addEntity(animalEntity);

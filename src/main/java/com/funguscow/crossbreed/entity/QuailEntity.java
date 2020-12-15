@@ -4,7 +4,6 @@ import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.init.ModEntities;
 import com.funguscow.crossbreed.init.ModSounds;
 import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -29,7 +28,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -72,12 +70,13 @@ public class QuailEntity extends ModAnimalEntity {
             return child;
         }
 
-        public void readFromTag(CompoundNBT nbt){
+        public Gene readFromTag(CompoundNBT nbt){
             layAmount = nbt.getFloat("LayAmount");
             layRandomAmount = nbt.getFloat("LayRandomAmount");
             layTime = nbt.getFloat("LayTime");
             layRandomTime = nbt.getFloat("LayRandomTime");
             dominance = nbt.getFloat("Dominance");
+            return this;
         }
 
         public CompoundNBT writeToTag(){
@@ -121,88 +120,7 @@ public class QuailEntity extends ModAnimalEntity {
     }
 
     private void layLoot(){
-        Item layItem;
-        switch (breed.layItem) {
-            case "FLOWERS":
-                switch (rand.nextInt(16)) {
-                    default:
-                        layItem = Items.DANDELION;
-                        break;
-                    case 1:
-                        layItem = Items.POPPY;
-                        break;
-                    case 2:
-                        layItem = Items.SUNFLOWER;
-                        break;
-                    case 3:
-                        layItem = Items.AZURE_BLUET;
-                        break;
-                    case 4:
-                        layItem = Items.ALLIUM;
-                        break;
-                    case 5:
-                        layItem = Items.CORNFLOWER;
-                        break;
-                    case 6:
-                        layItem = Items.ORANGE_TULIP;
-                        break;
-                    case 7:
-                        layItem = Items.PINK_TULIP;
-                        break;
-                    case 8:
-                        layItem = Items.RED_TULIP;
-                        break;
-                    case 9:
-                        layItem = Items.WHITE_TULIP;
-                        break;
-                }
-                break;
-            case "CORALS":
-                switch (rand.nextInt(5)) {
-                    case 0:
-                        layItem = Items.BRAIN_CORAL_BLOCK;
-                        break;
-                    case 1:
-                        layItem = Items.TUBE_CORAL_BLOCK;
-                        break;
-                    case 2:
-                        layItem = Items.FIRE_CORAL_BLOCK;
-                        break;
-                    case 3:
-                        layItem = Items.BUBBLE_CORAL_BLOCK;
-                        break;
-                    default:
-                        layItem = Items.HORN_CORAL_BLOCK;
-                        break;
-                }
-                break;
-            case "FISH":
-                switch (rand.nextInt(4)) {
-                    case 0:
-                        layItem = Items.COD;
-                        break;
-                    case 1:
-                        layItem = Items.SALMON;
-                        break;
-                    case 2:
-                        layItem = Items.TROPICAL_FISH;
-                        break;
-                    default:
-                        layItem = Items.PUFFERFISH;
-                        break;
-                }
-                break;
-            default:
-                layItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(breed.layItem));
-                break;
-        }
-        int amount = breed.layAmount + rand.nextInt(breed.layRandomAmount + 1);
-        amount = Math.max(1, (int)(amount * (gene.layAmount + rand.nextFloat() * gene.layAmount)));
-        ItemStack itemStack = new ItemStack(layItem, amount);
-        if(layItem == Items.BOOK){
-            itemStack = EnchantmentHelper.addRandomEnchantment(rand, itemStack, 30, true);
-        }
-        entityDropItem(itemStack);
+        entityDropItem(breed.getLoot(rand, gene));
     }
 
     public void setAlleles(Gene a, Gene b){
@@ -277,11 +195,13 @@ public class QuailEntity extends ModAnimalEntity {
     @Override
     public AgeableEntity func_241840_a(ServerWorld world, AgeableEntity other) {
         QuailEntity child = ModEntities.QUAIL.get().create(world);
-        QuailEntity otherQuail = (QuailEntity)other;
-        Gene childA = alleleA.crossover(alleleB, rand);
-        Gene childB = otherQuail.alleleA.crossover(otherQuail.alleleB, rand);
-        child.setAlleles(childA, childB);
-        child.setBreed(breed.getOffspring(otherQuail.breed, rand));
+        if(child != null) {
+            QuailEntity otherQuail = (QuailEntity) other;
+            Gene childA = alleleA.crossover(alleleB, rand);
+            Gene childB = otherQuail.alleleA.crossover(otherQuail.alleleB, rand);
+            child.setAlleles(childA, childB);
+            child.setBreed(breed.getOffspring(otherQuail.breed, rand));
+        }
         return child;
     }
 
@@ -380,11 +300,13 @@ public class QuailEntity extends ModAnimalEntity {
         if(this.removed || this.dead)
             return;
         super.onDeath(source);
-        if(breed.deathItem == null || breed.deathItem.equals(""))
+        if(breed.deathItem == null || breed.deathItem.equals("") || breed.deathAmount <= 0)
             return;
         int lootingLevel = ForgeHooks.getLootingLevel(this, source.getTrueSource(), source);
-        int amount = breed.deathAmount + rand.nextInt(breed.deathAmount + lootingLevel);
-        entityDropItem(new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(breed.deathItem)), amount));
+        int amount = breed.deathAmount + rand.nextInt(Math.max(1, breed.deathAmount) + lootingLevel);
+        Item dieItem = QuailType.getItem(breed.deathItem, rand);
+        if(dieItem != null)
+            entityDropItem(new ItemStack(dieItem, amount));
     }
 
     @Override

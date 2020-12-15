@@ -1,15 +1,16 @@
 package com.funguscow.crossbreed.config;
 
+import com.electronwill.nightconfig.core.Config;
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.entity.QuailType;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +23,9 @@ public class QuailConfig {
         private static final double[] TIER_DEFAULTS = {0.5, 1, 0.75, 0.5, 0.25, 0.125, 0.0625};
 
         public static class QuailTypeConfig{
-            public ForgeConfigSpec.IntValue amount, amountRand, time, onDieAmount;
-            public ForgeConfigSpec.ConfigValue<String> dropItem, deathItem;
+            public ForgeConfigSpec.IntValue amount, amountRand, time, onDieAmount, tier;
+            public ForgeConfigSpec.ConfigValue<String> dropItem, deathItem, parent1, parent2;
+            public ForgeConfigSpec.BooleanValue enabled;
         }
 
         public Map<String, Common.QuailTypeConfig> quailTypes;
@@ -31,11 +33,20 @@ public class QuailConfig {
 
         public ForgeConfigSpec.IntValue quailEggChance, quailEggMultiChance,
                 quailWeight, quailMin, quailMax, quailBreedingTime;
+        public ForgeConfigSpec.DoubleValue nestTickRate;
 
         public Common(ForgeConfigSpec.Builder builder){
             quailTypes = new HashMap<>();
             tierOdds = new ForgeConfigSpec.DoubleValue[7];
-            builder.comment("Odds of successful cross-breeding to ascend one tier").push("tiers");
+
+            builder.comment("Nest-related config").push("Nest");
+            nestTickRate = builder
+                    .comment("Rate at which to tick nests")
+                    .worldRestart()
+                    .defineInRange("NestTickRate", 1f, 0f, 1_000_000f);
+            builder.pop();
+
+            builder.comment("Odds of successful cross-breeding to ascend one tier").push("Tiers");
             for(int i = 0; i < 7; i++){
                 tierOdds[i] = builder.worldRestart().defineInRange("tier" + i, TIER_DEFAULTS[i], 0, 1);
             }
@@ -99,6 +110,22 @@ public class QuailConfig {
                         .comment("Extra item dropped on death, empty string for nothing")
                         .worldRestart()
                         .define("DeathItem", type.getValue().deathItem);
+                config.enabled = builder
+                        .comment("Whether the quail type is enabled")
+                        .worldRestart()
+                        .define("Enabled", type.getValue().enabled);
+                config.parent1 = builder
+                        .comment("One parent of breeding pair, empty for non-breedable")
+                        .worldRestart()
+                        .define("Parent1", type.getValue().parent1);
+                config.parent2 = builder
+                        .comment("One parent of breeding pair, empty for non-breedable")
+                        .worldRestart()
+                        .define("Parent2", type.getValue().parent2);
+                config.tier = builder
+                        .comment("Tier for odds of successful breed")
+                        .worldRestart()
+                        .defineInRange("Tier", type.getValue().tier, 0, 6);
                 builder.pop();
                 quailTypes.put(type.getKey(), config);
             }

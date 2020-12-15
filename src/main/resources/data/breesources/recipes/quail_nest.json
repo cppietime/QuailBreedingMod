@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "HHH",
+    "HJH",
+    "EEE"
+  ],
+  "key": {
+    "H": {
+      "item": "minecraft:hay_block"
+    },
+    "J": {
+      "item": "breesources:strong_quail_jail"
+    },
+    "E": {
+      "item": "breesources:quail_egg"
+    }
+  },
+  "result": {
+    "item": "breesources:quail_nest"
+  }
+}

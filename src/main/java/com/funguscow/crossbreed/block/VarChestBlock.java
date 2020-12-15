@@ -4,6 +4,7 @@ import com.funguscow.crossbreed.init.ModTileEntities;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -71,5 +72,10 @@ public class VarChestBlock extends ContainerBlock {
     @Override
     public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
         return Container.calcRedstone(worldIn.getTileEntity(pos));
+    }
+
+    @Override
+    public PushReaction getPushReaction(BlockState state) {
+        return PushReaction.DESTROY;
     }
 }

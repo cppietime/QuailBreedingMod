@@ -1,6 +1,7 @@
 package com.funguscow.crossbreed.init;
 
 import com.funguscow.crossbreed.BreedMod;
+import com.funguscow.crossbreed.block.NestBlock;
 import com.funguscow.crossbreed.block.VarChestBlock;
 import com.funguscow.crossbreed.block.VoiderBlock;
 import net.minecraft.block.AbstractBlock;
@@ -23,11 +24,12 @@ public class ModBlocks {
     private static VarChestBlock newChestBlock(int rows){
         return new VarChestBlock(AbstractBlock.Properties.from(Blocks.CHEST), rows);
     }
-    public static final VarChestBlock CHEST4_BLOCK = newChestBlock(4),
+    public static final Block CHEST4_BLOCK = newChestBlock(4),
         CHEST5_BLOCK = newChestBlock(5),
         CHEST6_BLOCK = newChestBlock(6),
         CHEST7_BLOCK = newChestBlock(7),
-        CHEST8_BLOCK = newChestBlock(8);
+        CHEST8_BLOCK = newChestBlock(8),
+        QUAIL_NEST_BLOCK = new NestBlock(AbstractBlock.Properties.from(Blocks.HAY_BLOCK));
 
     public static final RegistryObject<Block> VOIDER = registerBlockAndItem("voider",
             new VoiderBlock(AbstractBlock.Properties
@@ -50,7 +52,9 @@ public class ModBlocks {
                   block -> new BlockItem(block, new Item.Properties().group(BreedMod.GROUP))),
             CHEST8 = registerBlockAndItem("chest8",
                   CHEST8_BLOCK,
-                  block -> new BlockItem(block, new Item.Properties().group(BreedMod.GROUP)));
+                  block -> new BlockItem(block, new Item.Properties().group(BreedMod.GROUP))),
+            QUAIL_NEST = registerBlockAndItem("quail_nest", QUAIL_NEST_BLOCK,
+                    block -> new BlockItem(block, new Item.Properties().group(BreedMod.GROUP)));
 
     private static RegistryObject<Block> registerBlockAndItem(String name, Block block, Function<Block, Item> function){
         if(function != null){

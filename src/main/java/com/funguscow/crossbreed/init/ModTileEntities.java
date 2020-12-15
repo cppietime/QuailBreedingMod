@@ -1,6 +1,7 @@
 package com.funguscow.crossbreed.init;
 
 import com.funguscow.crossbreed.BreedMod;
+import com.funguscow.crossbreed.tileentities.NestTileEntity;
 import com.funguscow.crossbreed.tileentities.VarChestTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntityType;
@@ -18,6 +19,9 @@ public class ModTileEntities {
     public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, BreedMod.MODID);
 
     public static final Map<Integer, RegistryObject<TileEntityType<VarChestTileEntity>>> CHEST_TYPES = new HashMap<>();
+
+    public static final RegistryObject<TileEntityType<?>> QUAIL_NEST = TILE_ENTITIES.register("quail_nest",
+            () -> TileEntityType.Builder.create(NestTileEntity::new, ModBlocks.QUAIL_NEST_BLOCK).build(Util.attemptDataFix(TypeReferences.BLOCK_ENTITY, "quail_nest")));
 
     public static VarChestTileEntity newChestTileEntity(int rows){
         return new VarChestTileEntity(CHEST_TYPES.get(rows).get(), rows);

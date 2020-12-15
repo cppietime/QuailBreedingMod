@@ -22,8 +22,8 @@ public class GenericEggItem extends Item {
 
     private int spawnChance;
     private int multiSpawnChance;
-    private String animal;
-    private String itemID;
+    private final String animal;
+    private final String itemID;
 
     public GenericEggItem(Properties properties, int spawnChance, int multiSpawnChance, String animal, String itemID) {
         super(properties);
@@ -39,30 +39,21 @@ public class GenericEggItem extends Item {
         multiSpawnChance = multi;
     }
 
-    public int getSpawnChance(){
-        return spawnChance;
-    }
-
-    public int getMultiSpawnChance(){
-        return multiSpawnChance;
-    }
-
     /**
      * Throw the egg
-     * @param worldIn
-     * @param playerIn
-     * @param handIn
-     * @return
      */
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
         worldIn.playSound((PlayerEntity)null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
         if (!worldIn.isRemote) {
-            GenericEggEntity eggentity = ModEntities.GENERIC_EGG.get().create(worldIn).setEgg(itemID, spawnChance, multiSpawnChance, animal);
-            eggentity.setItem(itemstack);
-            eggentity.setPosition(playerIn.getPosX(), playerIn.getPosYEye() - 0.1, playerIn.getPosZ());
-            eggentity.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-            worldIn.addEntity(eggentity);
+            GenericEggEntity eggentity = ModEntities.GENERIC_EGG.get().create(worldIn);
+            if(eggentity != null) {
+                eggentity.setEgg(itemID, spawnChance, multiSpawnChance, animal);
+                eggentity.setItem(itemstack);
+                eggentity.setPosition(playerIn.getPosX(), playerIn.getPosYEye() - 0.1, playerIn.getPosZ());
+                eggentity.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
+                worldIn.addEntity(eggentity);
+            }
         }
 
         playerIn.addStat(Stats.ITEM_USED.get(this));
@@ -78,8 +69,11 @@ public class GenericEggItem extends Item {
             @Override
             protected ProjectileEntity getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {
                 GenericEggItem eggItem = (GenericEggItem)stackIn.getItem();
-                GenericEggEntity entity = ModEntities.GENERIC_EGG.get().create(worldIn).setEgg(eggItem.itemID, eggItem.spawnChance, eggItem.multiSpawnChance, eggItem.animal);
-                entity.setPosition(position.getX(), position.getY(), position.getZ());
+                GenericEggEntity entity = ModEntities.GENERIC_EGG.get().create(worldIn);
+                if(entity != null) {
+                    entity.setEgg(eggItem.itemID, eggItem.spawnChance, eggItem.multiSpawnChance, eggItem.animal);
+                    entity.setPosition(position.getX(), position.getY(), position.getZ());
+                }
                 return entity;
             }
         };

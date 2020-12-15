@@ -2,14 +2,19 @@ package com.funguscow.crossbreed.item;
 
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.entity.QuailEntity;
+import com.funguscow.crossbreed.tileentities.NestTileEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 
 public class MeterItem extends Item {
 
@@ -45,5 +50,19 @@ public class MeterItem extends Item {
                 new TranslationTextComponent("text." + BreedMod.MODID + ".stat.eggTimer", quail.getLayTimer() / 1200f),
                 Util.DUMMY_UUID);
         return ActionResultType.PASS;
+    }
+
+    @Override
+    public ActionResultType onItemUse(ItemUseContext context) {
+        BlockPos pos = context.getPos();
+        World world = context.getWorld();
+        if(world.isRemote)
+            return ActionResultType.FAIL;
+        TileEntity entity = world.getTileEntity(pos);
+        if(!(entity instanceof NestTileEntity))
+            return ActionResultType.FAIL;
+        NestTileEntity nest = (NestTileEntity)entity;
+        nest.printQuails(context.getPlayer());
+        return ActionResultType.FAIL;
     }
 }

@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 
 public class BubbleItem extends Item {
 
-    private Fluid fluid;
+    private final Fluid fluid;
 
     public BubbleItem(Properties properties, Fluid fluid) {
         super(properties);
@@ -36,14 +36,10 @@ public class BubbleItem extends Item {
 
     /**
      * Place the fluid
-     * @param worldIn
-     * @param playerIn
-     * @param handIn
-     * @return
      */
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
-        RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.NONE);
+        BlockRayTraceResult raytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.NONE);
         ActionResult<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onBucketUse(playerIn, worldIn, itemstack, raytraceresult);
         if (ret != null) return ret;
         if (raytraceresult.getType() == RayTraceResult.Type.MISS) {
@@ -51,14 +47,13 @@ public class BubbleItem extends Item {
         } else if (raytraceresult.getType() != RayTraceResult.Type.BLOCK) {
             return ActionResult.resultPass(itemstack);
         } else {
-            BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)raytraceresult;
-            BlockPos blockpos = blockraytraceresult.getPos();
-            Direction direction = blockraytraceresult.getFace();
+            BlockPos blockpos = raytraceresult.getPos();
+            Direction direction = raytraceresult.getFace();
             BlockPos blockpos1 = blockpos.offset(direction);
             if (worldIn.isBlockModifiable(playerIn, blockpos) && playerIn.canPlayerEdit(blockpos1, direction, itemstack)) {
                     BlockState blockstate = worldIn.getBlockState(blockpos);
                     BlockPos blockpos2 = canBlockContainFluid(worldIn, blockpos, blockstate) ? blockpos : blockpos1;
-                    if (this.tryPlaceContainedLiquid(playerIn, worldIn, blockpos2, blockraytraceresult)) {
+                    if (this.tryPlaceContainedLiquid(playerIn, worldIn, blockpos2, raytraceresult)) {
                         if (playerIn instanceof ServerPlayerEntity) {
                             CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity)playerIn, blockpos2, itemstack);
                         }
@@ -90,7 +85,7 @@ public class BubbleItem extends Item {
             boolean flag = blockstate.isReplaceable(this.fluid);
             boolean flag1 = blockstate.isAir() || flag || block instanceof ILiquidContainer && ((ILiquidContainer)block).canContainFluid(worldIn, posIn, blockstate, this.fluid);
             if (!flag1) {
-                return rayTrace != null && this.tryPlaceContainedLiquid(player, worldIn, rayTrace.getPos().offset(rayTrace.getFace()), (BlockRayTraceResult)null);
+                return rayTrace != null && this.tryPlaceContainedLiquid(player, worldIn, rayTrace.getPos().offset(rayTrace.getFace()), null);
             } else if (worldIn.getDimensionType().isUltrawarm() && this.fluid.isIn(FluidTags.WATER)) {
                 int i = posIn.getX();
                 int j = posIn.getY();
