@@ -81,6 +81,14 @@ public class NestTileEntity extends TileEntity implements ITickableTileEntity, I
         return head.writeToTag();
     }
 
+    public ListNBT getQuails(){
+        ListNBT nbt = new ListNBT();
+        for(VirtualQuail quail : quails){
+            nbt.add(quail.writeToTag());
+        }
+        return nbt;
+    }
+
     @Override
     public void tick() {
         for(VirtualQuail quail : quails){

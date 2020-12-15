@@ -5,13 +5,45 @@
       "rolls": 1,
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "breesources:quail_nest"
-        }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "enchantments": [
+                      {
+                        "enchantment": "minecraft:silk_touch",
+                        "levels": {
+                          "min": 1
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "functions": [
+                {
+                  "function": "minecraft:copy_nbt",
+                  "source": "block_entity",
+                  "ops": [
+                    {
+                      "source": "Quails",
+                      "target": "BlockEntityTag.Quails",
+                      "op": "replace"
+                    }
+                  ]
+                }
+              ],
+              "name": "breesources:quail_nest"
+            },
+            {
+              "type": "minecraft:item",
+              "name": "breesources:quail_nest"
+            }
+          ]
         }
       ]
     }

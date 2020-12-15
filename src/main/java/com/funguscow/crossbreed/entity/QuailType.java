@@ -211,7 +211,7 @@ public class QuailType {
             SILVER = new QuailType("silver", "#forge:ingots/silver", 1, 0, 6000).disable(),
 
             // Tier 5
-            EMERALD = new QuailType("emerald", "minecraft:emerald", 1, 0, 24000),
+            EMERALD = new QuailType("emerald", "minecraft:emerald", 1, 0, 24000, "minecraft:saddle", 1),
             OBSIDIAN = new QuailType("obsidian", "minecraft:obsidian", 1, 0, 12000),
             BLAZE = new QuailType("blaze", "minecraft:blaze_rod", 1, 0, 12000),
             WARPED_NYL = new QuailType("warped_nyl", "minecraft:warped_nylium", 1, 0, 12000),
