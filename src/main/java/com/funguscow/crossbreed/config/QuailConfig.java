@@ -10,10 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Mod.EventBusSubscriber(modid = BreedMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class QuailConfig {
@@ -34,6 +31,8 @@ public class QuailConfig {
         public ForgeConfigSpec.IntValue quailEggChance, quailEggMultiChance,
                 quailWeight, quailMin, quailMax, quailBreedingTime;
         public ForgeConfigSpec.DoubleValue nestTickRate;
+
+        public ForgeConfigSpec.ConfigValue<List<Config>> extraQuails;
 
         public Common(ForgeConfigSpec.Builder builder){
             quailTypes = new HashMap<>();
@@ -89,19 +88,19 @@ public class QuailConfig {
                 config.amount = builder
                         .comment("Base amount of loot laid")
                         .worldRestart()
-                        .defineInRange("amount", type.getValue().layAmount, 0, 64);
+                        .defineInRange("Amount", type.getValue().layAmount, 0, 64);
                 config.amountRand = builder
                         .comment("Size of range of loot variance")
                         .worldRestart()
-                        .defineInRange("randomAmount", type.getValue().layRandomAmount, 0, 64);
+                        .defineInRange("RandomAmount", type.getValue().layRandomAmount, 0, 64);
                 config.time = builder
                         .comment("Minimum ticks between laying")
                         .worldRestart()
-                        .defineInRange("layTime", type.getValue().layTime, 0, 1_000_000);
+                        .defineInRange("LayTime", type.getValue().layTime, 0, 1_000_000);
                 config.onDieAmount = builder
                         .comment("Amount of extra death loot dropped, if any")
                         .worldRestart()
-                        .defineInRange("deathAmount", type.getValue().deathAmount, 0, 64);
+                        .defineInRange("DeathAmount", type.getValue().deathAmount, 0, 64);
                 config.dropItem = builder
                         .comment("ID of item dropped as egg")
                         .worldRestart()
@@ -129,6 +128,10 @@ public class QuailConfig {
                 builder.pop();
                 quailTypes.put(type.getKey(), config);
             }
+            extraQuails = builder
+                    .comment("Additional quail types, copy the format from default quails, but add a Name property")
+                    .worldRestart()
+                    .define("Extras", new ArrayList<>());
             builder.pop();
         }
     }

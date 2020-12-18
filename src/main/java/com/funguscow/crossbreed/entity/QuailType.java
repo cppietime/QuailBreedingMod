@@ -1,5 +1,6 @@
 package com.funguscow.crossbreed.entity;
 
+import com.electronwill.nightconfig.core.Config;
 import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.util.RandomPool;
 import com.funguscow.crossbreed.util.UnorderedPair;
@@ -21,10 +22,6 @@ public class QuailType {
     public static Map<UnorderedPair<String>, RandomPool<String>> Pairings = new HashMap<>();
 
     public static void preRegisterPair(QuailType mother, QuailType father, QuailType child, int tier){
-//        if(child.enabled) {
-//            RandomPool<String> children = Pairings.computeIfAbsent(new UnorderedPair<>(mother.name, father.name), pair -> new RandomPool<>((String) null));
-//            children.add(child.name, chance);
-//        }
         child.parent1 = mother.name;
         child.parent2 = father.name;
         child.tier = tier;
@@ -130,6 +127,29 @@ public class QuailType {
                 pool.add(type.name, tiers.get(type.tier));
             }
         }
+        for(Config config : QuailConfig.COMMON.extraQuails.get()){
+            int layAmount = config.getIntOrElse("Amount", 1);
+            int layRandomAmount = config.getIntOrElse("RandomAmount", 0);
+            int layTime = config.getIntOrElse("LayTime", 6000);
+            int deathAmount = config.getIntOrElse("DeathAmount", 0);
+            int tier = config.getIntOrElse("Tier", 1);
+            String name = config.get("Name");
+            String dropItem = config.getOrElse("DropItem", "breesources:quail_egg");
+            String deathItem = config.getOrElse("DeathItem", "");
+            String parent1 = config.getOrElse("Parent1", "");
+            String parent2 = config.getOrElse("Parent2", "");
+            QuailType extraType = new QuailType(name, dropItem, layAmount, layRandomAmount, layTime, deathItem, deathAmount);
+            if(!config.getOrElse("Enabled", true))
+                extraType.disable();
+            extraType.tier = tier;
+            extraType.parent1 = parent1;
+            extraType.parent2 = parent2;
+            if(!parent1.equals("") && !parent2.equals("") && extraType.enabled){
+                UnorderedPair<String> pair = new UnorderedPair<>(parent1, parent2);
+                RandomPool<String> pool = Pairings.computeIfAbsent(pair, keyPair -> new RandomPool<>((String)null));
+                pool.add(name, tiers.get(tier));
+            }
+        }
     }
 
     public static final QuailType
@@ -209,6 +229,7 @@ public class QuailType {
             TURTLE = new QuailType("turtle", "minecraft:scute", 1, 0, 10000, "minecraft:turtle_egg", 1),
             // Modded
             SILVER = new QuailType("silver", "#forge:ingots/silver", 1, 0, 6000).disable(),
+            URANIUM = new QuailType("uranium", "#forge:ingots/uranium", 1, 0, 6000).disable(),
 
             // Tier 5
             EMERALD = new QuailType("emerald", "minecraft:emerald", 1, 0, 24000, "minecraft:saddle", 1),
@@ -426,6 +447,7 @@ public class QuailType {
         preRegisterPair(SAND, FISH, TURTLE, (3));
 
         preRegisterPair(GOLD, BONE, SILVER, (3));
+        preRegisterPair(GOLD, WART, URANIUM, (3));
 
         preRegisterPair(GOLD, SLIME, EMERALD, (4));
         preRegisterPair(WATER, LAVA, OBSIDIAN, (4));
