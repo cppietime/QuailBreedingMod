@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WWW",
+    "WXW",
+    "WWW"
+  ],
+  "key": {
+    "W": {
+      "item": "minecraft:iron_ingot"
+    },
+    "X": {
+      "item": "breesources:quail_meter"
+    }
+  },
+  "result": {
+    "item": "breesources:strong_quail_jail"
+  }
+}

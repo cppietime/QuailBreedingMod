@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IEI",
+    "RJR",
+    "IRI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "E": {
+      "item": "breesources:quail_egg"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "J": {
+      "item": "breesources:quail_jail"
+    }
+  },
+  "result": {
+    "item": "breesources:quail_meter"
+  }
+}

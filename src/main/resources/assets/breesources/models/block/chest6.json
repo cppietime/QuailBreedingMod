@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "breesources:block/chest6",
+    "north": "breesources:block/chest6",
+    "south": "breesources:block/chest6",
+    "east": "breesources:block/chest6",
+    "west": "breesources:block/chest6",
+    "up": "minecraft:block/oak_planks",
+    "down": "minecraft:block/oak_planks"
+  }
+}
