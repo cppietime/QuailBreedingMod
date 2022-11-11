@@ -229,7 +229,7 @@ public class QuailType {
             LAVA = new QuailType("lava", "breesources:lava_bubble", 1, 0, 6000, "minecraft:pointed_dripstone", 1),
             GUNPOWDER = new QuailType("gunpowder", "minecraft:gunpowder", 1, 0, 6000),
             SPIDEREYE = new QuailType("spidereye", "minecraft:spider_eye", 1, 0, 6000),
-            SLIME = new QuailType("slime", "minecraft:slime_balls", 1, 0, 6000),
+            SLIME = new QuailType("slime", "minecraft:slime_ball", 1, 0, 6000),
             WART = new QuailType("wart", "minecraft:nether_wart", 1, 0, 6000),
             GLASS = new QuailType("glass", "minecraft:glass", 1, 0, 6000),
             BASALT = new QuailType("basalt", "minecraft:basalt", 1, 0, 6000),
@@ -378,22 +378,22 @@ public class QuailType {
             LIGHT_BLUE_TERRACOTTA = new QuailType("light_blue_terracotta", "minecraft:light_blue_terracotta", 1, 0, 4800),
 
     //Glass blocks
-    WHITE_GLASS = new QuailType("white_glass", "minecraft:white_glass", 1, 0, 12000),
-            BLACK_GLASS = new QuailType("black_glass", "minecraft:black_glass", 1, 0, 12000),
-            GRAY_GLASS = new QuailType("gray_glass", "minecraft:gray_glass", 1, 0, 12000),
-            LIGHT_GRAY_GLASS = new QuailType("light_gray_glass", "minecraft:light_gray_glass", 1, 0, 12000),
-            RED_GLASS = new QuailType("red_glass", "minecraft:red_glass", 1, 0, 12000),
-            GREEN_GLASS = new QuailType("green_glass", "minecraft:green_glass", 1, 0, 12000),
-            BLUE_GLASS = new QuailType("blue_glass", "minecraft:blue_glass", 1, 0, 12000),
-            YELLOW_GLASS = new QuailType("yellow_glass", "minecraft:yellow_glass", 1, 0, 12000),
-            BROWN_GLASS = new QuailType("brown_glass", "minecraft:brown_glass", 1, 0, 12000),
-            PINK_GLASS = new QuailType("pink_glass", "minecraft:pink_glass", 1, 0, 12000),
-            ORANGE_GLASS = new QuailType("orange_glass", "minecraft:orange_glass", 1, 0, 12000),
-            PURPLE_GLASS = new QuailType("purple_glass", "minecraft:purple_glass", 1, 0, 12000),
-            MAGENTA_GLASS = new QuailType("magenta_glass", "minecraft:magenta_glass", 1, 0, 12000),
-            LIME_GLASS = new QuailType("lime_glass", "minecraft:lime_glass", 1, 0, 12000),
-            CYAN_GLASS = new QuailType("cyan_glass", "minecraft:cyan_glass", 1, 0, 12000),
-            LIGHT_BLUE_GLASS = new QuailType("light_blue_glass", "minecraft:light_blue_glass", 1, 0, 12000);
+    WHITE_GLASS = new QuailType("white_glass", "minecraft:white_stained_glass", 1, 0, 12000),
+            BLACK_GLASS = new QuailType("black_glass", "minecraft:black_stained_glass", 1, 0, 12000),
+            GRAY_GLASS = new QuailType("gray_glass", "minecraft:gray_stained_glass", 1, 0, 12000),
+            LIGHT_GRAY_GLASS = new QuailType("light_gray_glass", "minecraft:light_gray_stained_glass", 1, 0, 12000),
+            RED_GLASS = new QuailType("red_glass", "minecraft:red_stained_glass", 1, 0, 12000),
+            GREEN_GLASS = new QuailType("green_glass", "minecraft:green_stained_glass", 1, 0, 12000),
+            BLUE_GLASS = new QuailType("blue_glass", "minecraft:blue_stained_glass", 1, 0, 12000),
+            YELLOW_GLASS = new QuailType("yellow_glass", "minecraft:yellow_stained_glass", 1, 0, 12000),
+            BROWN_GLASS = new QuailType("brown_glass", "minecraft:brown_stained_glass", 1, 0, 12000),
+            PINK_GLASS = new QuailType("pink_glass", "minecraft:pink_stained_glass", 1, 0, 12000),
+            ORANGE_GLASS = new QuailType("orange_glass", "minecraft:orange_stained_glass", 1, 0, 12000),
+            PURPLE_GLASS = new QuailType("purple_glass", "minecraft:purple_stained_glass", 1, 0, 12000),
+            MAGENTA_GLASS = new QuailType("magenta_glass", "minecraft:magenta_stained_glass", 1, 0, 12000),
+            LIME_GLASS = new QuailType("lime_glass", "minecraft:lime_stained_glass", 1, 0, 12000),
+            CYAN_GLASS = new QuailType("cyan_glass", "minecraft:cyan_stained_glass", 1, 0, 12000),
+            LIGHT_BLUE_GLASS = new QuailType("light_blue_glass", "minecraft:light_blue_stained_glass", 1, 0, 12000);
 
     static {
         preRegisterPair(BROWN, PAINTED, GRAVEL, (0));

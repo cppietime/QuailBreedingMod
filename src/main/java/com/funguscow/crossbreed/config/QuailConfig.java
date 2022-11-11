@@ -19,7 +19,7 @@ public class QuailConfig {
 
     public static class Common {
 
-        private static final double[] TIER_DEFAULTS = {0.5, 1, 0.75, 0.5, 0.25, 0.125, 0.0625};
+        private static final double[] TIER_DEFAULTS = {0.5, 0.9, 0.75, 0.5, 0.25, 0.125, 0.0625};
 
         public static class QuailTypeConfig {
             public ForgeConfigSpec.IntValue amount, amountRand, time, onDieAmount, tier;
