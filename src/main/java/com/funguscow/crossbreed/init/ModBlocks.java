@@ -22,15 +22,16 @@ public class ModBlocks {
 
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, BreedMod.MODID);
 
-    private static VarChestBlock newChestBlock(int rows){
+    private static VarChestBlock newChestBlock(int rows) {
         return new VarChestBlock(BlockBehaviour.Properties.copy(Blocks.CHEST), rows);
     }
+
     public static final Supplier<Block> CHEST4_BLOCK = () -> newChestBlock(4),
-        CHEST5_BLOCK = () -> newChestBlock(5),
-        CHEST6_BLOCK = () -> newChestBlock(6),
-        CHEST7_BLOCK = () -> newChestBlock(7),
-        CHEST8_BLOCK = () -> newChestBlock(8),
-        QUAIL_NEST_BLOCK = () -> new NestBlock(BlockBehaviour.Properties.copy(Blocks.HAY_BLOCK));
+            CHEST5_BLOCK = () -> newChestBlock(5),
+            CHEST6_BLOCK = () -> newChestBlock(6),
+            CHEST7_BLOCK = () -> newChestBlock(7),
+            CHEST8_BLOCK = () -> newChestBlock(8),
+            QUAIL_NEST_BLOCK = () -> new NestBlock(BlockBehaviour.Properties.copy(Blocks.HAY_BLOCK));
 
     public static final RegistryObject<Block> VOIDER = registerBlockAndItem("voider",
             () -> new VoiderBlock(BlockBehaviour.Properties
@@ -41,26 +42,26 @@ public class ModBlocks {
                     .requiresCorrectToolForDrops()),
             block -> new BlockItem(block, new Item.Properties().tab(BreedMod.GROUP))),
             CHEST4 = registerBlockAndItem("chest4",
-                  CHEST4_BLOCK,
-                  block -> new BlockItem(block, new Item.Properties().tab(BreedMod.GROUP))),
+                    CHEST4_BLOCK,
+                    block -> new BlockItem(block, new Item.Properties().tab(BreedMod.GROUP))),
             CHEST5 = registerBlockAndItem("chest5",
-                  CHEST5_BLOCK,
-                  block -> new BlockItem(block, new Item.Properties().tab(BreedMod.GROUP))),
+                    CHEST5_BLOCK,
+                    block -> new BlockItem(block, new Item.Properties().tab(BreedMod.GROUP))),
             CHEST6 = registerBlockAndItem("chest6",
-                  CHEST6_BLOCK,
-                  block -> new BlockItem(block, new Item.Properties().tab(BreedMod.GROUP))),
+                    CHEST6_BLOCK,
+                    block -> new BlockItem(block, new Item.Properties().tab(BreedMod.GROUP))),
             CHEST7 = registerBlockAndItem("chest7",
-                  CHEST7_BLOCK,
-                  block -> new BlockItem(block, new Item.Properties().tab(BreedMod.GROUP))),
+                    CHEST7_BLOCK,
+                    block -> new BlockItem(block, new Item.Properties().tab(BreedMod.GROUP))),
             CHEST8 = registerBlockAndItem("chest8",
-                  CHEST8_BLOCK,
-                  block -> new BlockItem(block, new Item.Properties().tab(BreedMod.GROUP))),
+                    CHEST8_BLOCK,
+                    block -> new BlockItem(block, new Item.Properties().tab(BreedMod.GROUP))),
             QUAIL_NEST = registerBlockAndItem("quail_nest", QUAIL_NEST_BLOCK,
                     block -> new BlockItem(block, new Item.Properties().tab(BreedMod.GROUP)));
 
-    private static RegistryObject<Block> registerBlockAndItem(String name, Supplier<Block> block, Function<Block, Item> function){
+    private static RegistryObject<Block> registerBlockAndItem(String name, Supplier<Block> block, Function<Block, Item> function) {
         RegistryObject<Block> registry = BLOCKS.register(name, block);
-        if(function != null){
+        if (function != null) {
             ModItems.ITEMS.register(name, () -> function.apply(registry.get()));
         }
         return registry;

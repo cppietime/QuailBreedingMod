@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.network.chat.Component.translatable;
 
@@ -25,7 +26,7 @@ public class MeterItem extends Item {
     }
 
     @Override
-    public InteractionResult interactLivingEntity(ItemStack stack, Player playerIn, LivingEntity target, InteractionHand hand) {
+    public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack stack, Player playerIn, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
         if (playerIn.level.isClientSide())
             return InteractionResult.FAIL;
         if (!(target instanceof QuailEntity))
@@ -54,7 +55,7 @@ public class MeterItem extends Item {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    public @NotNull InteractionResult useOn(UseOnContext context) {
         BlockPos pos = context.getClickedPos();
         Level world = context.getLevel();
         if (world.isClientSide())

@@ -47,8 +47,8 @@ public class ModItems {
             QUAIL_SPAWN_EGG = ITEMS.register("quail_spawn_egg",
                     () -> new ForgeSpawnEggItem(ModEntities.QUAIL, 0x734011, 0xa4b5bd, new Item.Properties().tab(BreedMod.GROUP).stacksTo(16)));
 
-    public static void matchConfig(){
-        GenericEggItem quailEgg = (GenericEggItem)QUAIL_EGG.get();
+    public static void matchConfig() {
+        GenericEggItem quailEgg = (GenericEggItem) QUAIL_EGG.get();
         quailEgg.updateOdds(QuailConfig.COMMON.quailEggChance.get(), QuailConfig.COMMON.quailEggMultiChance.get());
     }
 

@@ -13,6 +13,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.WorldlyContainer;
@@ -39,12 +40,13 @@ import static net.minecraft.network.chat.Component.translatable;
 
 public class NestTileEntity extends BlockEntity implements WorldlyContainer {
 
-    public static class VirtualQuail{
+    public static class VirtualQuail {
         private final QuailType breed;
         private final QuailEntity.Gene gene, alleleA, alleleB;
         private final CompoundTag extraNBT;
         private float layTimer;
-        public VirtualQuail(CompoundTag nbt){
+
+        public VirtualQuail(CompoundTag nbt) {
             extraNBT = nbt.copy();
             breed = QuailType.Types.get(extraNBT.getString("Breed"));
             alleleA = new QuailEntity.Gene().readFromTag(extraNBT.getCompound("AlleleA"));
@@ -57,18 +59,18 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
             gene = alleleA.dominance >= alleleB.dominance ? alleleA : alleleB;
         }
 
-        public CompoundTag writeToTag(){
+        public CompoundTag writeToTag() {
             CompoundTag nbt = extraNBT.copy();
             nbt.putString("Breed", breed.name);
-            nbt.putInt("EggLayTime", (int)layTimer);
+            nbt.putInt("EggLayTime", (int) layTimer);
             nbt.put("AlleleA", alleleA.writeToTag());
             nbt.put("AlleleB", alleleB.writeToTag());
             return nbt;
         }
 
-        public void resetTimer(RandomSource rand){
+        public void resetTimer(RandomSource rand) {
             layTimer = breed.layTime + rand.nextInt(breed.layTime + 1);
-            layTimer *=  gene.layTime + rand.nextFloat() * gene.layRandomTime;
+            layTimer *= gene.layTime + rand.nextFloat() * gene.layRandomTime;
             layTimer = Math.max(600, layTimer);
         }
     }
@@ -82,24 +84,24 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
         super(ModTileEntities.QUAIL_NEST.get(), pos, state);
         quails = new Stack<>();
         inventory = new ArrayDeque<>();
-        breedCooldown = 0;
+        breedCooldown = QuailConfig.COMMON.quailBreedingTime.get();
         seeds = 0;
     }
 
-    public void putQuail(CompoundTag nbt){
+    public void putQuail(CompoundTag nbt) {
         quails.add(new VirtualQuail(nbt));
     }
 
-    public CompoundTag getQuail(){
-        if(quails.isEmpty())
+    public CompoundTag getQuail() {
+        if (quails.isEmpty())
             return null;
         VirtualQuail head = quails.pop();
         return head.writeToTag();
     }
 
-    public ListTag getQuails(){
+    public ListTag getQuails() {
         ListTag nbt = new ListTag();
-        for(VirtualQuail quail : quails){
+        for (VirtualQuail quail : quails) {
             nbt.add(quail.writeToTag());
         }
         return nbt;
@@ -114,20 +116,23 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
     }
 
     private void selfTick(Level level, BlockPos pos, BlockState state) {
-        for(VirtualQuail quail : quails){
+        for (VirtualQuail quail : quails) {
             quail.layTimer -= QuailConfig.COMMON.nestTickRate.get();
-            if(quail.layTimer <= 0){
+            if (quail.layTimer <= 0) {
                 quail.resetTimer(level.random);
                 ItemStack nextThing = quail.breed.getLoot(level.random, quail.gene);
                 inventory.add(nextThing);
             }
         }
-        if (breedCooldown >= 0) {
-            breedCooldown--;
-        }
-        if (breedCooldown <= 0 && seeds >= 2) {
-            seeds -= 2;
-            breedOne(level.random);
+        if (numQuails() >= 2 && !level.isClientSide()) {
+            if (breedCooldown > 0) {
+                breedCooldown--;
+            }
+            if (breedCooldown <= 0 && seeds >= 2 && numQuails() < QuailConfig.COMMON.maxQuailsInNest.get()) {
+                breedOne(level.random);
+                breedCooldown = QuailConfig.COMMON.quailBreedingTime.get();
+                seeds -= 2;
+            }
         }
     }
 
@@ -135,7 +140,7 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
     public void saveAdditional(@NotNull CompoundTag compound) {
         super.saveAdditional(compound);
         ListTag listNBT = new ListTag();
-        for(VirtualQuail quail : quails){
+        for (VirtualQuail quail : quails) {
             listNBT.add(quail.writeToTag());
         }
         compound.put("Quails", listNBT);
@@ -154,7 +159,8 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
     public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
         ListTag listNBT = nbt.getList("Quails", 10);
-        for(int i = 0; i < listNBT.size(); i++){
+        quails.clear();
+        for (int i = 0; i < listNBT.size(); i++) {
             CompoundTag quailTag = listNBT.getCompound(i);
             VirtualQuail quail = new VirtualQuail(quailTag);
             quails.add(quail);
@@ -170,22 +176,22 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
         }
     }
 
-    public void spawnQuails(Level world){
-        for(VirtualQuail quail : quails){
+    public void spawnQuails(Level world) {
+        for (VirtualQuail quail : quails) {
             CompoundTag nbt = quail.writeToTag();
-            QuailEntity entity = (QuailEntity)ModEntities.QUAIL.get().spawn((ServerLevel) world, null, null, getBlockPos(), MobSpawnType.TRIGGERED, true, false);
-            if(entity != null)
+            QuailEntity entity = (QuailEntity) ModEntities.QUAIL.get().spawn((ServerLevel) world, null, null, getBlockPos(), MobSpawnType.TRIGGERED, true, false);
+            if (entity != null)
                 entity.readAdditionalSaveData(nbt);
         }
     }
 
-    public void printQuails(Player player){
+    public void printQuails(Player player) {
         Map<String, Integer> breeds = new HashMap<>();
-        for(VirtualQuail quail : quails){
+        for (VirtualQuail quail : quails) {
             breeds.put(quail.breed.name, breeds.getOrDefault(quail.breed.name, 0) + 1);
         }
         MutableComponent component = Component.empty();
-        for(Map.Entry<String, Integer> breed : breeds.entrySet()){
+        for (Map.Entry<String, Integer> breed : breeds.entrySet()) {
             if (!component.getSiblings().isEmpty()) {
                 component.append(literal("\n"));
             }
@@ -197,14 +203,14 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
     }
 
     public void killOne(Level level) {
-        if (quails.empty()) {
+        if (quails.empty() || level.isClientSide()) {
             return;
         }
-        if (!(level instanceof ServerLevel)) {
+        MinecraftServer server = level.getServer();
+        if (server == null) {
             return;
         }
-        BreedMod.LOGGER.debug("Killed a quail");
-        VirtualQuail quail = quails.remove(level.random.nextInt(quails.size()));
+        VirtualQuail quail = quails.remove(level.random.nextInt(numQuails()));
         String deathItemId = quail.breed.deathItem;
         if (deathItemId != null && !deathItemId.isEmpty()) {
             int amount = quail.breed.deathAmount;
@@ -215,26 +221,26 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
             }
         }
         ResourceLocation lootLocation = new ResourceLocation(BreedMod.MODID, "entities/" + QuailEntity.ID);
-        LootTable lootTable = level.getServer().getLootTables().get(lootLocation);
+        LootTable lootTable = server.getLootTables().get(lootLocation);
         if (lootTable != LootTable.EMPTY) {
             QuailEntity quailEntity = ModEntities.QUAIL.get().create(level);
-            LootContext.Builder builder = (new LootContext.Builder((ServerLevel)level)).withRandom(level.random).withParameter(LootContextParams.THIS_ENTITY, quailEntity).withParameter(LootContextParams.ORIGIN, Vec3.ZERO).withParameter(LootContextParams.DAMAGE_SOURCE, DamageSource.OUT_OF_WORLD).withOptionalParameter(LootContextParams.KILLER_ENTITY, quailEntity).withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, quailEntity);
-            LootContext ctx = builder.create(LootContextParamSets.ENTITY);
-            inventory.addAll(lootTable.getRandomItems(ctx));
+            if (quailEntity != null) {
+                LootContext.Builder builder = (new LootContext.Builder((ServerLevel) level)).withRandom(level.random).withParameter(LootContextParams.THIS_ENTITY, quailEntity).withParameter(LootContextParams.ORIGIN, Vec3.ZERO).withParameter(LootContextParams.DAMAGE_SOURCE, DamageSource.OUT_OF_WORLD).withOptionalParameter(LootContextParams.KILLER_ENTITY, quailEntity).withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, quailEntity);
+                LootContext ctx = builder.create(LootContextParamSets.ENTITY);
+                inventory.addAll(lootTable.getRandomItems(ctx));
+                quailEntity.discard();
+            }
         }
     }
 
     public void breedOne(RandomSource random) {
-        if (quails.size() < 2 || breedCooldown > 0) {
-            return;
-        }
-        int index = random.nextInt(quails.size());
+        int index = random.nextInt(numQuails());
         VirtualQuail parentA = quails.remove(index);
-        index = random.nextInt(quails.size());
+        index = random.nextInt(numQuails());
         VirtualQuail parentB = quails.remove(index);
         CompoundTag nbt = parentA.extraNBT.copy();
         QuailType breed = parentA.breed.getOffspring(parentB.breed, random);
-        nbt.putInt("EggLayTime", 6000);
+        nbt.putInt("EggLayTime", breed.layTime * 2); // Maximum, is this good tho?
         nbt.putString("Breed", breed.name);
         QuailEntity.Gene alleleA = parentA.alleleA.crossover(parentA.alleleB, random);
         QuailEntity.Gene alleleB = parentB.alleleA.crossover(parentB.alleleB, random);
@@ -244,15 +250,15 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
         quails.add(parentA);
         quails.add(parentB);
         quails.add(child);
-        breedCooldown = QuailConfig.COMMON.quailBreedingTime.get();
     }
 
-    public int numQuails(){
+    public int numQuails() {
         return quails.size();
     }
+
     @Override
     public int getContainerSize() {
-        return inventory.size();
+        return 1;
     }
 
     @Override
@@ -314,7 +320,7 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
 
     @Override
     public boolean canPlaceItemThroughFace(int index, @NotNull ItemStack itemStack, @Nullable Direction direction) {
-        return direction != Direction.DOWN && QuailEntity.BREED_MATERIAL.test(itemStack);
+        return direction != Direction.DOWN && QuailEntity.BREED_MATERIAL.test(itemStack) && seeds < QuailConfig.COMMON.maxSeedsInNest.get();
     }
 
     @Override

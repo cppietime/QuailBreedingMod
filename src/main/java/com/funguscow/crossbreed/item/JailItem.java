@@ -1,6 +1,7 @@
 package com.funguscow.crossbreed.item;
 
 import com.funguscow.crossbreed.BreedMod;
+import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.entity.QuailEntity;
 import com.funguscow.crossbreed.init.ModEntities;
 import com.funguscow.crossbreed.tileentities.NestTileEntity;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ import static net.minecraft.network.chat.Component.translatable;
 
 public class JailItem extends Item {
 
-    private boolean reusable;
+    private final boolean reusable;
 
     public JailItem(Properties properties, boolean reusable) {
         super(properties);
@@ -34,7 +36,7 @@ public class JailItem extends Item {
     }
 
     @Override
-    public InteractionResult interactLivingEntity(ItemStack stack, Player playerIn, LivingEntity target, InteractionHand hand) {
+    public @NotNull InteractionResult interactLivingEntity(ItemStack stack, @NotNull Player playerIn, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
         CompoundTag jailTag = stack.getTagElement("Jailed");
         if(jailTag != null || !(target instanceof QuailEntity)){
             return InteractionResult.FAIL;
@@ -52,9 +54,9 @@ public class JailItem extends Item {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    public @NotNull InteractionResult useOn(UseOnContext context) {
         Level world = context.getLevel();
-        if(!(world instanceof ServerLevel))
+        if(world.isClientSide())
             return InteractionResult.SUCCESS;
         ItemStack itemStack = context.getItemInHand();
         Player player = context.getPlayer();
@@ -92,7 +94,7 @@ public class JailItem extends Item {
                 return itemStack.isEmpty() ? InteractionResult.PASS : InteractionResult.sidedSuccess(player.level.isClientSide());
             }
             else{ // Deposit a quail
-                if(jailTag.getInt("Age") < 0) // If a baby
+                if(jailTag.getInt("Age") < 0 || nestEntity.numQuails() >= QuailConfig.COMMON.maxQuailsInNest.get()) // If a baby or full
                     return InteractionResult.PASS;
                 nestEntity.putQuail(jailTag);
                 ItemStack emptied = new ItemStack(itemStack.getItem());
@@ -108,7 +110,7 @@ public class JailItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         CompoundTag jailTag = stack.getTagElement("Jailed");
         if(jailTag == null){
             tooltip.add(translatable("text." + BreedMod.MODID + ".empty"));

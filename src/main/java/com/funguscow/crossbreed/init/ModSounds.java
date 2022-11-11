@@ -13,8 +13,8 @@ public class ModSounds {
 
     public static final RegistryObject<SoundEvent> QUAIL_AMBIENT = SOUNDS.register("quail_ambient",
             () -> new SoundEvent(new ResourceLocation("breesources", "quail_ambient"))),
-        QUAIL_HURT = SOUNDS.register("quail_hurt",
-                () -> new SoundEvent(new ResourceLocation("breesources", "quail_hurt"))),
+            QUAIL_HURT = SOUNDS.register("quail_hurt",
+                    () -> new SoundEvent(new ResourceLocation("breesources", "quail_hurt"))),
             QUAIL_DIE = SOUNDS.register("quail_die",
                     () -> new SoundEvent(new ResourceLocation("breesources", "quail_die"))),
             QUAIL_STEP = SOUNDS.register("quail_step",

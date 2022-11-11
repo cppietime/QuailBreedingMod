@@ -3,6 +3,7 @@ package com.funguscow.crossbreed.init;
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.tileentities.NestTileEntity;
 import com.funguscow.crossbreed.tileentities.VarChestTileEntity;
+import com.mojang.datafixers.types.Type;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.datafix.fixes.References;
@@ -16,31 +17,35 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ModTileEntities {
+
+    private static Type<?> fetchBlockEntityType(String name) {
+        return (Util.fetchChoiceType(References.BLOCK_ENTITY, name));
+    }
 
     public static final DeferredRegister<BlockEntityType<?>> TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, BreedMod.MODID);
 
     public static final Map<Integer, RegistryObject<BlockEntityType<VarChestTileEntity>>> CHEST_TYPES = new HashMap<>();
 
     public static final RegistryObject<BlockEntityType<?>> QUAIL_NEST = TILE_ENTITIES.register("quail_nest",
-            () -> BlockEntityType.Builder.of(NestTileEntity::new, ModBlocks.QUAIL_NEST.get()).build(Util.fetchChoiceType(References.BLOCK_ENTITY, "quail_nest")));
+            () -> BlockEntityType.Builder.of(NestTileEntity::new, ModBlocks.QUAIL_NEST.get()).build(fetchBlockEntityType("quail_nest")));
 
-    public static VarChestTileEntity newChestTileEntity(BlockPos pos, BlockState state, int rows){
+    public static VarChestTileEntity newChestTileEntity(BlockPos pos, BlockState state, int rows) {
         return new VarChestTileEntity(CHEST_TYPES.get(rows).get(), pos, state, rows);
     }
 
-    private static void registerChestTileEntity(int rows, Supplier<Block>... blocks){
+    @SafeVarargs
+    private static void registerChestTileEntity(int rows, Supplier<Block>... blocks) {
         String name = String.format("chest%d", rows);
-        BreedMod.LOGGER.warn("Registering chest with " + rows + " rows");
         CHEST_TYPES.put(rows, TILE_ENTITIES.register(name,
-                () -> BlockEntityType.Builder.of((BlockPos pos, BlockState state) -> newChestTileEntity(pos, state, rows), Arrays.stream(blocks).map(Supplier::get).toArray(Block[]::new)).build(Util.fetchChoiceType(References.BLOCK_ENTITY, name))));
+                () -> BlockEntityType.Builder.of((BlockPos pos, BlockState state) -> newChestTileEntity(pos, state, rows), Arrays.stream(blocks).map(Supplier::get).toArray(Block[]::new)).build(fetchBlockEntityType(name))));
     }
 
     public static void registerEntities() {
         try {
-            BreedMod.LOGGER.warn("Registering chest entities");
             registerChestTileEntity(4, ModBlocks.CHEST4);
             registerChestTileEntity(5, ModBlocks.CHEST5);
             registerChestTileEntity(6, ModBlocks.CHEST6);

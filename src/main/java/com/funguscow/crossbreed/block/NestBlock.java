@@ -1,5 +1,6 @@
 package com.funguscow.crossbreed.block;
 
+import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.init.ModTileEntities;
 import com.funguscow.crossbreed.tileentities.NestTileEntity;
 import net.minecraft.core.BlockPos;
@@ -67,9 +68,14 @@ public class NestBlock extends BaseEntityBlock {
     @Override
     public int getAnalogOutputSignal(@NotNull BlockState blockState, Level worldIn, @NotNull BlockPos pos) {
         BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-        if(tileEntity instanceof NestTileEntity){
-            NestTileEntity nest = (NestTileEntity)tileEntity;
-            return Math.min(15, nest.numQuails());
+        if (tileEntity instanceof NestTileEntity) {
+            NestTileEntity nest = (NestTileEntity) tileEntity;
+            int numQuails = nest.numQuails();
+            if (numQuails == 0) {
+                return 0;
+            }
+            int ratio = (numQuails * 15) / QuailConfig.COMMON.maxQuailsInNest.get();
+            return Math.max(ratio, 1);
         }
         return 0;
     }
@@ -102,7 +108,7 @@ public class NestBlock extends BaseEntityBlock {
                 compoundnbt.put("Quails", nestTileEntity.getQuails());
                 itemstack.addTagElement("BlockEntityTag", compoundnbt);
 
-                ItemEntity itementity = new ItemEntity(worldIn, (double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), itemstack);
+                ItemEntity itementity = new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), itemstack);
                 itementity.setDefaultPickUpDelay();
                 worldIn.addFreshEntity(itementity);
             }
@@ -117,7 +123,7 @@ public class NestBlock extends BaseEntityBlock {
         if (entity instanceof PrimedTnt || entity instanceof Creeper || entity instanceof WitherSkull || entity instanceof WitherBoss || entity instanceof MinecartTNT) {
             BlockEntity tileentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
             if (tileentity instanceof NestTileEntity) {
-                NestTileEntity nestTileEntity = (NestTileEntity)tileentity;
+                NestTileEntity nestTileEntity = (NestTileEntity) tileentity;
                 nestTileEntity.spawnQuails(builder.getLevel());
             }
         }
@@ -137,15 +143,14 @@ public class NestBlock extends BaseEntityBlock {
                 nestEntity.killOne(level);
             }
             level.setBlock(pos, state.setValue(TRIGGERED, true), 4);
-        }
-        else if (!powered && triggered) {
+        } else if (!powered && triggered) {
             level.setBlock(pos, state.setValue(TRIGGERED, false), 4);
         }
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
         return (pBlockEntityType == ModTileEntities.QUAIL_NEST.get()) ? NestTileEntity::tick : null;
     }
 }

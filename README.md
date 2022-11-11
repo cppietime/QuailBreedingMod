@@ -28,6 +28,7 @@ Seven cobblestone surrounding one Cactus, with an opening on top, produces a Voi
 - Elegant + Gravel = Acacia
 - Elegant + Clay = Jungle
 - Elegant + Netherrack = Dark Oak
+- Painted + Clay = Mangrove
 - Painted + Cobblestone = Coal
 - Bobwhite + Netherrack = Quartz
 - Brown + Clay = Apple
@@ -55,6 +56,10 @@ Seven cobblestone surrounding one Cactus, with an opening on top, produces a Voi
 - Feather + String = Leather
 - Clay + Coal = Terracotta
 - Feather + Clay = Snow
+- Apple + Clay = Copper
+- Reeds + Clay = Sculk
+- Quartz + Netherrack = Deepslate
+- Reeds + Coal = Glow Berries
 
 ### Tier 4 Pairs:
 - Dirt + Flower = Grass
@@ -72,6 +77,9 @@ Seven cobblestone surrounding one Cactus, with an opening on top, produces a Voi
 - Water + Snowball = Ice
 - Soul Sand + Redstone = Glowstone
 - Water + Leather = Fish
+- Dirt + Water = Mud
+- Wheat + Clay = Moss
+- Apple + Quartz = Amethyst
 
 ### Tier 5 Pairs:
 - Gold + Slime = Emerald
@@ -100,6 +108,7 @@ Seven cobblestone surrounding one Cactus, with an opening on top, produces a Voi
 - Packed Ice + Emerald = Blue Ice
 - Warped Nylium + Bone = Warped Stem
 - Crimson Nylium + Bone = Crimson Stem
+- Emerald + Sculk = Sculk Sensor
 
 ### Tier 7 Pairs:
 - Diamond + Wither Rose = Wither

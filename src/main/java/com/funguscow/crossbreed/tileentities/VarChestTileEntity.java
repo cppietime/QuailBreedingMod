@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.network.chat.Component.translatable;
 
@@ -29,23 +30,23 @@ public class VarChestTileEntity extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    protected NonNullList<ItemStack> getItems() {
+    protected @NotNull NonNullList<ItemStack> getItems() {
         return contents;
     }
 
     @Override
-    protected void setItems(NonNullList<ItemStack> itemsIn) {
+    protected void setItems(@NotNull NonNullList<ItemStack> itemsIn) {
         contents = itemsIn;
     }
 
     @Override
-    protected Component getDefaultName() {
+    protected @NotNull Component getDefaultName() {
         return translatable(BreedMod.MODID + ":container.var_chest");
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory inventory) {
-        return new ChestMenu(ModContainers.CHEST_TYPES.get(rows).get(), id,  inventory, this, rows);
+    public @NotNull AbstractContainerMenu createMenu(int id, @NotNull Inventory inventory) {
+        return new ChestMenu(ModContainers.CHEST_TYPES.get(rows).get(), id, inventory, this, rows);
     }
 
     @Override
@@ -54,14 +55,14 @@ public class VarChestTileEntity extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    public void load(CompoundTag nbt) {
+    public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
         contents = NonNullList.withSize(rows * 9, ItemStack.EMPTY);
         ContainerHelper.loadAllItems(nbt, contents);
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
+    public void saveAdditional(@NotNull CompoundTag compound) {
         super.saveAdditional(compound);
         ContainerHelper.saveAllItems(compound, contents);
     }

@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ChestMenu;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A modified chest screen that can handle more than 6 rows
@@ -27,9 +28,9 @@ public class ResizableChestScreen extends AbstractContainerScreen<ChestMenu> {
     }
 
     @Override
-    protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
+    protected void renderBg(@NotNull PoseStack matrixStack, float partialTicks, int x, int y) {
         Minecraft minecraft = this.minecraft;
-        if(minecraft == null)
+        if (minecraft == null)
             return;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -37,7 +38,7 @@ public class ResizableChestScreen extends AbstractContainerScreen<ChestMenu> {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.blit(matrixStack, i, j, 0, 0, this.getXSize(), Math.min(3, this.numRows) * 18 + 18);
-        for(int rowsLeft = numRows - 3; rowsLeft > 0; rowsLeft -= 3){
+        for (int rowsLeft = numRows - 3; rowsLeft > 0; rowsLeft -= 3) {
             this.blit(matrixStack, i, j + (this.numRows - rowsLeft) * 18 + 18, 0, 72, this.imageWidth, Math.min(3, rowsLeft) * 18);
         }
         this.blit(matrixStack, i, j + this.numRows * 18 + 17, 0, 126, this.imageWidth, 96);

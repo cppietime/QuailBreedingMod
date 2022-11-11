@@ -21,7 +21,7 @@ public class QuailConfig {
 
         private static final double[] TIER_DEFAULTS = {0.5, 1, 0.75, 0.5, 0.25, 0.125, 0.0625};
 
-        public static class QuailTypeConfig{
+        public static class QuailTypeConfig {
             public ForgeConfigSpec.IntValue amount, amountRand, time, onDieAmount, tier;
             public ForgeConfigSpec.ConfigValue<String> dropItem, deathItem, parent1, parent2;
             public ForgeConfigSpec.BooleanValue enabled;
@@ -31,12 +31,13 @@ public class QuailConfig {
         public ForgeConfigSpec.DoubleValue[] tierOdds;
 
         public ForgeConfigSpec.IntValue quailEggChance, quailEggMultiChance,
-                quailWeight, quailMin, quailMax, quailBreedingTime;
+                quailWeight, quailMin, quailMax, quailBreedingTime,
+                maxSeedsInNest, maxQuailsInNest;
         public ForgeConfigSpec.DoubleValue nestTickRate;
 
         public ForgeConfigSpec.ConfigValue<List<Config>> extraQuails;
 
-        public Common(ForgeConfigSpec.Builder builder){
+        public Common(ForgeConfigSpec.Builder builder) {
             quailTypes = new HashMap<>();
             tierOdds = new ForgeConfigSpec.DoubleValue[7];
 
@@ -45,10 +46,18 @@ public class QuailConfig {
                     .comment("Rate at which to tick nests relative to overworld quails.")
                     .worldRestart()
                     .defineInRange("NestTickRate", 1f, 0f, 1_000_000f);
+            maxSeedsInNest = builder
+                    .comment("Maximum number of seeds a nest can hold for breeding.")
+                    .worldRestart()
+                    .defineInRange("MaxSeedsInNest", 64, 2, 1000);
+            maxQuailsInNest = builder
+                    .comment("Maximum number of quails a nest can hold.")
+                    .worldRestart()
+                    .defineInRange("MaxQuailsInNest", 64, 2, 1000);
             builder.pop();
 
             builder.comment("Odds of successful cross-breeding to ascend one tier.").push("Tiers");
-            for(int i = 0; i < 7; i++){
+            for (int i = 0; i < 7; i++) {
                 tierOdds[i] = builder.worldRestart().defineInRange("tier" + i, TIER_DEFAULTS[i], 0, 1);
             }
             builder.pop();
@@ -84,7 +93,7 @@ public class QuailConfig {
             builder.pop();
 
             builder.comment("Settings for each type of quail.").push("QuailTypes");
-            for(Map.Entry<String, QuailType> type : QuailType.Types.entrySet()){
+            for (Map.Entry<String, QuailType> type : QuailType.Types.entrySet()) {
                 builder.comment("Config values for quail type " + type.getKey() + ".").push(type.getKey());
                 QuailTypeConfig config = new QuailTypeConfig();
                 config.amount = builder
@@ -140,6 +149,7 @@ public class QuailConfig {
 
     public static final Common COMMON;
     public static final ForgeConfigSpec CONFIG_SPEC;
+
     static {
         final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
         COMMON = specPair.getLeft();
@@ -147,12 +157,12 @@ public class QuailConfig {
     }
 
     @SubscribeEvent
-    public static void onLoad(ModConfigEvent.Loading event){
+    public static void onLoad(ModConfigEvent.Loading event) {
 
     }
 
     @SubscribeEvent
-    public static void onFileChanged(ModConfigEvent.Reloading event){
+    public static void onFileChanged(ModConfigEvent.Reloading event) {
 
     }
 

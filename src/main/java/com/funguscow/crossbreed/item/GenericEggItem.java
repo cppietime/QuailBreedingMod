@@ -2,10 +2,7 @@ package com.funguscow.crossbreed.item;
 
 import com.funguscow.crossbreed.entity.GenericEggEntity;
 import com.funguscow.crossbreed.init.ModEntities;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Position;
-import net.minecraft.core.Vec3i;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.sounds.SoundEvents;
@@ -15,11 +12,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.EggItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +41,7 @@ public class GenericEggItem extends Item {
         EGG_QUEUE.add(this);
     }
 
-    public void updateOdds(int chance, int multi){
+    public void updateOdds(int chance, int multi) {
         spawnChance = chance;
         multiSpawnChance = multi;
     }
@@ -52,11 +49,12 @@ public class GenericEggItem extends Item {
     /**
      * Throw the egg
      */
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    @Override
+    public @NotNull InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
-        worldIn.playSound((Player)null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.EGG_THROW, SoundSource.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.EGG_THROW, SoundSource.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
         if (!worldIn.isClientSide()) {
-            GenericEggEntity eggentity = new GenericEggEntity(worldIn, playerIn);//ModEntities.GENERIC_EGG.get().create(worldIn);
+            GenericEggEntity eggentity = new GenericEggEntity(worldIn, playerIn);
             eggentity.setEgg(itemID, spawnChance, multiSpawnChance, animal);
             eggentity.setItem(itemstack);
             eggentity.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0.0F, 1.5F, 1.0F);
@@ -71,20 +69,20 @@ public class GenericEggItem extends Item {
         return InteractionResultHolder.sidedSuccess(itemstack, worldIn.isClientSide()); // Consume or success?
     }
 
-    public static void registerDispenser(){
-        DispenseItemBehavior behavior = new AbstractProjectileDispenseBehavior(){
+    public static void registerDispenser() {
+        DispenseItemBehavior behavior = new AbstractProjectileDispenseBehavior() {
             @Override
-            protected Projectile getProjectile(Level worldIn, Position position, ItemStack itemStack) {
-                GenericEggItem eggItem = (GenericEggItem)itemStack.getItem();
+            protected @NotNull Projectile getProjectile(@NotNull Level worldIn, @NotNull Position position, ItemStack itemStack) {
+                GenericEggItem eggItem = (GenericEggItem) itemStack.getItem();
                 GenericEggEntity entity = ModEntities.GENERIC_EGG.get().create(worldIn);
-                if(entity != null) {
-                    entity.setEgg(eggItem.itemID, eggItem.spawnChance, eggItem.multiSpawnChance, eggItem.animal);
-                    entity.setPos(position.x(), position.y(), position.z());
-                }
+                assert (entity != null);
+                entity.setEgg(eggItem.itemID, eggItem.spawnChance, eggItem.multiSpawnChance, eggItem.animal);
+                entity.setItem(itemStack);
+                entity.setPos(position.x(), position.y(), position.z());
                 return entity;
             }
         };
-        for(GenericEggItem egg : EGG_QUEUE){
+        for (GenericEggItem egg : EGG_QUEUE) {
             DispenserBlock.registerBehavior(egg, behavior);
         }
     }

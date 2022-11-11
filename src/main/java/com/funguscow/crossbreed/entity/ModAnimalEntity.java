@@ -17,12 +17,12 @@ public abstract class ModAnimalEntity extends Animal {
     public void aiStep() {
         super.aiStep();
         int timeout = getBreedingTimeout();
-        if(getAge() > timeout)
+        if (getAge() > timeout)
             setAge(timeout);
-        if(timeout > 6000){
-            if(getAge() == 5999)
+        if (timeout > 6000) {
+            if (getAge() == 5999)
                 setAge(timeout);
-            else if(getAge() == 6000)
+            else if (getAge() == 6000)
                 setAge(5999);
         }
     }

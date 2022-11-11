@@ -18,8 +18,8 @@
   ],
   "spawners": {
     "type": "breesources:quail",
-    "weight": 100000,
+    "weight": 9,
     "minCount": 2,
-    "maxCount": 5
+    "maxCount": 6
   }
 }

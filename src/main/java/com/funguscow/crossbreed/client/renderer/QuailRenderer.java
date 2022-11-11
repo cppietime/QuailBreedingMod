@@ -7,8 +7,9 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
-public class QuailRenderer extends MobRenderer<QuailEntity, QuailModel<QuailEntity>> {
+public class QuailRenderer extends MobRenderer<QuailEntity, QuailModel> {
 
     protected static final String TEXTURE_TEMPLATE = "textures/entity/quail/%s.png";
 
@@ -17,7 +18,7 @@ public class QuailRenderer extends MobRenderer<QuailEntity, QuailModel<QuailEnti
     }
 
     @Override
-    public ResourceLocation getTextureLocation(QuailEntity entity) {
+    public @NotNull ResourceLocation getTextureLocation(QuailEntity entity) {
         return new ResourceLocation(BreedMod.MODID, String.format(TEXTURE_TEMPLATE, entity.getBreedName()));
     }
 

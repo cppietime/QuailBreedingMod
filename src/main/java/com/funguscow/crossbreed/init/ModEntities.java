@@ -23,7 +23,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<GenericEggEntity>> GENERIC_EGG = ENTITY_TYPES.register("generic_egg",
             () -> EntityType.Builder.<GenericEggEntity>of(GenericEggEntity::new, MobCategory.MISC).sized(0.25f, 0.25f)
                     .setTrackingRange(4)
-                .build(new ResourceLocation(BreedMod.MODID, "generic_egg").toString()));
+                    .build(new ResourceLocation(BreedMod.MODID, "generic_egg").toString()));
 
     public static void registerPlacements() {
         SpawnPlacements.register(QUAIL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);

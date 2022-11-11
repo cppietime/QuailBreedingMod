@@ -2,9 +2,7 @@ package com.funguscow.crossbreed.init;
 
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.gui.ResizableChestScreen;
-import com.mojang.blaze3d.platform.ScreenManager;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ChestMenu;
@@ -22,22 +20,22 @@ public class ModContainers {
 
     public static final Map<Integer, RegistryObject<MenuType<ChestMenu>>> CHEST_TYPES = new HashMap<>();
 
-    public static ChestMenu newChestContainer(int id, Inventory inventory, int rows){
+    public static ChestMenu newChestContainer(int id, Inventory inventory, int rows) {
         return new ChestMenu(CHEST_TYPES.get(rows).get(), id, inventory, new SimpleContainer(rows * 9), rows);
     }
 
-    public static void registerScreens(){
-        for(RegistryObject<MenuType <ChestMenu>> reg : CHEST_TYPES.values()){
-            MenuScreens.register(reg.get(), ResizableChestScreen::new); // What class si this now? TODO
+    public static void registerScreens() {
+        for (RegistryObject<MenuType<ChestMenu>> reg : CHEST_TYPES.values()) {
+            MenuScreens.register(reg.get(), ResizableChestScreen::new);
         }
     }
 
-    private static void registerChest(int rows){
+    private static void registerChest(int rows) {
         CHEST_TYPES.put(rows, CONTAINERS.register(String.format("chest%d", rows),
                 () -> new MenuType<>((id, player) -> newChestContainer(id, player, rows))));
     }
 
-    static{
+    static {
         registerChest(4);
         registerChest(5);
         registerChest(6);
