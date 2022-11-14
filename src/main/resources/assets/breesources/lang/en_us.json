@@ -234,5 +234,13 @@
   "text.breesources.breed.uranium": "Uranium Quail",
   "text.breesources.breed.ruby": "Ruby Quail",
   "text.breesources.breed.sapphire": "Sapphire Quail",
-  "text.breesources.breed.music": "Music Quail"
+  "text.breesources.breed.music": "Music Quail",
+  "text.breesources.breed.mangrove": "Mangrove Quail",
+  "text.breesources.breed.mud": "Mud Quail",
+  "text.breesources.breed.amethyst": "Amethyst Quail",
+  "text.breesources.breed.deepslate": "Deepslate Quail",
+  "text.breesources.breed.moss": "Moss Quail",
+  "text.breesources.breed.glow": "Glowing Quail",
+  "text.breesources.breed.sculk": "Sculk Quail",
+  "text.breesources.breed.sculk_sensor": "Deep Dark Quail"
 }
