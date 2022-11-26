@@ -28,6 +28,13 @@ public class ResizableChestScreen extends AbstractContainerScreen<ChestMenu> {
     }
 
     @Override
+    public void render(@NotNull PoseStack matrixStack, int pMouseX, int pMouseY, float partialTicks) {
+        renderBackground(matrixStack);
+        super.render(matrixStack, pMouseX, pMouseY, partialTicks);
+        renderTooltip(matrixStack, pMouseX, pMouseY);
+    }
+
+    @Override
     protected void renderBg(@NotNull PoseStack matrixStack, float partialTicks, int x, int y) {
         Minecraft minecraft = this.minecraft;
         if (minecraft == null)
