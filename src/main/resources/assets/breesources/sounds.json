@@ -1,0 +1,32 @@
+{
+  "quail_ambient": {
+    "category": "neutral",
+    "subtitle": "breesources.subtitle.quail_ambient",
+    "sounds": ["breesources:quail_ambient"]
+  },
+  "quail_hurt": {
+    "category": "neutral",
+    "subtitle": "breesources.subtitle.quail_hurt",
+    "sounds": ["breesources:quail_hurt"]
+  },
+  "quail_die": {
+    "category": "neutral",
+    "subtitle": "breesources.subtitle.quail_die",
+    "sounds": ["breesources:quail_die"]
+  },
+  "quail_step": {
+    "category": "neutral",
+    "subtitle": "breesources.subtitle.quail_step",
+    "sounds": ["minecraft:mob/chicken/step1"]
+  },
+  "quail_plop": {
+    "category": "neutral",
+    "subtitle": "breesources.subtitle.quail_plop",
+    "sounds": ["minecraft:mob/chicken/plop"]
+  },
+  "quail_milk": {
+    "category": "neutral",
+    "subtitle": "breesources.subtitle.quail_milk",
+    "sounds": ["minecraft:mob/cow/milk1"]
+  }
+}

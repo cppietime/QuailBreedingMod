@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "breesources:raw_quail"
+  },
+  "result": "breesources:cooked_quail",
+  "experience": 0.35,
+  "cookingTime": 100
+}

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "breesources:block/nest_side",
+    "north": "breesources:block/nest_side",
+    "south": "breesources:block/nest_side",
+    "east": "breesources:block/nest_side",
+    "west": "breesources:block/nest_side",
+    "up": "breesources:block/nest_top",
+    "down": "breesources:block/nest_bottom"
+  }
+}
