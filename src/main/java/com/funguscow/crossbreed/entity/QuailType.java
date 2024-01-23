@@ -1,6 +1,7 @@
 package com.funguscow.crossbreed.entity;
 
 import com.electronwill.nightconfig.core.Config;
+import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.util.RandomPool;
 import com.funguscow.crossbreed.util.UnorderedPair;
@@ -137,7 +138,7 @@ public class QuailType {
             int deathAmount = config.getIntOrElse("DeathAmount", 0);
             int tier = config.getIntOrElse("Tier", 1);
             String name = config.get("Name");
-            String dropItem = config.getOrElse("DropItem", "breesources:quail_egg");
+            String dropItem = config.getOrElse("DropItem", BreedMod.MODID + ":quail_egg");
             String deathItem = config.getOrElse("DeathItem", "");
             String parent1 = config.getOrElse("Parent1", "");
             String parent2 = config.getOrElse("Parent2", "");
@@ -160,10 +161,10 @@ public class QuailType {
 
     public static final QuailType
             // Tier 0 / wild-type
-            PAINTED = new QuailType("painted", "breesources:quail_egg", 1, 0, 6000),
-            BOBWHITE = new QuailType("bobwhite", "breesources:quail_egg", 1, 0, 6000),
-            BROWN = new QuailType("brown", "breesources:quail_egg", 1, 0, 6000),
-            ELEGANT = new QuailType("elegant", "breesources:quail_egg", 1, 0, 6000),
+            PAINTED = new QuailType("painted", BreedMod.MODID + ":quail_egg", 1, 0, 6000),
+            BOBWHITE = new QuailType("bobwhite", BreedMod.MODID + ":quail_egg", 1, 0, 6000),
+            BROWN = new QuailType("brown", BreedMod.MODID + ":quail_egg", 1, 0, 6000),
+            ELEGANT = new QuailType("elegant", BreedMod.MODID + ":quail_egg", 1, 0, 6000),
 
     // Tier 1
     GRAVEL = new QuailType("gravel", "minecraft:gravel", 1, 0, 1200, "minecraft:flint", 2),
@@ -205,7 +206,7 @@ public class QuailType {
             PUMPKIN = new QuailType("pumpkin", "minecraft:pumpkin", 1, 0, 3600),
             POTATO = new QuailType("potato", "minecraft:potato", 1, 0, 4800, "minecraft:porkchop", 1),
             CARROT = new QuailType("carrot", "minecraft:carrot", 1, 0, 4800, "minecraft:rabbit", 1),
-            WATER = new QuailType("water", "breesources:water_bubble", 1, 0, 4800),
+            WATER = new QuailType("water", BreedMod.MODID + ":water_bubble", 1, 0, 4800),
             LEATHER = new QuailType("leather", "minecraft:leather", 1, 0, 4800, "minecraft:beef", 1),
             TERRACOTTA = new QuailType("terracotta", "minecraft:terracotta", 1, 0, 4800),
             SNOWBALL = new QuailType("snowball", "minecraft:snowball", 1, 2, 2000, "minecraft:sweet_berries", 1),
@@ -226,7 +227,7 @@ public class QuailType {
             BROWNSHROOM = new QuailType("brownshroom", "minecraft:brown_mushroom", 1, 0, 6000),
             ENDSTONE = new QuailType("endstone", "minecraft:end_stone", 1, 0, 6000, "minecraft:purpur_block", 1),
             GOLD = new QuailType("gold", "minecraft:raw_gold", 1, 0, 6000),
-            LAVA = new QuailType("lava", "breesources:lava_bubble", 1, 0, 6000, "minecraft:pointed_dripstone", 1),
+            LAVA = new QuailType("lava", BreedMod.MODID + ":lava_bubble", 1, 0, 6000, "minecraft:pointed_dripstone", 1),
             GUNPOWDER = new QuailType("gunpowder", "minecraft:gunpowder", 1, 0, 6000),
             SPIDEREYE = new QuailType("spidereye", "minecraft:spider_eye", 1, 0, 6000),
             SLIME = new QuailType("slime", "minecraft:slime_ball", 1, 0, 6000),
