@@ -107,7 +107,7 @@ public class QuailEntity extends ModAnimalEntity {
 
     public QuailEntity(EntityType<? extends Animal> type, Level worldIn) {
         super(type, worldIn);
-        breed = QuailType.BROWN;
+        setBreed(QuailType.BROWN);
         randomBreed();
         setAlleles(new Gene(level().random), new Gene(level().random));
     }

@@ -18,8 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LiquidBlockContainer;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
@@ -88,7 +87,7 @@ public class BubbleItem extends Item {
             BlockState blockstate = worldIn.getBlockState(posIn);
             Block block = blockstate.getBlock();
             boolean flag = blockstate.canBeReplaced(this.fluid);
-            boolean flag1 = blockstate.isAir() || flag || block instanceof LiquidBlockContainer && ((LiquidBlockContainer) block).canPlaceLiquid(player, worldIn, posIn, blockstate, this.fluid);
+            boolean flag1 = blockstate.isAir() || flag || canBlockContainFluid(player, worldIn, posIn, blockstate);
             if (!flag1) {
                 return rayTrace != null && this.tryPlaceContainedLiquid(player, worldIn, rayTrace.getBlockPos().relative(rayTrace.getDirection()), null);
             } else if (worldIn.dimensionType().ultraWarm() && this.fluid.is(FluidTags.WATER)) {
@@ -106,17 +105,22 @@ public class BubbleItem extends Item {
                 ((LiquidBlockContainer) block).placeLiquid(worldIn, posIn, blockstate, ((FlowingFluid) this.fluid).getSource(false));
                 this.playEmptySound(player, worldIn, posIn);
                 return true;
-            } else {
-                if (!worldIn.isClientSide() && flag && !blockstate.liquid()) {
-                    worldIn.destroyBlock(posIn, true);
+            } else if (block instanceof AbstractCauldronBlock) {
+                if (fluid == Fluids.WATER) {
+                    return worldIn.setBlock(posIn, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3), 3);
+                } else if (fluid == Fluids.LAVA) {
+                    return worldIn.setBlock(posIn, Blocks.LAVA_CAULDRON.defaultBlockState(), 3);
                 }
+            }
 
-                if (!worldIn.setBlock(posIn, this.fluid.defaultFluidState().createLegacyBlock(), 11) && !blockstate.getFluidState().isSource()) {
-                    return false;
-                } else {
-                    this.playEmptySound(player, worldIn, posIn);
-                    return true;
-                }
+            if (!worldIn.isClientSide() && flag && !blockstate.liquid()) {
+                worldIn.destroyBlock(posIn, true);
+            }
+            if (!worldIn.setBlock(posIn, this.fluid.defaultFluidState().createLegacyBlock(), 11) && !blockstate.getFluidState().isSource()) {
+                return false;
+            } else {
+                this.playEmptySound(player, worldIn, posIn);
+                return true;
             }
         }
     }
@@ -129,6 +133,9 @@ public class BubbleItem extends Item {
     }
 
     private boolean canBlockContainFluid(Player playerIn, Level worldIn, BlockPos posIn, BlockState blockstate) {
-        return blockstate.getBlock() instanceof LiquidBlockContainer && ((LiquidBlockContainer) blockstate.getBlock()).canPlaceLiquid(playerIn, worldIn, posIn, blockstate, this.fluid);
+        return (blockstate.getBlock() instanceof LiquidBlockContainer &&
+                ((LiquidBlockContainer) blockstate.getBlock()).canPlaceLiquid(playerIn, worldIn, posIn, blockstate, this.fluid)) ||
+                (blockstate.getBlock() instanceof AbstractCauldronBlock &&
+                        (fluid == Fluids.WATER || fluid == Fluids.LAVA));
     }
 }

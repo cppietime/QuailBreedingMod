@@ -30,6 +30,8 @@ import static net.minecraft.network.chat.Component.translatable;
 
 public class JailItem extends Item {
 
+    public static final String JAILED_TAG_KEY = "Jailed";
+
     private final boolean reusable;
 
     public JailItem(Properties properties, boolean reusable) {
@@ -39,7 +41,7 @@ public class JailItem extends Item {
 
     @Override
     public @NotNull InteractionResult interactLivingEntity(ItemStack stack, @NotNull Player playerIn, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
-        CompoundTag jailTag = stack.getTagElement("Jailed");
+        CompoundTag jailTag = stack.getTagElement(JAILED_TAG_KEY);
         if(jailTag != null || !(target instanceof QuailEntity)){
             return InteractionResult.FAIL;
         }
@@ -48,11 +50,21 @@ public class JailItem extends Item {
         quail.addAdditionalSaveData(jailTag);
         quail.remove(Entity.RemovalReason.DISCARDED);
         ItemStack jailed = new ItemStack(stack.getItem());
-        jailed.addTagElement("Jailed", jailTag);
+        jailed.addTagElement(JAILED_TAG_KEY, jailTag);
         stack.shrink(1);
         if (!playerIn.addItem(jailed))
             playerIn.drop(jailed, false);
         return stack.isEmpty() ? InteractionResult.PASS : InteractionResult.sidedSuccess(playerIn.level().isClientSide());
+    }
+
+    public boolean releaseQuail(Level world, BlockPos pos, ItemStack itemStack, Player player) {
+        CompoundTag jailTag = itemStack.getTagElement(JAILED_TAG_KEY);
+        if (jailTag == null)
+            return false;
+        QuailEntity released = (QuailEntity) ModEntities.QUAIL.get().spawn((ServerLevel) world, itemStack, player, pos, MobSpawnType.SPAWN_EGG, true, false);
+        if(released != null)
+            released.readAdditionalSaveData(jailTag);
+        return true;
     }
 
     @Override
@@ -64,19 +76,23 @@ public class JailItem extends Item {
         Player player = context.getPlayer();
         if(player == null)
             return InteractionResult.PASS;
-        CompoundTag jailTag = itemStack.getTagElement("Jailed");
+        CompoundTag jailTag = itemStack.getTagElement(JAILED_TAG_KEY);
         BlockPos clickedPos = context.getClickedPos();
         BlockEntity tileEntity = world.getBlockEntity(clickedPos);
         if(!(tileEntity instanceof NestTileEntity)) { // When using to release a quail
-            if (jailTag == null)
+            BlockPos spawnPos = clickedPos.relative(context.getClickedFace());
+            if (!releaseQuail(world, spawnPos, itemStack, player)) {
+                return InteractionResult.PASS;
+            }
+            /*if (jailTag == null)
                 return InteractionResult.PASS;
             QuailEntity released = (QuailEntity) ModEntities.QUAIL.get().spawn((ServerLevel) world, itemStack, player, context.getClickedPos().relative(context.getClickedFace()), MobSpawnType.SPAWN_EGG, true, false);
             if(released != null)
-                released.readAdditionalSaveData(jailTag);
+                released.readAdditionalSaveData(jailTag);*/
             ItemStack emptied = new ItemStack(itemStack.getItem());
             itemStack.shrink(1);
             if (reusable && !player.isCreative()) {
-                emptied.removeTagKey("Jailed");
+                emptied.removeTagKey(JAILED_TAG_KEY);
                 if (!player.addItem(emptied))
                     player.drop(emptied, false);
             }
@@ -89,7 +105,7 @@ public class JailItem extends Item {
                 if(quail == null) // Empty so just quit
                     return InteractionResult.PASS;
                 ItemStack jailed = new ItemStack(itemStack.getItem());
-                jailed.addTagElement("Jailed", quail);
+                jailed.addTagElement(JAILED_TAG_KEY, quail);
                 if(!player.isCreative())
                     itemStack.shrink(1);
                 if (!player.addItem(jailed))
@@ -103,7 +119,7 @@ public class JailItem extends Item {
                 ItemStack emptied = new ItemStack(itemStack.getItem());
                 itemStack.shrink(1);
                 if (reusable && !player.isCreative()) {
-                    emptied.removeTagKey("Jailed");
+                    emptied.removeTagKey(JAILED_TAG_KEY);
                     if (!player.addItem(emptied))
                         player.drop(emptied, false);
                 }
@@ -114,7 +130,7 @@ public class JailItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        CompoundTag jailTag = stack.getTagElement("Jailed");
+        CompoundTag jailTag = stack.getTagElement(JAILED_TAG_KEY);
         if(jailTag == null){
             tooltip.add(translatable("text." + BreedMod.MODID + ".empty"));
         }
@@ -143,6 +159,6 @@ public class JailItem extends Item {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return stack.getTagElement("Jailed") != null;
+        return stack.getTagElement(JAILED_TAG_KEY) != null;
     }
 }

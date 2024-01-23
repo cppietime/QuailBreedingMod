@@ -55,6 +55,7 @@ public class BreedMod {
         event.enqueueWork(() -> {
             QuailType.matchConfig();
             ModItems.matchConfig();
+            ModItems.registerDispenser();
             ModEntities.registerPlacements();
             ModContainers.registerScreens();
             GenericEggItem.registerDispenser();

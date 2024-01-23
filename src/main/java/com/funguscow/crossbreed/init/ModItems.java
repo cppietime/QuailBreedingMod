@@ -3,10 +3,17 @@ package com.funguscow.crossbreed.init;
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.item.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -69,6 +76,41 @@ public class ModItems {
         ModCreativeTabs.QUAIL_MOD_TAB.add(QUAIL_SPAWN_EGG);
 
         ModCreativeTabs.addItemToVanillaTab(CreativeModeTabs.SPAWN_EGGS, QUAIL_SPAWN_EGG);
+    }
+
+    public static void registerDispenser() {
+        DefaultDispenseItemBehavior bubbleBehavior = new DefaultDispenseItemBehavior() {
+            @Override
+            protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+                BubbleItem bubble = (BubbleItem)itemStack.getItem();
+                BlockPos pos = blockSource.pos().relative(blockSource.state().getValue(DispenserBlock.FACING));
+                if (bubble.tryPlaceContainedLiquid(null, blockSource.level(), pos, null)) {
+                    itemStack.shrink(1);
+                    return itemStack;
+                }
+                return super.execute(blockSource, itemStack);
+            }
+        };
+        DispenserBlock.registerBehavior(WATER_BUBBLE.get(), bubbleBehavior);
+        DispenserBlock.registerBehavior(LAVA_BUBBLE.get(), bubbleBehavior);
+
+        OptionalDispenseItemBehavior jailBehavior = new OptionalDispenseItemBehavior() {
+            @Override
+            protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+                JailItem item = (JailItem)itemStack.getItem();
+                CompoundTag jailedTag = itemStack.getTagElement(JailItem.JAILED_TAG_KEY);
+                BlockPos pos = blockSource.pos().relative(blockSource.state().getValue(DispenserBlock.FACING));
+                if (jailedTag == null) {
+                    // Attempt to capture a quail
+                } else {
+                    // Release a quail
+                    if (item.releaseQuail(blockSource.level(), pos, itemStack, null)) {
+
+                    }
+                }
+                return super.execute(blockSource, itemStack);
+            }
+        };
     }
 
 }

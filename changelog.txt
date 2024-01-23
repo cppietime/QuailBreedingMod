@@ -13,3 +13,5 @@ Consider rebalancing.
 Make analog output of nest uniform.
 Remove hardcoded references to mod namespace.
 Allow nest to accept seeds when holding loot.
+Add behavior for jails and bubbles in dispensers.
+Add behavior for bubbles used on cauldrons.

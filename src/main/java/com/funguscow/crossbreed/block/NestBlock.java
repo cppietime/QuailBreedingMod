@@ -74,7 +74,7 @@ public class NestBlock extends BaseEntityBlock {
             if (numQuails == 0) {
                 return 0;
             }
-            int ratio = (numQuails * 15) / QuailConfig.COMMON.maxQuailsInNest.get();
+            int ratio = (numQuails * 14) / QuailConfig.COMMON.maxQuailsInNest.get() + 1;
             return Math.max(ratio, 1);
         }
         return 0;
