@@ -5,6 +5,7 @@ import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.entity.QuailEntity;
 import com.funguscow.crossbreed.init.ModEntities;
 import com.funguscow.crossbreed.tileentities.NestTileEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -63,7 +65,8 @@ public class JailItem extends Item {
         if(player == null)
             return InteractionResult.PASS;
         CompoundTag jailTag = itemStack.getTagElement("Jailed");
-        BlockEntity tileEntity = world.getBlockEntity(context.getClickedPos());
+        BlockPos clickedPos = context.getClickedPos();
+        BlockEntity tileEntity = world.getBlockEntity(clickedPos);
         if(!(tileEntity instanceof NestTileEntity)) { // When using to release a quail
             if (jailTag == null)
                 return InteractionResult.PASS;

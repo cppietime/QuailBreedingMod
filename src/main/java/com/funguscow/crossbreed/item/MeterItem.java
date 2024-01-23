@@ -38,19 +38,19 @@ public class MeterItem extends Item {
                 translatable("text." + BreedMod.MODID + ".breed." + quail.getBreedName())
                         .append(CommonComponents.NEW_LINE)
                         .append(
-                                translatable("text." + BreedMod.MODID + ".stat.amount", gene.layAmount))
+                                translatable("text." + BreedMod.MODID + ".stat.amount", String.format("%.3f", gene.layAmount)))
                         .append(CommonComponents.NEW_LINE)
                         .append(
-                                translatable("text." + BreedMod.MODID + ".stat.amountRandom", gene.layRandomAmount))
+                                translatable("text." + BreedMod.MODID + ".stat.amountRandom", String.format("%.3f", gene.layRandomAmount)))
                         .append(CommonComponents.NEW_LINE)
                         .append(
-                                translatable("text." + BreedMod.MODID + ".stat.time", gene.layTime))
+                                translatable("text." + BreedMod.MODID + ".stat.time", String.format("%.3f", gene.layTime)))
                         .append(CommonComponents.NEW_LINE)
                         .append(
-                                translatable("text." + BreedMod.MODID + ".stat.timeRandom", gene.layRandomTime))
+                                translatable("text." + BreedMod.MODID + ".stat.timeRandom", String.format("%.3f", gene.layRandomTime)))
                         .append(CommonComponents.NEW_LINE)
                         .append(
-                                translatable("text." + BreedMod.MODID + ".stat.eggTimer", seconds / 60, seconds % 60));
+                                translatable("text." + BreedMod.MODID + ".stat.eggTimer", String.format("%d:%02d", seconds / 60, seconds % 60)));
         playerIn.displayClientMessage(component, false);
         return InteractionResult.PASS;
     }

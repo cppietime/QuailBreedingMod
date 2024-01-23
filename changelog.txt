@@ -3,9 +3,13 @@ Update to game version 1.20.2.
 Update to Minecraft Forge version 48.1.0.
 Update to Parchment mapping version 2023.12.10-1.20.2.
 Update method/API calls to enable building.
+Issue block update on nest quail amount change.
+Add seeds needed for breeding in nest to config.
 
 TODO:
 Shorten/soften quail sounds.
-Re-implement mod creative inventory tab using updated API.
 Add quail type for pottery sherds, torchflowers, pitcher plants, and cherry trees.
 Consider rebalancing.
+Make analog output of nest uniform.
+Remove hardcoded references to mod namespace.
+Allow nest to accept seeds when holding loot.

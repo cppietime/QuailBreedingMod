@@ -32,7 +32,7 @@ public class QuailConfig {
 
         public ForgeConfigSpec.IntValue quailEggChance, quailEggMultiChance,
                 quailWeight, quailMin, quailMax, quailBreedingTime,
-                maxSeedsInNest, maxQuailsInNest;
+                maxSeedsInNest, maxQuailsInNest, seedsToBreed;
         public ForgeConfigSpec.DoubleValue nestTickRate;
 
         public ForgeConfigSpec.ConfigValue<List<Config>> extraQuails;
@@ -54,6 +54,10 @@ public class QuailConfig {
                     .comment("Maximum number of quails a nest can hold.")
                     .worldRestart()
                     .defineInRange("MaxQuailsInNest", 64, 2, 1000);
+            seedsToBreed = builder
+                    .comment("Number of seed items to breed a new quail.")
+                    .worldRestart()
+                    .defineInRange("SeedsToBreed", 32, 1, 1000);
             builder.pop();
 
             builder.comment("Odds of successful cross-breeding to ascend one tier.").push("Tiers");

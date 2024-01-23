@@ -89,12 +89,14 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
 
     public void putQuail(CompoundTag nbt) {
         quails.add(new VirtualQuail(nbt));
+        setChanged();
     }
 
     public CompoundTag getQuail() {
         if (quails.isEmpty())
             return null;
         VirtualQuail head = quails.pop();
+        setChanged();
         return head.writeToTag();
     }
 
@@ -127,10 +129,11 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
             if (breedCooldown > 0) {
                 breedCooldown--;
             }
-            if (breedCooldown <= 0 && seeds >= 2 && numQuails() < QuailConfig.COMMON.maxQuailsInNest.get()) {
+            int neededSeeds = QuailConfig.COMMON.seedsToBreed.get();
+            if (breedCooldown <= 0 && seeds >= neededSeeds && numQuails() < QuailConfig.COMMON.maxQuailsInNest.get()) {
                 breedOne(level.random);
                 breedCooldown = QuailConfig.COMMON.quailBreedingTime.get();
-                seeds -= 2;
+                seeds -= neededSeeds;
             }
         }
     }
@@ -185,18 +188,23 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
     }
 
     public void printQuails(Player player) {
-        Map<String, Integer> breeds = new HashMap<>();
-        for (VirtualQuail quail : quails) {
-            breeds.put(quail.breed.name, breeds.getOrDefault(quail.breed.name, 0) + 1);
-        }
-        MutableComponent component = Component.empty();
-        for (Map.Entry<String, Integer> breed : breeds.entrySet()) {
-            if (!component.getSiblings().isEmpty()) {
-                component.append(literal("\n"));
+        final MutableComponent component;
+        if (quails.empty()) {
+            component = Component.translatable("text." + BreedMod.MODID + ".empty");
+        } else {
+            component = Component.empty();
+            Map<String, Integer> breeds = new HashMap<>();
+            for (VirtualQuail quail : quails) {
+                breeds.put(quail.breed.name, breeds.getOrDefault(quail.breed.name, 0) + 1);
             }
-            component.append(translatable("text." + BreedMod.MODID + ".multiplier",
-                    translatable("text." + BreedMod.MODID + ".breed." + breed.getKey()),
-                    breed.getValue()));
+            for (Map.Entry<String, Integer> breed : breeds.entrySet()) {
+                if (!component.getSiblings().isEmpty()) {
+                    component.append(literal("\n"));
+                }
+                component.append(translatable("text." + BreedMod.MODID + ".multiplier",
+                        translatable("text." + BreedMod.MODID + ".breed." + breed.getKey()),
+                        breed.getValue()));
+            }
         }
         player.displayClientMessage(component, false);
     }
@@ -265,7 +273,7 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
     }
 
     @Override
-    public @NotNull ItemStack getItem(int p_18941_) {
+    public @NotNull ItemStack getItem(int slot) {
         if (inventory.isEmpty()) {
             return ItemStack.EMPTY;
         }

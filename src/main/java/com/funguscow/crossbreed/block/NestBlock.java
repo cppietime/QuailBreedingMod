@@ -139,7 +139,6 @@ public class NestBlock extends BaseEntityBlock {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof NestTileEntity) {
                 NestTileEntity nestEntity = (NestTileEntity) entity;
-//                nestEntity.breedOne(level.random);
                 nestEntity.killOne(level);
             }
             level.setBlock(pos, state.setValue(TRIGGERED, true), 4);
