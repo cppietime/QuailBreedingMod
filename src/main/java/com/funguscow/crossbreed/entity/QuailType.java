@@ -197,6 +197,7 @@ public class QuailType {
             ACACIA = new QuailType("acacia", "minecraft:acacia_log", 1, 0, 2400, "minecraft:acacia_sapling", 1),
             DARK_OAK = new QuailType("dark_oak", "minecraft:dark_oak_log", 1, 0, 2400, "minecraft:dark_oak_sapling", 1),
             MANGROVE = new QuailType("mangrove", "minecraft:mangrove_log", 1, 0, 2400, "minecraft:mangrove_propagule", 1),
+            CHERRY = new QuailType("cherry", "minecraft:cherry_log", 1, 0, 2400, "minecraft:cherry_sapling", 1),
 
     COAL = new QuailType("coal", "minecraft:coal", 1, 0, 2400),
             QUARTZ = new QuailType("quartz", "minecraft:quartz", 1, 0, 2400),
@@ -273,6 +274,10 @@ public class QuailType {
             BLACKSTONE = new QuailType("blackstone", "minecraft:blackstone", 1, 0, 12000, "minecraft:gilded_blackstone", 1),
             CORAL = new QuailType("coral", "@breesources:coral_items", 1, 0, 12000, "@breesources:coral_blocks", 1),
             PACKED_ICE = new QuailType("packed_ice", "minecraft:packed_ice", 1, 0, 12000),
+            SHERD = new QuailType("sherd", "@breesources:sherds", 1, 0, 12000),
+            PITCHER = new QuailType("pitcher", "minecraft:pitcher_plant", 1, 0, 12000, "minecraft:pitcher_pod", 1),
+            TORCHFLOWER = new QuailType("torchflower", "minecraft:torchflower", 1, 0, 12000, "minecraft:torchflower_seeds", 1),
+
     // Modded
     RUBY = new QuailType("ruby", "#forge:gems/ruby", 1, 0, 12000).disable(),
             SAPPHIRE = new QuailType("sapphire", "#forge:gems/sapphire", 1, 0, 12000).disable(),
@@ -426,6 +431,7 @@ public class QuailType {
         preRegisterPair(ELEGANT, GRAVEL, ACACIA, (1));
         preRegisterPair(ELEGANT, NETHERRACK, DARK_OAK, (1));
         preRegisterPair(PAINTED, CLAY, MANGROVE, (1));
+        preRegisterPair(BROWN, COBBLE, CHERRY, (1));
         preRegisterPair(PAINTED, COBBLE, COAL, (1));
         preRegisterPair(BOBWHITE, NETHERRACK, QUARTZ, (1));
         preRegisterPair(BROWN, CLAY, APPLE, (1));
@@ -514,6 +520,9 @@ public class QuailType {
         preRegisterPair(WARPED_NYL, BONE, WARPED_STEM, (5));
         preRegisterPair(CRIMSON_NYL, BONE, CRIMSON_STEM, (5));
         preRegisterPair(EMERALD, SCULK, SCULK_SENSOR, (5));
+        preRegisterPair(AMETHYST, CORAL, SHERD, (5));
+        preRegisterPair(REDSHROOM, SAND, PITCHER, (5));
+        preRegisterPair(BROWNSHROOM, GRAVEL, TORCHFLOWER, (5));
 
         preRegisterPair(DIAMOND, WITHER_ROSE, WITHER_STAR, (6));
         preRegisterPair(NAUTILUS, PEARL, HEART_OF_SEA, (6));
