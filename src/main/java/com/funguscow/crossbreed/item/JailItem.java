@@ -39,6 +39,19 @@ public class JailItem extends Item {
         this.reusable = reusable;
     }
 
+    public boolean isReusable() {
+        return reusable;
+    }
+
+    public ItemStack captureQuail(ItemStack stack, QuailEntity quail) {
+        CompoundTag jailTag = new CompoundTag();
+        quail.addAdditionalSaveData(jailTag);
+        quail.remove(Entity.RemovalReason.DISCARDED);
+        ItemStack jailed = new ItemStack(stack.getItem());
+        jailed.addTagElement(JAILED_TAG_KEY, jailTag);
+        return jailed;
+    }
+
     @Override
     public @NotNull InteractionResult interactLivingEntity(ItemStack stack, @NotNull Player playerIn, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
         CompoundTag jailTag = stack.getTagElement(JAILED_TAG_KEY);
@@ -46,11 +59,12 @@ public class JailItem extends Item {
             return InteractionResult.FAIL;
         }
         QuailEntity quail = (QuailEntity)target;
-        jailTag = new CompoundTag();
+        /*jailTag = new CompoundTag();
         quail.addAdditionalSaveData(jailTag);
         quail.remove(Entity.RemovalReason.DISCARDED);
         ItemStack jailed = new ItemStack(stack.getItem());
-        jailed.addTagElement(JAILED_TAG_KEY, jailTag);
+        jailed.addTagElement(JAILED_TAG_KEY, jailTag);*/
+        ItemStack jailed = captureQuail(stack, quail);
         stack.shrink(1);
         if (!playerIn.addItem(jailed))
             playerIn.drop(jailed, false);
@@ -64,6 +78,15 @@ public class JailItem extends Item {
         QuailEntity released = (QuailEntity) ModEntities.QUAIL.get().spawn((ServerLevel) world, itemStack, player, pos, MobSpawnType.SPAWN_EGG, true, false);
         if(released != null)
             released.readAdditionalSaveData(jailTag);
+        return true;
+    }
+
+    public boolean depositQuail(ItemStack itemStack, NestTileEntity nestEntity) {
+        CompoundTag jailTag = itemStack.getTagElement(JAILED_TAG_KEY);
+        assert jailTag != null;
+        if(jailTag.getInt("Age") < 0 || nestEntity.numQuails() >= QuailConfig.COMMON.maxQuailsInNest.get()) // If a baby or full
+            return false;
+        nestEntity.putQuail(jailTag);
         return true;
     }
 
@@ -110,12 +133,14 @@ public class JailItem extends Item {
                     itemStack.shrink(1);
                 if (!player.addItem(jailed))
                     player.drop(jailed, false);
-                return itemStack.isEmpty() ? InteractionResult.PASS : InteractionResult.sidedSuccess(player.level().isClientSide());
             }
             else{ // Deposit a quail
-                if(jailTag.getInt("Age") < 0 || nestEntity.numQuails() >= QuailConfig.COMMON.maxQuailsInNest.get()) // If a baby or full
+                /*if(jailTag.getInt("Age") < 0 || nestEntity.numQuails() >= QuailConfig.COMMON.maxQuailsInNest.get()) // If a baby or full
                     return InteractionResult.PASS;
-                nestEntity.putQuail(jailTag);
+                nestEntity.putQuail(jailTag);*/
+                if (!depositQuail(itemStack, nestEntity)) {
+                    return InteractionResult.PASS;
+                }
                 ItemStack emptied = new ItemStack(itemStack.getItem());
                 itemStack.shrink(1);
                 if (reusable && !player.isCreative()) {
@@ -123,8 +148,8 @@ public class JailItem extends Item {
                     if (!player.addItem(emptied))
                         player.drop(emptied, false);
                 }
-                return itemStack.isEmpty() ? InteractionResult.PASS : InteractionResult.sidedSuccess(player.level().isClientSide());
             }
+            return itemStack.isEmpty() ? InteractionResult.PASS : InteractionResult.sidedSuccess(player.level().isClientSide());
         }
     }
 

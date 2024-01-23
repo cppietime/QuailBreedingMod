@@ -2,7 +2,9 @@ package com.funguscow.crossbreed.init;
 
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.config.QuailConfig;
+import com.funguscow.crossbreed.entity.QuailEntity;
 import com.funguscow.crossbreed.item.*;
+import com.funguscow.crossbreed.tileentities.NestTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
@@ -13,8 +15,11 @@ import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -100,17 +105,57 @@ public class ModItems {
                 JailItem item = (JailItem)itemStack.getItem();
                 CompoundTag jailedTag = itemStack.getTagElement(JailItem.JAILED_TAG_KEY);
                 BlockPos pos = blockSource.pos().relative(blockSource.state().getValue(DispenserBlock.FACING));
-                if (jailedTag == null) {
-                    // Attempt to capture a quail
+                Level level = blockSource.level();
+                BlockEntity entity = level.getBlockEntity(pos);
+                if (!(entity instanceof NestTileEntity)) {
+                    if (jailedTag == null) {
+                        // Attempt to capture a quail
+                        for (QuailEntity quail : level.getEntitiesOfClass(QuailEntity.class, new AABB(pos), QuailEntity::isAlive)) {
+                            setSuccess(true);
+                            return item.captureQuail(itemStack, quail);
+                        }
+                    } else {
+                        // Release a quail
+                        if (item.releaseQuail(level, pos, itemStack, null)) {
+                            setSuccess(true);
+                            if (item.isReusable()) {
+                                ItemStack empty = new ItemStack(item, 1);
+                                empty.removeTagKey(JailItem.JAILED_TAG_KEY);
+                                return empty;
+                            }
+                            return ItemStack.EMPTY;
+                        }
+                    }
                 } else {
-                    // Release a quail
-                    if (item.releaseQuail(blockSource.level(), pos, itemStack, null)) {
-
+                    NestTileEntity nest = (NestTileEntity) entity;
+                    // Nest is in front of dispenser
+                    if (jailedTag == null) {
+                        // Attempt to withdraw a quail
+                        CompoundTag quail = nest.getQuail();
+                        if (quail != null) {
+                            setSuccess(true);
+                            ItemStack jailed = new ItemStack(item, 1);
+                            jailed.addTagElement(JailItem.JAILED_TAG_KEY, quail);
+                            return jailed;
+                        }
+                    } else {
+                        // Deposit the quail
+                        if (item.depositQuail(itemStack, nest)) {
+                            setSuccess(true);
+                            if (item.isReusable()) {
+                                ItemStack empty = new ItemStack(item, 1);
+                                empty.removeTagKey(JailItem.JAILED_TAG_KEY);
+                                return empty;
+                            }
+                            return ItemStack.EMPTY;
+                        }
                     }
                 }
                 return super.execute(blockSource, itemStack);
             }
         };
+        DispenserBlock.registerBehavior(QUAIL_JAIL.get(), jailBehavior);
+        DispenserBlock.registerBehavior(STRONG_QUAIL_JAIL.get(), jailBehavior);
     }
 
 }

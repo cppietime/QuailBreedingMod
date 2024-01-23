@@ -5,13 +5,13 @@ Update to Parchment mapping version 2023.12.10-1.20.2.
 Update method/API calls to enable building.
 Issue block update on nest quail amount change.
 Add seeds needed for breeding in nest to config.
+Make analog output of nest uniform.
+Add behavior for jails and bubbles in dispensers.
+Add behavior for bubbles used on cauldrons.
 
 TODO:
 Shorten/soften quail sounds.
 Add quail type for pottery sherds, torchflowers, pitcher plants, and cherry trees.
 Consider rebalancing.
-Make analog output of nest uniform.
 Remove hardcoded references to mod namespace.
 Allow nest to accept seeds when holding loot.
-Add behavior for jails and bubbles in dispensers.
-Add behavior for bubbles used on cauldrons.
