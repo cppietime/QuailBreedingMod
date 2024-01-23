@@ -74,6 +74,9 @@ public class QuailType {
     }
 
     public static Item getItem(String id, RandomSource rand) {
+        if (id == null || id.isEmpty()) {
+            return null;
+        }
         Item item;
         if ("#@".contains(id.substring(0, 1))) {
             TagKey<Item> tagkey = ItemTags.create(new ResourceLocation(id.substring(1)));
@@ -122,6 +125,12 @@ public class QuailType {
             type.parent1 = configType.parent1.get();
             type.parent2 = configType.parent2.get();
             type.tier = configType.tier.get();
+            if (!type.layItem.isEmpty() && getItem(type.layItem.replace("@", "#"), null) == null) {
+                BreedMod.LOGGER.warn("Drop item id " + type.layItem + " does not exist");
+            }
+            if (!type.deathItem.isEmpty() && getItem(type.deathItem.replace("@", "#"), null) == null) {
+                BreedMod.LOGGER.warn("Death item id " + type.deathItem + " does not exist");
+            }
             if (type.enabled && !type.parent1.equals("") && !type.parent2.equals("")) {
                 UnorderedPair<String> pair = new UnorderedPair<>(type.parent1, type.parent2);
                 if (Pairings.containsKey(pair)) {
@@ -138,11 +147,17 @@ public class QuailType {
             int deathAmount = config.getIntOrElse("DeathAmount", 0);
             int tier = config.getIntOrElse("Tier", 1);
             String name = config.get("Name");
-            String dropItem = config.getOrElse("DropItem", BreedMod.MODID + ":quail_egg");
+            String layItem = config.getOrElse("DropItem", BreedMod.MODID + ":quail_egg");
             String deathItem = config.getOrElse("DeathItem", "");
             String parent1 = config.getOrElse("Parent1", "");
             String parent2 = config.getOrElse("Parent2", "");
-            QuailType extraType = new QuailType(name, dropItem, layAmount, layRandomAmount, layTime, deathItem, deathAmount);
+            QuailType extraType = new QuailType(name, layItem, layAmount, layRandomAmount, layTime, deathItem, deathAmount);
+            if (!layItem.isEmpty() && getItem(layItem.replace("@", "#"), null) == null) {
+                BreedMod.LOGGER.warn("Drop item id " + layItem + " does not exist");
+            }
+            if (!deathItem.isEmpty() && getItem(deathItem.replace("@", "#"), null) == null) {
+                BreedMod.LOGGER.warn("Death item id " + deathItem + " does not exist");
+            }
             if (!config.getOrElse("Enabled", true))
                 extraType.disable();
             extraType.tier = tier;
