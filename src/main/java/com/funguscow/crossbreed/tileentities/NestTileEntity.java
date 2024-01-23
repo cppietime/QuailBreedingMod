@@ -264,7 +264,7 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
 
     @Override
     public int getContainerSize() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -274,6 +274,9 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
 
     @Override
     public @NotNull ItemStack getItem(int slot) {
+        if (slot != 1) {
+            return ItemStack.EMPTY;
+        }
         if (inventory.isEmpty()) {
             return ItemStack.EMPTY;
         }
@@ -282,6 +285,9 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
 
     @Override
     public @NotNull ItemStack removeItem(int slot, int amount) {
+        if (slot != 1 || amount < 1) {
+            return ItemStack.EMPTY;
+        }
         ItemStack head = inventory.peek();
         if (head == null) {
             return ItemStack.EMPTY;
@@ -295,6 +301,9 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
 
     @Override
     public @NotNull ItemStack removeItemNoUpdate(int slot) {
+        if (slot != 1) {
+            return ItemStack.EMPTY;
+        }
         if (inventory.isEmpty()) {
             return ItemStack.EMPTY;
         }
@@ -303,7 +312,7 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
 
     @Override
     public void setItem(int slot, @NotNull ItemStack item) {
-        if (QuailEntity.BREED_MATERIAL.test(item)) {
+        if (slot == 0 && QuailEntity.BREED_MATERIAL.test(item)) {
             seeds += item.getCount();
         }
     }
@@ -321,16 +330,19 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
 
     @Override
     public int @NotNull [] getSlotsForFace(@NotNull Direction direction) {
+        if (direction == Direction.DOWN) {
+            return new int[]{1};
+        }
         return new int[]{0};
     }
 
     @Override
-    public boolean canPlaceItemThroughFace(int index, @NotNull ItemStack itemStack, @Nullable Direction direction) {
-        return direction != Direction.DOWN && QuailEntity.BREED_MATERIAL.test(itemStack) && seeds < QuailConfig.COMMON.maxSeedsInNest.get();
+    public boolean canPlaceItemThroughFace(int slot, @NotNull ItemStack itemStack, @Nullable Direction direction) {
+        return slot == 0 && direction != Direction.DOWN && QuailEntity.BREED_MATERIAL.test(itemStack) && seeds < QuailConfig.COMMON.maxSeedsInNest.get();
     }
 
     @Override
-    public boolean canTakeItemThroughFace(int index, @NotNull ItemStack itemStack, @NotNull Direction direction) {
-        return direction == Direction.DOWN;
+    public boolean canTakeItemThroughFace(int slot, @NotNull ItemStack itemStack, @NotNull Direction direction) {
+        return slot == 1 && direction == Direction.DOWN;
     }
 }

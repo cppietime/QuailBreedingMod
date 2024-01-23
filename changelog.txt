@@ -9,9 +9,9 @@ Make analog output of nest uniform.
 Add behavior for jails and bubbles in dispensers.
 Add behavior for bubbles used on cauldrons.
 Remove hardcoded references to mod namespace.
+Allow nest to accept seeds when holding loot.
 
 TODO:
 Shorten/soften quail sounds.
 Add quail type for pottery sherds, torchflowers, pitcher plants, and cherry trees.
 Consider rebalancing.
-Allow nest to accept seeds when holding loot.
