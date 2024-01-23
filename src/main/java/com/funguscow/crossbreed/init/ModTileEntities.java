@@ -10,6 +10,7 @@ import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -43,16 +44,13 @@ public class ModTileEntities {
                 () -> BlockEntityType.Builder.of((BlockPos pos, BlockState state) -> newChestTileEntity(pos, state, rows), Arrays.stream(blocks).map(Supplier::get).toArray(Block[]::new)).build(fetchBlockEntityType(name))));
     }
 
-    public static void registerEntities() {
-        try {
-            registerChestTileEntity(4, ModBlocks.CHEST4);
-            registerChestTileEntity(5, ModBlocks.CHEST5);
-            registerChestTileEntity(6, ModBlocks.CHEST6);
-            registerChestTileEntity(7, ModBlocks.CHEST7);
-            registerChestTileEntity(8, ModBlocks.CHEST8);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void register(IEventBus bus) {
+        registerChestTileEntity(4, ModBlocks.CHEST4);
+        registerChestTileEntity(5, ModBlocks.CHEST5);
+        registerChestTileEntity(6, ModBlocks.CHEST6);
+        registerChestTileEntity(7, ModBlocks.CHEST7);
+        registerChestTileEntity(8, ModBlocks.CHEST8);
+        TILE_ENTITIES.register(bus);
     }
 
 }

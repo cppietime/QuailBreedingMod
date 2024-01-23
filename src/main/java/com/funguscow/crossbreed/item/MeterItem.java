@@ -33,6 +33,7 @@ public class MeterItem extends Item {
             return InteractionResult.FAIL;
         QuailEntity quail = (QuailEntity) target;
         QuailEntity.Gene gene = quail.getGene();
+        int seconds = quail.getLayTimer() / 20;
         MutableComponent component =
                 translatable("text." + BreedMod.MODID + ".breed." + quail.getBreedName())
                         .append(CommonComponents.NEW_LINE)
@@ -49,7 +50,7 @@ public class MeterItem extends Item {
                                 translatable("text." + BreedMod.MODID + ".stat.timeRandom", gene.layRandomTime))
                         .append(CommonComponents.NEW_LINE)
                         .append(
-                                translatable("text." + BreedMod.MODID + ".stat.eggTimer", quail.getLayTimer() / 1200f));
+                                translatable("text." + BreedMod.MODID + ".stat.eggTimer", seconds / 60, seconds % 60));
         playerIn.displayClientMessage(component, false);
         return InteractionResult.PASS;
     }

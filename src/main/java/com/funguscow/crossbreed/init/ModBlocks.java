@@ -10,10 +10,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -39,31 +41,43 @@ public class ModBlocks {
                     .explosionResistance(4.0f)
                     .sound(SoundType.STONE)
                     .requiresCorrectToolForDrops()),
-            block -> new BlockItem(block, new Item.Properties())),
+            block -> new BlockItem(block, new Item.Properties()),
+            Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
             CHEST4 = registerBlockAndItem("chest4",
                     CHEST4_BLOCK,
-                    block -> new BlockItem(block, new Item.Properties())),
+                    block -> new BlockItem(block, new Item.Properties()),
+                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
             CHEST5 = registerBlockAndItem("chest5",
                     CHEST5_BLOCK,
-                    block -> new BlockItem(block, new Item.Properties())),
+                    block -> new BlockItem(block, new Item.Properties()),
+                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
             CHEST6 = registerBlockAndItem("chest6",
                     CHEST6_BLOCK,
-                    block -> new BlockItem(block, new Item.Properties())),
+                    block -> new BlockItem(block, new Item.Properties()),
+                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
             CHEST7 = registerBlockAndItem("chest7",
                     CHEST7_BLOCK,
-                    block -> new BlockItem(block, new Item.Properties())),
+                    block -> new BlockItem(block, new Item.Properties()),
+                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
             CHEST8 = registerBlockAndItem("chest8",
                     CHEST8_BLOCK,
-                    block -> new BlockItem(block, new Item.Properties())),
+                    block -> new BlockItem(block, new Item.Properties()),
+                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
             QUAIL_NEST = registerBlockAndItem("quail_nest", QUAIL_NEST_BLOCK,
-                    block -> new BlockItem(block, new Item.Properties()));
+                    block -> new BlockItem(block, new Item.Properties()),
+                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB));
 
-    private static RegistryObject<Block> registerBlockAndItem(String name, Supplier<Block> block, Function<Block, Item> function) {
+    private static RegistryObject<Block> registerBlockAndItem(String name, Supplier<Block> block, Function<Block, Item> function, Optional<ModCreativeTabs.ModCreativeTab> creativeTab) {
         RegistryObject<Block> registry = BLOCKS.register(name, block);
         if (function != null) {
-            ModItems.ITEMS.register(name, () -> function.apply(registry.get()));
+            RegistryObject<Item> item = ModItems.ITEMS.register(name, () -> function.apply(registry.get()));
+            creativeTab.ifPresent(modCreativeTab -> modCreativeTab.add(item));
         }
         return registry;
+    }
+
+    public static void register(IEventBus bus) {
+        BLOCKS.register(bus);
     }
 
 }

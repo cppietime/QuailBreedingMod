@@ -3,6 +3,7 @@ package com.funguscow.crossbreed.init;
 import com.funguscow.crossbreed.BreedMod;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -23,5 +24,9 @@ public class ModSounds {
                     () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("breesources", "quail_plop"))),
             QUAIL_MILK = SOUNDS.register("quail_milk",
                     () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("breesources", "quail_milk")));
+
+    public static void register(IEventBus bus) {
+        SOUNDS.register(bus);
+    }
 
 }

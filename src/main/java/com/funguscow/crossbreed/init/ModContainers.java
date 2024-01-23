@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -36,12 +37,13 @@ public class ModContainers {
                 () -> new MenuType<>((id, player) -> newChestContainer(id, player, rows), FeatureFlags.VANILLA_SET)));
     }
 
-    static {
+    public static void register(IEventBus bus) {
         registerChest(4);
         registerChest(5);
         registerChest(6);
         registerChest(7);
         registerChest(8);
+        CONTAINERS.register(bus);
     }
 
 }

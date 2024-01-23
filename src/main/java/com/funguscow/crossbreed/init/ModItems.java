@@ -5,9 +5,11 @@ import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.item.*;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.food.Foods;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.ForgeSpawnEggItem;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -50,6 +52,23 @@ public class ModItems {
     public static void matchConfig() {
         GenericEggItem quailEgg = (GenericEggItem) QUAIL_EGG.get();
         quailEgg.updateOdds(QuailConfig.COMMON.quailEggChance.get(), QuailConfig.COMMON.quailEggMultiChance.get());
+    }
+
+    public static void register(IEventBus bus) {
+        ITEMS.register(bus);
+        ModCreativeTabs.QUAIL_MOD_TAB.add(QUAIL_EGG);
+        ModCreativeTabs.QUAIL_MOD_TAB.add(WATER_BUBBLE);
+        ModCreativeTabs.QUAIL_MOD_TAB.add(LAVA_BUBBLE);
+        ModCreativeTabs.QUAIL_MOD_TAB.add(QUAIL_JAIL);
+        ModCreativeTabs.QUAIL_MOD_TAB.add(STRONG_QUAIL_JAIL);
+        ModCreativeTabs.QUAIL_MOD_TAB.add(RAW_QUAIL);
+        ModCreativeTabs.QUAIL_MOD_TAB.add(COOKED_QUAIL);
+        ModCreativeTabs.QUAIL_MOD_TAB.add(PICKLED_EGG);
+        ModCreativeTabs.QUAIL_MOD_TAB.add(FRIED_EGG);
+        ModCreativeTabs.QUAIL_MOD_TAB.add(QUAIL_METER);
+        ModCreativeTabs.QUAIL_MOD_TAB.add(QUAIL_SPAWN_EGG);
+
+        ModCreativeTabs.addItemToVanillaTab(CreativeModeTabs.SPAWN_EGGS, QUAIL_SPAWN_EGG);
     }
 
 }

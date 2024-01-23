@@ -21,11 +21,6 @@ import org.apache.logging.log4j.Logger;
 @Mod(BreedMod.MODID)
 public class BreedMod {
 
-    /*public static final CreativeModeTab GROUP = CreativeModeTab.builder()
-            .title(Component.translatable("brees_group"))
-            .icon(() -> new ItemStack(ModItems.QUAIL_JAIL.get()))
-            .build();*/
-
     public static final String MODID = "breesources";
 
     // Directly reference a log4j logger.
@@ -43,13 +38,13 @@ public class BreedMod {
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, QuailConfig.CONFIG_SPEC, "quails.toml");
 
-        ModTileEntities.registerEntities();
-        ModItems.ITEMS.register(bus);
-        ModBlocks.BLOCKS.register(bus);
-        ModEntities.ENTITY_TYPES.register(bus);
-        ModSounds.SOUNDS.register(bus);
-        ModContainers.CONTAINERS.register(bus);
-        ModTileEntities.TILE_ENTITIES.register(bus);
+        ModItems.register(bus);
+        ModBlocks.register(bus);
+        ModEntities.register(bus);
+        ModSounds.register(bus);
+        ModContainers.register(bus);
+        ModTileEntities.register(bus);
+        ModCreativeTabs.register(bus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
