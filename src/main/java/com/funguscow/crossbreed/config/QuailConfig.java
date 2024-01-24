@@ -23,6 +23,7 @@ public class QuailConfig {
 
         public static class QuailTypeConfig {
             public ForgeConfigSpec.IntValue amount, amountRand, time, onDieAmount, tier;
+            public ForgeConfigSpec.DoubleValue fecundity;
             public ForgeConfigSpec.ConfigValue<String> dropItem, deathItem, parent1, parent2;
             public ForgeConfigSpec.BooleanValue enabled;
         }
@@ -33,7 +34,7 @@ public class QuailConfig {
         public ForgeConfigSpec.IntValue quailEggChance, quailEggMultiChance,
                 quailWeight, quailMin, quailMax, quailBreedingTime,
                 maxSeedsInNest, maxQuailsInNest, seedsToBreed;
-        public ForgeConfigSpec.DoubleValue nestTickRate;
+        public ForgeConfigSpec.DoubleValue nestTickRate, manureCompostValue;
 
         public ForgeConfigSpec.ConfigValue<List<Config>> extraQuails;
 
@@ -96,6 +97,11 @@ public class QuailConfig {
                     .defineInRange("QuailBreedingTime", 6000, 1, 144_000);
             builder.pop();
 
+            manureCompostValue = builder
+                    .comment("Odds of manure filling a composter.")
+                    .worldRestart()
+                    .defineInRange("ManureCompostValue", 0.5, 0, 1);
+
             builder.comment("Settings for each type of quail.").push("QuailTypes");
             for (Map.Entry<String, QuailType> type : QuailType.Types.entrySet()) {
                 builder.comment("Config values for quail type " + type.getKey() + ".").push(type.getKey());
@@ -116,6 +122,10 @@ public class QuailConfig {
                         .comment("Amount of extra death loot dropped, if any.")
                         .worldRestart()
                         .defineInRange("DeathAmount", type.getValue().deathAmount, 0, 64);
+                config.fecundity = builder
+                        .comment("Chance of laying an egg each time.")
+                        .worldRestart()
+                        .defineInRange("Fecundity", 1.0, 0, 1);
                 config.dropItem = builder
                         .comment("ID of item dropped as egg.")
                         .worldRestart()

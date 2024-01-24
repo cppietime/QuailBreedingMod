@@ -3,7 +3,10 @@ package com.funguscow.crossbreed.init;
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.entity.QuailEntity;
-import com.funguscow.crossbreed.item.*;
+import com.funguscow.crossbreed.item.BubbleItem;
+import com.funguscow.crossbreed.item.GenericEggItem;
+import com.funguscow.crossbreed.item.JailItem;
+import com.funguscow.crossbreed.item.MeterItem;
 import com.funguscow.crossbreed.tileentities.NestTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
@@ -16,6 +19,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluids;
@@ -59,7 +63,9 @@ public class ModItems {
             QUAIL_METER = ITEMS.register("quail_meter",
                     () -> new MeterItem(new Item.Properties().stacksTo(1))),
             QUAIL_SPAWN_EGG = ITEMS.register("quail_spawn_egg",
-                    () -> new ForgeSpawnEggItem(ModEntities.QUAIL, 0x734011, 0xa4b5bd, new Item.Properties().stacksTo(16)));
+                    () -> new ForgeSpawnEggItem(ModEntities.QUAIL, 0x734011, 0xa4b5bd, new Item.Properties().stacksTo(16))),
+            MANURE = ITEMS.register("manure",
+                    () -> new Item(new Item.Properties()));
 
     public static void matchConfig() {
         GenericEggItem quailEgg = (GenericEggItem) QUAIL_EGG.get();
@@ -79,6 +85,7 @@ public class ModItems {
         ModCreativeTabs.QUAIL_MOD_TAB.add(FRIED_EGG);
         ModCreativeTabs.QUAIL_MOD_TAB.add(QUAIL_METER);
         ModCreativeTabs.QUAIL_MOD_TAB.add(QUAIL_SPAWN_EGG);
+        ModCreativeTabs.QUAIL_MOD_TAB.add(MANURE);
 
         ModCreativeTabs.addItemToVanillaTab(CreativeModeTabs.SPAWN_EGGS, QUAIL_SPAWN_EGG);
     }
@@ -156,6 +163,10 @@ public class ModItems {
         };
         DispenserBlock.registerBehavior(QUAIL_JAIL.get(), jailBehavior);
         DispenserBlock.registerBehavior(STRONG_QUAIL_JAIL.get(), jailBehavior);
+    }
+
+    public static void registerCompost() {
+        ComposterBlock.COMPOSTABLES.put(MANURE.get(), QuailConfig.COMMON.manureCompostValue.get().floatValue());
     }
 
 }

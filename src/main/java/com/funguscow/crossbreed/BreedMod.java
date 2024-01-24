@@ -56,6 +56,7 @@ public class BreedMod {
             QuailType.matchConfig();
             ModItems.matchConfig();
             ModItems.registerDispenser();
+            ModItems.registerCompost();
             ModEntities.registerPlacements();
             ModContainers.registerScreens();
             GenericEggItem.registerDispenser();

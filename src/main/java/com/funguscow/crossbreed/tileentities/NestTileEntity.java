@@ -181,7 +181,7 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
     public void spawnQuails(Level world) {
         for (VirtualQuail quail : quails) {
             CompoundTag nbt = quail.writeToTag();
-            QuailEntity entity = (QuailEntity) ModEntities.QUAIL.get().spawn((ServerLevel) world, getBlockPos(), MobSpawnType.TRIGGERED);
+            QuailEntity entity = ModEntities.QUAIL.get().spawn((ServerLevel) world, getBlockPos(), MobSpawnType.TRIGGERED);
             if (entity != null)
                 entity.readAdditionalSaveData(nbt);
         }

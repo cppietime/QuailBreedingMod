@@ -50,6 +50,9 @@ public class MeterItem extends Item {
                                 translatable("text." + BreedMod.MODID + ".stat.timeRandom", String.format("%.3f", gene.layRandomTime)))
                         .append(CommonComponents.NEW_LINE)
                         .append(
+                                translatable("text." + BreedMod.MODID + ".stat.fecundity", String.format("%.1f", gene.fecundity)))
+                        .append(CommonComponents.NEW_LINE)
+                        .append(
                                 translatable("text." + BreedMod.MODID + ".stat.eggTimer", String.format("%d:%02d", seconds / 60, seconds % 60)));
         playerIn.displayClientMessage(component, false);
         return InteractionResult.PASS;

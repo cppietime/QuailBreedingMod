@@ -2,7 +2,12 @@
   "quail_ambient": {
     "category": "neutral",
     "subtitle": "breesources.subtitle.quail_ambient",
-    "sounds": ["breesources:quail_ambient"]
+    "sounds": [
+        "breesources:quail_ambient",
+        "breesources:quail_ambient0",
+        "breesources:quail_ambient1",
+        "breesources:quail_ambient2"
+    ]
   },
   "quail_hurt": {
     "category": "neutral",

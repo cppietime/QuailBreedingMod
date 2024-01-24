@@ -3,6 +3,7 @@ package com.funguscow.crossbreed.entity;
 import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.init.ModEntities;
 import com.funguscow.crossbreed.init.ModSounds;
+import com.funguscow.crossbreed.util.TagUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -46,19 +47,29 @@ public class QuailEntity extends ModAnimalEntity {
     private static final Lazy<Integer> breedingTimeout = Lazy.of(QuailConfig.COMMON.quailBreedingTime);
 
     public static class Gene {
-        private static final float MUTATION_SIGMA = 0.05f;
+        public static final float LAY_AMOUNT_RANGE = 1.5f;
+        public static final float LAY_TIME_RANGE = 1.5f;
+        public static final float FECUNDITY_RANGE = 4f;
+        public static final float LAY_AMOUNT_SIGMA = 0.08f;
+        public static final float LAY_RANDOM_AMOUNT_SIGMA = 0.08f;
+        public static final float LAY_TIME_SIGMA = 0.08f;
+        public static final float LAY_RANDOM_TIME_SIGMA = 0.08f;
+        public static final float FECUNDITY_SIGMA = 0.5f;
+        public static final float DOMINANCE_SIGMA = 0.05f;
 
         public float layAmount;
         public float layRandomAmount;
         public float layTime;
         public float layRandomTime;
+        public float fecundity;
         public float dominance;
 
         public Gene(RandomSource rand) {
-            layAmount = rand.nextFloat() * 1.5f;
+            layAmount = rand.nextFloat() * LAY_AMOUNT_RANGE;
             layRandomAmount = rand.nextFloat();
-            layTime = rand.nextFloat() * 1.5f;
+            layTime = rand.nextFloat() * LAY_TIME_RANGE;
             layRandomTime = rand.nextFloat();
+            fecundity = rand.nextFloat() * FECUNDITY_RANGE;
             dominance = rand.nextFloat();
         }
 
@@ -67,20 +78,22 @@ public class QuailEntity extends ModAnimalEntity {
 
         public Gene crossover(Gene other, RandomSource rand) {
             Gene child = new Gene();
-            child.layAmount = Math.max(0, rand.nextBoolean() ? layAmount : other.layAmount + (float) rand.nextGaussian() * MUTATION_SIGMA);
-            child.layRandomAmount = Math.max(0, rand.nextBoolean() ? layRandomAmount : other.layRandomAmount + (float) rand.nextGaussian() * MUTATION_SIGMA);
-            child.layTime = Math.max(0, rand.nextBoolean() ? layTime : other.layTime + (float) rand.nextGaussian() * MUTATION_SIGMA);
-            child.layRandomTime = Math.max(0, rand.nextBoolean() ? layRandomTime : other.layRandomTime + (float) rand.nextGaussian() * MUTATION_SIGMA);
-            child.dominance = rand.nextBoolean() ? dominance : other.dominance + (float) rand.nextGaussian() * MUTATION_SIGMA;
+            child.layAmount = Math.max(0, rand.nextBoolean() ? layAmount : other.layAmount + (float) rand.nextGaussian() * LAY_AMOUNT_SIGMA);
+            child.layRandomAmount = Math.max(0, rand.nextBoolean() ? layRandomAmount : other.layRandomAmount + (float) rand.nextGaussian() * LAY_RANDOM_AMOUNT_SIGMA);
+            child.layTime = Math.max(0, rand.nextBoolean() ? layTime : other.layTime + (float) rand.nextGaussian() * LAY_TIME_SIGMA);
+            child.layRandomTime = Math.max(0, rand.nextBoolean() ? layRandomTime : other.layRandomTime + (float) rand.nextGaussian() * LAY_RANDOM_TIME_SIGMA);
+            child.fecundity = Math.max(0, rand.nextBoolean() ? fecundity : other.fecundity + (float) rand.nextGaussian() * FECUNDITY_SIGMA);
+            child.dominance = rand.nextBoolean() ? dominance : other.dominance + (float) rand.nextGaussian() * DOMINANCE_SIGMA;
             return child;
         }
 
         public Gene readFromTag(CompoundTag nbt) {
-            layAmount = nbt.getFloat("LayAmount");
-            layRandomAmount = nbt.getFloat("LayRandomAmount");
-            layTime = nbt.getFloat("LayTime");
-            layRandomTime = nbt.getFloat("LayRandomTime");
-            dominance = nbt.getFloat("Dominance");
+            layAmount = TagUtils.getOrDefault(nbt, "LayAmount", LAY_AMOUNT_RANGE / 2);
+            layRandomAmount = TagUtils.getOrDefault(nbt, "LayRandomAmount", 1f / 2);
+            layTime = TagUtils.getOrDefault(nbt, "LayTime", LAY_TIME_RANGE / 2);
+            layRandomTime = TagUtils.getOrDefault(nbt, "LayRandomTime", 1f / 2);
+            fecundity = TagUtils.getOrDefault(nbt, "Fecundity", 0.5f);
+            dominance = TagUtils.getOrDefault(nbt, "Dominance", 0.5f);
             return this;
         }
 
@@ -90,6 +103,7 @@ public class QuailEntity extends ModAnimalEntity {
             nbt.putFloat("LayRandomAmount", layRandomAmount);
             nbt.putFloat("LayTime", layTime);
             nbt.putFloat("LayRandomTime", layRandomTime);
+            nbt.putFloat("Fecundity", fecundity);
             nbt.putFloat("Dominance", dominance);
             return nbt;
         }
@@ -107,7 +121,7 @@ public class QuailEntity extends ModAnimalEntity {
 
     public QuailEntity(EntityType<? extends Animal> type, Level worldIn) {
         super(type, worldIn);
-        setBreed(QuailType.BROWN);
+        setBreed(QuailType.PAINTED);
         randomBreed();
         setAlleles(new Gene(level().random), new Gene(level().random));
     }
@@ -155,7 +169,7 @@ public class QuailEntity extends ModAnimalEntity {
             case 2 -> breed = QuailType.BROWN;
             default -> breed = QuailType.ELEGANT;
         }
-        entityData.set(BREED_NAME, breed.name);
+        entityData.set(BREED_NAME, breed.name, true);
     }
 
     private void setBreed(QuailType breed) {
@@ -280,8 +294,7 @@ public class QuailEntity extends ModAnimalEntity {
         if (nbt.contains("AlleleB"))
             alleleB.readFromTag(nbt.getCompound("AlleleB"));
         setAlleles(alleleA, alleleB);
-        if (nbt.contains("EggLayTime"))
-            layTimer = nbt.getInt("EggLayTime");
+        layTimer = TagUtils.getOrDefault(nbt, "EggLayTime", layTimer);
     }
 
     @Override

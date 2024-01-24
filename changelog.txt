@@ -1,4 +1,4 @@
-1.6.0.0 Changelog
+1.1.0.0 Changelog
 Update to game version 1.20.2.
 Update to Minecraft Forge version 48.1.0.
 Update to Parchment mapping version 2023.12.10-1.20.2.

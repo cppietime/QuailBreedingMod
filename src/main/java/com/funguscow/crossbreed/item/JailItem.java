@@ -9,6 +9,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -21,7 +23,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -46,6 +47,7 @@ public class JailItem extends Item {
     public ItemStack captureQuail(ItemStack stack, QuailEntity quail) {
         CompoundTag jailTag = new CompoundTag();
         quail.addAdditionalSaveData(jailTag);
+        quail.playSound(SoundEvents.ITEM_PICKUP, 1.0f, 1.0f);
         quail.remove(Entity.RemovalReason.DISCARDED);
         ItemStack jailed = new ItemStack(stack.getItem());
         jailed.addTagElement(JAILED_TAG_KEY, jailTag);
@@ -59,11 +61,6 @@ public class JailItem extends Item {
             return InteractionResult.FAIL;
         }
         QuailEntity quail = (QuailEntity)target;
-        /*jailTag = new CompoundTag();
-        quail.addAdditionalSaveData(jailTag);
-        quail.remove(Entity.RemovalReason.DISCARDED);
-        ItemStack jailed = new ItemStack(stack.getItem());
-        jailed.addTagElement(JAILED_TAG_KEY, jailTag);*/
         ItemStack jailed = captureQuail(stack, quail);
         stack.shrink(1);
         if (!playerIn.addItem(jailed))
@@ -93,25 +90,44 @@ public class JailItem extends Item {
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
         Level world = context.getLevel();
-        if(world.isClientSide())
-            return InteractionResult.SUCCESS;
         ItemStack itemStack = context.getItemInHand();
+
         Player player = context.getPlayer();
-        if(player == null)
+        if(player == null) {
             return InteractionResult.PASS;
+        }
+
         CompoundTag jailTag = itemStack.getTagElement(JAILED_TAG_KEY);
         BlockPos clickedPos = context.getClickedPos();
         BlockEntity tileEntity = world.getBlockEntity(clickedPos);
+
+        if(world.isClientSide()) {
+            if (tileEntity instanceof NestTileEntity) {
+                NestTileEntity nest = (NestTileEntity) tileEntity;
+                if (jailTag == null && nest.numQuails() > 0) {
+                    player.playSound(SoundEvents.ITEM_PICKUP, 1.0f, 1.0f);
+                } else if (jailTag != null && nest.numQuails() < QuailConfig.COMMON.maxQuailsInNest.get()) {
+                    if (reusable || player.isCreative()) {
+                        player.playSound(SoundEvents.ITEM_PICKUP, 1.0f, 1.0f);
+                    } else {
+                        player.playSound(SoundEvents.ITEM_BREAK, 0.8f, 0.8f);
+                    }
+                }
+            } else if (jailTag != null){
+                if (reusable || player.isCreative()) {
+                    player.playSound(SoundEvents.ITEM_PICKUP, 1.0f, 1.0f);
+                } else {
+                    player.playSound(SoundEvents.ITEM_BREAK, 0.8f, 0.8f);
+                }
+            }
+            return InteractionResult.SUCCESS;
+        }
+
         if(!(tileEntity instanceof NestTileEntity)) { // When using to release a quail
             BlockPos spawnPos = clickedPos.relative(context.getClickedFace());
             if (!releaseQuail(world, spawnPos, itemStack, player)) {
                 return InteractionResult.PASS;
             }
-            /*if (jailTag == null)
-                return InteractionResult.PASS;
-            QuailEntity released = (QuailEntity) ModEntities.QUAIL.get().spawn((ServerLevel) world, itemStack, player, context.getClickedPos().relative(context.getClickedFace()), MobSpawnType.SPAWN_EGG, true, false);
-            if(released != null)
-                released.readAdditionalSaveData(jailTag);*/
             ItemStack emptied = new ItemStack(itemStack.getItem());
             itemStack.shrink(1);
             if (reusable && !player.isCreative()) {
@@ -119,7 +135,6 @@ public class JailItem extends Item {
                 if (!player.addItem(emptied))
                     player.drop(emptied, false);
             }
-            return itemStack.isEmpty() ? InteractionResult.PASS : InteractionResult.sidedSuccess(player.level().isClientSide());
         }
         else{ // When using on a nest
             NestTileEntity nestEntity = (NestTileEntity)tileEntity;
@@ -135,9 +150,6 @@ public class JailItem extends Item {
                     player.drop(jailed, false);
             }
             else{ // Deposit a quail
-                /*if(jailTag.getInt("Age") < 0 || nestEntity.numQuails() >= QuailConfig.COMMON.maxQuailsInNest.get()) // If a baby or full
-                    return InteractionResult.PASS;
-                nestEntity.putQuail(jailTag);*/
                 if (!depositQuail(itemStack, nestEntity)) {
                     return InteractionResult.PASS;
                 }
@@ -149,8 +161,8 @@ public class JailItem extends Item {
                         player.drop(emptied, false);
                 }
             }
-            return itemStack.isEmpty() ? InteractionResult.PASS : InteractionResult.sidedSuccess(player.level().isClientSide());
         }
+        return itemStack.isEmpty() ? InteractionResult.PASS : InteractionResult.sidedSuccess(player.level().isClientSide());
     }
 
     @Override
@@ -177,7 +189,10 @@ public class JailItem extends Item {
             tooltip.add(
                     translatable("text." + BreedMod.MODID + ".stat.timeRandom", gene.getFloat("LayRandomTime")));
             tooltip.add(
-                    translatable("text." + BreedMod.MODID + ".stat.eggTimer", jailTag.getInt("EggLayTime") / 1200f));
+                    translatable("text." + BreedMod.MODID + ".stat.fecundity", gene.getFloat("Fecundity")));
+            int seconds = jailTag.getInt("EggLayTime") / 20;
+            tooltip.add(
+                    translatable("text." + BreedMod.MODID + ".stat.eggTimer", String.format("%d:%02d", seconds / 60, seconds % 60)));
         }
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
