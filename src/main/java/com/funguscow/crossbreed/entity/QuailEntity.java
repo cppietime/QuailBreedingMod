@@ -44,6 +44,11 @@ public class QuailEntity extends ModAnimalEntity {
 
     public static final String ID = "quail";
 
+    public static final String BREED_KEY = "Breed",
+            ALLELE_A_KEY = "AlleleA",
+            ALLELE_B_KEY = "AlleleB",
+            TIMER_KEY = "EggLayTime";
+
     private static final Lazy<Integer> breedingTimeout = Lazy.of(QuailConfig.COMMON.quailBreedingTime);
 
     public static class Gene {
@@ -202,7 +207,7 @@ public class QuailEntity extends ModAnimalEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        entityData.define(BREED_NAME, "painted");
+        entityData.define(BREED_NAME, QuailType.PAINTED.name);
     }
 
     @Override
@@ -286,24 +291,24 @@ public class QuailEntity extends ModAnimalEntity {
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        if (nbt.contains("Breed")) {
-            setBreed(QuailType.Types.get(nbt.getString("Breed")));
+        if (nbt.contains(BREED_KEY)) {
+            setBreed(QuailType.Types.get(nbt.getString(BREED_KEY)));
         }
-        if (nbt.contains("AlleleA"))
-            alleleA.readFromTag(nbt.getCompound("AlleleA"));
-        if (nbt.contains("AlleleB"))
-            alleleB.readFromTag(nbt.getCompound("AlleleB"));
+        if (nbt.contains(ALLELE_A_KEY))
+            alleleA.readFromTag(nbt.getCompound(ALLELE_A_KEY));
+        if (nbt.contains(ALLELE_B_KEY))
+            alleleB.readFromTag(nbt.getCompound(ALLELE_B_KEY));
         setAlleles(alleleA, alleleB);
-        layTimer = TagUtils.getOrDefault(nbt, "EggLayTime", layTimer);
+        layTimer = TagUtils.getOrDefault(nbt, TIMER_KEY, layTimer);
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putInt("EggLayTime", layTimer);
-        nbt.putString("Breed", breed.name);
-        nbt.put("AlleleA", alleleA.writeToTag());
-        nbt.put("AlleleB", alleleB.writeToTag());
+        nbt.putInt(TIMER_KEY, layTimer);
+        nbt.putString(BREED_KEY, breed.name);
+        nbt.put(ALLELE_A_KEY, alleleA.writeToTag());
+        nbt.put(ALLELE_B_KEY, alleleB.writeToTag());
     }
 
     @Override

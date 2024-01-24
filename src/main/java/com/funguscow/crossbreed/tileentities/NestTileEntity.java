@@ -47,23 +47,23 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
 
         public VirtualQuail(CompoundTag nbt) {
             extraNBT = nbt.copy();
-            breed = QuailType.Types.get(extraNBT.getString("Breed"));
-            alleleA = new QuailEntity.Gene().readFromTag(extraNBT.getCompound("AlleleA"));
-            alleleB = new QuailEntity.Gene().readFromTag(extraNBT.getCompound("AlleleB"));
-            layTimer = extraNBT.getInt("EggLayTime");
-            extraNBT.remove("EggLayTime");
-            extraNBT.remove("Breed");
-            extraNBT.remove("AlleleA");
-            extraNBT.remove("AlleleB");
+            breed = QuailType.Types.get(extraNBT.getString(QuailEntity.BREED_KEY));
+            alleleA = new QuailEntity.Gene().readFromTag(extraNBT.getCompound(QuailEntity.ALLELE_A_KEY));
+            alleleB = new QuailEntity.Gene().readFromTag(extraNBT.getCompound(QuailEntity.ALLELE_B_KEY));
+            layTimer = extraNBT.getInt(QuailEntity.TIMER_KEY);
+            extraNBT.remove(QuailEntity.TIMER_KEY);
+            extraNBT.remove(QuailEntity.BREED_KEY);
+            extraNBT.remove(QuailEntity.ALLELE_A_KEY);
+            extraNBT.remove(QuailEntity.ALLELE_B_KEY);
             gene = alleleA.dominance >= alleleB.dominance ? alleleA : alleleB;
         }
 
         public CompoundTag writeToTag() {
             CompoundTag nbt = extraNBT.copy();
-            nbt.putString("Breed", breed.name);
-            nbt.putInt("EggLayTime", (int) layTimer);
-            nbt.put("AlleleA", alleleA.writeToTag());
-            nbt.put("AlleleB", alleleB.writeToTag());
+            nbt.putString(QuailEntity.BREED_KEY, breed.name);
+            nbt.putInt(QuailEntity.TIMER_KEY, (int) layTimer);
+            nbt.put(QuailEntity.ALLELE_A_KEY, alleleA.writeToTag());
+            nbt.put(QuailEntity.ALLELE_B_KEY, alleleB.writeToTag());
             return nbt;
         }
 
@@ -138,6 +138,11 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
         }
     }
 
+    public static final String QUAILS_KEY = "Quails",
+        COOLDOWN_KEY = "Cooldown",
+        SEEDS_KEY = "Seeds",
+        INVENTORY_KEY = "Inventory";
+
     @Override
     public void saveAdditional(@NotNull CompoundTag compound) {
         super.saveAdditional(compound);
@@ -145,22 +150,22 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
         for (VirtualQuail quail : quails) {
             listNBT.add(quail.writeToTag());
         }
-        compound.put("Quails", listNBT);
-        compound.putInt("Cooldown", breedCooldown);
-        compound.putInt("Seeds", seeds);
+        compound.put(QUAILS_KEY, listNBT);
+        compound.putInt(COOLDOWN_KEY, breedCooldown);
+        compound.putInt(SEEDS_KEY, seeds);
         ListTag inventoryTag = new ListTag();
         for (ItemStack itemStack : inventory) {
             CompoundTag itemTag = new CompoundTag();
             itemStack.save(itemTag);
             inventoryTag.add(itemTag);
         }
-        compound.put("Inventory", inventoryTag);
+        compound.put(INVENTORY_KEY, inventoryTag);
     }
 
     @Override
     public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
-        ListTag listNBT = nbt.getList("Quails", 10);
+        ListTag listNBT = nbt.getList(QUAILS_KEY, 10);
         quails.clear();
         for (int i = 0; i < listNBT.size(); i++) {
             CompoundTag quailTag = listNBT.getCompound(i);
@@ -168,9 +173,9 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
             quails.add(quail);
         }
         inventory.clear();
-        breedCooldown = nbt.getInt("Cooldown");
-        seeds = nbt.getInt("Seeds");
-        ListTag inventoryTag = nbt.getList("Inventory", 10);
+        breedCooldown = nbt.getInt(COOLDOWN_KEY);
+        seeds = nbt.getInt(SEEDS_KEY);
+        ListTag inventoryTag = nbt.getList(INVENTORY_KEY, 10);
         for (int i = 0; i < inventoryTag.size(); i++) {
             CompoundTag itemTag = inventoryTag.getCompound(i);
             ItemStack itemStack = ItemStack.of(itemTag);
@@ -246,12 +251,12 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
         VirtualQuail parentB = quails.remove(index);
         CompoundTag nbt = parentA.extraNBT.copy();
         QuailType breed = parentA.breed.getOffspring(parentB.breed, random);
-        nbt.putInt("EggLayTime", breed.layTime * 2); // Maximum, is this good tho?
-        nbt.putString("Breed", breed.name);
+        nbt.putInt(QuailEntity.TIMER_KEY, breed.layTime * 2); // Maximum, is this good tho?
+        nbt.putString(QuailEntity.BREED_KEY, breed.name);
         QuailEntity.Gene alleleA = parentA.alleleA.crossover(parentA.alleleB, random);
         QuailEntity.Gene alleleB = parentB.alleleA.crossover(parentB.alleleB, random);
-        nbt.put("AlleleA", alleleA.writeToTag());
-        nbt.put("AlleleB", alleleB.writeToTag());
+        nbt.put(QuailEntity.ALLELE_A_KEY, alleleA.writeToTag());
+        nbt.put(QuailEntity.ALLELE_B_KEY, alleleB.writeToTag());
         VirtualQuail child = new VirtualQuail(nbt);
         quails.add(parentA);
         quails.add(parentB);
