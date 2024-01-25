@@ -1,6 +1,7 @@
 package com.funguscow.crossbreed.init;
 
 import com.funguscow.crossbreed.BreedMod;
+import com.funguscow.crossbreed.tileentities.GeneratorTileEntity;
 import com.funguscow.crossbreed.tileentities.NestTileEntity;
 import com.funguscow.crossbreed.tileentities.VarChestTileEntity;
 import com.mojang.datafixers.types.Type;
@@ -31,7 +32,9 @@ public class ModTileEntities {
     public static final Map<Integer, RegistryObject<BlockEntityType<VarChestTileEntity>>> CHEST_TYPES = new HashMap<>();
 
     public static final RegistryObject<BlockEntityType<?>> QUAIL_NEST = TILE_ENTITIES.register("quail_nest",
-            () -> BlockEntityType.Builder.of(NestTileEntity::new, ModBlocks.QUAIL_NEST.get()).build(fetchBlockEntityType("quail_nest")));
+            () -> BlockEntityType.Builder.of(NestTileEntity::new, ModBlocks.QUAIL_NEST.get()).build(fetchBlockEntityType("quail_nest"))),
+        GENERATOR = TILE_ENTITIES.register("quail_generator",
+                () -> BlockEntityType.Builder.of(GeneratorTileEntity::new, ModBlocks.GENERATOR.get()).build(fetchBlockEntityType("quail_generator")));
 
     public static VarChestTileEntity newChestTileEntity(BlockPos pos, BlockState state, int rows) {
         return new VarChestTileEntity(CHEST_TYPES.get(rows).get(), pos, state, rows);

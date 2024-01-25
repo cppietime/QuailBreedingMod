@@ -1,6 +1,7 @@
 package com.funguscow.crossbreed.init;
 
 import com.funguscow.crossbreed.BreedMod;
+import com.funguscow.crossbreed.block.GeneratorBlock;
 import com.funguscow.crossbreed.block.NestBlock;
 import com.funguscow.crossbreed.block.VarChestBlock;
 import com.funguscow.crossbreed.block.VoiderBlock;
@@ -32,7 +33,8 @@ public class ModBlocks {
             CHEST6_BLOCK = () -> newChestBlock(6),
             CHEST7_BLOCK = () -> newChestBlock(7),
             CHEST8_BLOCK = () -> newChestBlock(8),
-            QUAIL_NEST_BLOCK = () -> new NestBlock(BlockBehaviour.Properties.copy(Blocks.HAY_BLOCK));
+            QUAIL_NEST_BLOCK = () -> new NestBlock(BlockBehaviour.Properties.copy(Blocks.HAY_BLOCK)),
+            GENERATOR_BLOCK = () -> new GeneratorBlock(BlockBehaviour.Properties.copy(Blocks.STONE));
 
     public static final RegistryObject<Block> VOIDER = registerBlockAndItem("voider",
             () -> new VoiderBlock(BlockBehaviour.Properties
@@ -65,7 +67,10 @@ public class ModBlocks {
                     Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
             QUAIL_NEST = registerBlockAndItem("quail_nest", QUAIL_NEST_BLOCK,
                     block -> new BlockItem(block, new Item.Properties()),
-                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB));
+                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
+            GENERATOR = registerBlockAndItem("quail_generator", GENERATOR_BLOCK,
+                    block -> new BlockItem(block, new Item.Properties()),
+                    Optional.empty());
 
     private static RegistryObject<Block> registerBlockAndItem(String name, Supplier<Block> block, Function<Block, Item> function, Optional<ModCreativeTabs.ModCreativeTab> creativeTab) {
         RegistryObject<Block> registry = BLOCKS.register(name, block);

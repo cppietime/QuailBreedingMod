@@ -12,6 +12,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -22,6 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -29,6 +33,10 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.EnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,6 +87,9 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
     private int breedCooldown;
     private int seeds;
 
+    private final EnergyStorage energy = new EnergyStorage(100_000, 10, 0, 0);
+    private final LazyOptional<EnergyStorage> energyOptional = LazyOptional.of(() -> energy);
+
     public NestTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.QUAIL_NEST.get(), pos, state);
         quails = new Stack<>();
@@ -89,14 +100,14 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
 
     public void putQuail(CompoundTag nbt) {
         quails.add(new VirtualQuail(nbt));
-        setChanged();
+        sendUpdate();
     }
 
     public CompoundTag getQuail() {
         if (quails.isEmpty())
             return null;
         VirtualQuail head = quails.pop();
-        setChanged();
+        sendUpdate();
         return head.writeToTag();
     }
 
@@ -117,12 +128,15 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
     }
 
     private void selfTick(Level level, BlockPos pos, BlockState state) {
+        boolean changed = false;
+
         for (VirtualQuail quail : quails) {
             quail.layTimer -= QuailConfig.COMMON.nestTickRate.get();
             if (quail.layTimer <= 0) {
                 quail.resetTimer(level.random);
                 ItemStack nextThing = quail.breed.getLoot(level.random, quail.gene);
                 inventory.add(nextThing);
+                changed = true;
             }
         }
         if (numQuails() >= 2 && !level.isClientSide()) {
@@ -132,9 +146,14 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
             int neededSeeds = QuailConfig.COMMON.seedsToBreed.get();
             if (breedCooldown <= 0 && seeds >= neededSeeds && numQuails() < QuailConfig.COMMON.maxQuailsInNest.get()) {
                 breedOne(level.random);
+                changed = true;
                 breedCooldown = QuailConfig.COMMON.quailBreedingTime.get();
                 seeds -= neededSeeds;
             }
+        }
+
+        if (changed) {
+            setChanged();
         }
     }
 
@@ -160,6 +179,7 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
             inventoryTag.add(itemTag);
         }
         compound.put(INVENTORY_KEY, inventoryTag);
+        compound.put("Energy", energy.serializeNBT());
     }
 
     @Override
@@ -180,6 +200,9 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
             CompoundTag itemTag = inventoryTag.getCompound(i);
             ItemStack itemStack = ItemStack.of(itemTag);
             inventory.add(itemStack);
+        }
+        if (nbt.contains("Energy")) {
+            energy.deserializeNBT(nbt.get("Energy"));
         }
     }
 
@@ -349,5 +372,41 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
     @Override
     public boolean canTakeItemThroughFace(int slot, @NotNull ItemStack itemStack, @NotNull Direction direction) {
         return slot == 1 && direction == Direction.DOWN;
+    }
+
+    @Override
+    @NotNull
+    public CompoundTag getUpdateTag() {
+        CompoundTag nbt = super.getUpdateTag();
+        saveAdditional(nbt);
+        return nbt;
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    public void sendUpdate() {
+        setChanged();
+
+        if (level != null) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        }
+    }
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap) {
+        /*if (cap == ForgeCapabilities.ENERGY) {
+            return energyOptional.cast();
+        }*/
+        return super.getCapability(cap);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        energyOptional.invalidate();
     }
 }
