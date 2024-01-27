@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "HHH",
+    "HOH",
     "HJH",
-    "EEE"
+    "HEH"
   ],
   "key": {
     "H": {
@@ -13,7 +13,10 @@
       "item": "breesources:strong_quail_jail"
     },
     "E": {
-      "item": "breesources:quail_egg"
+      "item": "minecraft:emerald_block"
+    },
+    "O": {
+      "item": "minecraft:hopper"
     }
   },
   "result": {

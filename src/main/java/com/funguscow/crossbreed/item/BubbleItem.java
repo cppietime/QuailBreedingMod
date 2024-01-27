@@ -58,8 +58,8 @@ public class BubbleItem extends Item {
                 BlockState blockstate = worldIn.getBlockState(blockpos);
                 BlockPos blockpos2 = canBlockContainFluid(playerIn, worldIn, blockpos, blockstate) ? blockpos : blockpos1;
                 if (this.tryPlaceContainedLiquid(playerIn, worldIn, blockpos2, raytraceresult)) {
-                    if (playerIn instanceof ServerPlayer) {
-                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) playerIn, blockpos2, itemstack);
+                    if (playerIn instanceof ServerPlayer serverPlayer) {
+                        CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, blockpos2, itemstack);
                     }
 
                     playerIn.awardStat(Stats.ITEM_USED.get(this));
@@ -101,8 +101,8 @@ public class BubbleItem extends Item {
                 }
 
                 return true;
-            } else if (block instanceof LiquidBlockContainer && ((LiquidBlockContainer) block).canPlaceLiquid(player, worldIn, posIn, blockstate, fluid)) {
-                ((LiquidBlockContainer) block).placeLiquid(worldIn, posIn, blockstate, ((FlowingFluid) this.fluid).getSource(false));
+            } else if (block instanceof LiquidBlockContainer lbc && ((LiquidBlockContainer) block).canPlaceLiquid(player, worldIn, posIn, blockstate, fluid)) {
+                lbc.placeLiquid(worldIn, posIn, blockstate, ((FlowingFluid) this.fluid).getSource(false));
                 this.playEmptySound(player, worldIn, posIn);
                 return true;
             } else if (block instanceof AbstractCauldronBlock) {
@@ -133,8 +133,8 @@ public class BubbleItem extends Item {
     }
 
     private boolean canBlockContainFluid(Player playerIn, Level worldIn, BlockPos posIn, BlockState blockstate) {
-        return (blockstate.getBlock() instanceof LiquidBlockContainer &&
-                ((LiquidBlockContainer) blockstate.getBlock()).canPlaceLiquid(playerIn, worldIn, posIn, blockstate, this.fluid)) ||
+        return (blockstate.getBlock() instanceof LiquidBlockContainer lbc &&
+                lbc.canPlaceLiquid(playerIn, worldIn, posIn, blockstate, this.fluid)) ||
                 (blockstate.getBlock() instanceof AbstractCauldronBlock &&
                         (fluid == Fluids.WATER || fluid == Fluids.LAVA));
     }

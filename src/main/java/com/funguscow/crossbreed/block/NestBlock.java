@@ -68,8 +68,7 @@ public class NestBlock extends BaseEntityBlock {
     @Override
     public int getAnalogOutputSignal(@NotNull BlockState blockState, Level worldIn, @NotNull BlockPos pos) {
         BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-        if (tileEntity instanceof NestTileEntity) {
-            NestTileEntity nest = (NestTileEntity) tileEntity;
+        if (tileEntity instanceof NestTileEntity nest) {
             int numQuails = nest.numQuails();
             if (numQuails == 0) {
                 return 0;
@@ -84,8 +83,7 @@ public class NestBlock extends BaseEntityBlock {
     @Override
     public void playerDestroy(@NotNull Level worldIn, @NotNull Player player, @NotNull BlockPos pos, @NotNull BlockState state, BlockEntity te, @NotNull ItemStack stack) {
         super.playerDestroy(worldIn, player, pos, state, te, stack);
-        if (!worldIn.isClientSide() && te instanceof NestTileEntity) {
-            NestTileEntity nestTileEntity = (NestTileEntity) te;
+        if (!worldIn.isClientSide() && te instanceof NestTileEntity nestTileEntity) {
             if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) == 0) {
                 nestTileEntity.spawnQuails(worldIn);
                 worldIn.updateNeighbourForOutputSignal(pos, this);
@@ -96,8 +94,7 @@ public class NestBlock extends BaseEntityBlock {
     public void playerWillDestroy(Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
         if (!worldIn.isClientSide && player.isCreative() && worldIn.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)) {
             BlockEntity tileentity = worldIn.getBlockEntity(pos);
-            if (tileentity instanceof NestTileEntity) {
-                NestTileEntity nestTileEntity = (NestTileEntity) tileentity;
+            if (tileentity instanceof NestTileEntity nestTileEntity) {
                 ItemStack itemstack = new ItemStack(this);
                 boolean flag = nestTileEntity.numQuails() > 0;
                 if (!flag) {
@@ -122,8 +119,7 @@ public class NestBlock extends BaseEntityBlock {
         Entity entity = builder.getOptionalParameter(LootContextParams.THIS_ENTITY);
         if (entity instanceof PrimedTnt || entity instanceof Creeper || entity instanceof WitherSkull || entity instanceof WitherBoss || entity instanceof MinecartTNT) {
             BlockEntity tileentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-            if (tileentity instanceof NestTileEntity) {
-                NestTileEntity nestTileEntity = (NestTileEntity) tileentity;
+            if (tileentity instanceof NestTileEntity nestTileEntity) {
                 nestTileEntity.spawnQuails(builder.getLevel());
             }
         }
@@ -137,8 +133,7 @@ public class NestBlock extends BaseEntityBlock {
         boolean triggered = state.getValue(TRIGGERED);
         if (powered && !triggered) {
             BlockEntity entity = level.getBlockEntity(pos);
-            if (entity instanceof NestTileEntity) {
-                NestTileEntity nestEntity = (NestTileEntity) entity;
+            if (entity instanceof NestTileEntity nestEntity) {
                 nestEntity.killOne(level);
             }
             level.setBlock(pos, state.setValue(TRIGGERED, true), 4);

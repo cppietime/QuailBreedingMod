@@ -6,6 +6,9 @@
     },
     {
       "tag": "breesources:eggs"
+    },
+    {
+      "item": "minecraft:sugar"
     }
   ],
   "result": {

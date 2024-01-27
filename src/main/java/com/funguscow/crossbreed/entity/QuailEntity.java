@@ -52,8 +52,8 @@ public class QuailEntity extends ModAnimalEntity {
     private static final Lazy<Integer> breedingTimeout = Lazy.of(QuailConfig.COMMON.quailBreedingTime);
 
     public static class Gene {
-        public static final float LAY_AMOUNT_RANGE = 1.5f;
-        public static final float LAY_TIME_RANGE = 1.5f;
+        public static final float LAY_AMOUNT_MIN = 0.1f, LAY_AMOUNT_MAX = 2.5f, LAY_AMOUNT_RANGE = LAY_AMOUNT_MAX - LAY_AMOUNT_MIN;
+        public static final float LAY_TIME_MIN = 0.1f, LAY_TIME_MAX = 4f, LAY_TIME_RANGE = LAY_TIME_MAX - LAY_TIME_MIN;
         public static final float FECUNDITY_RANGE = 4f;
         public static final float LAY_AMOUNT_SIGMA = 0.08f;
         public static final float LAY_RANDOM_AMOUNT_SIGMA = 0.08f;
@@ -70,9 +70,9 @@ public class QuailEntity extends ModAnimalEntity {
         public float dominance;
 
         public Gene(RandomSource rand) {
-            layAmount = rand.nextFloat() * LAY_AMOUNT_RANGE;
+            layAmount = rand.nextFloat() * LAY_AMOUNT_RANGE + LAY_AMOUNT_MIN;
             layRandomAmount = rand.nextFloat();
-            layTime = rand.nextFloat() * LAY_TIME_RANGE;
+            layTime = rand.nextFloat() * LAY_TIME_RANGE + LAY_TIME_MIN;
             layRandomTime = rand.nextFloat();
             fecundity = rand.nextFloat() * FECUNDITY_RANGE;
             dominance = rand.nextFloat();
@@ -83,9 +83,9 @@ public class QuailEntity extends ModAnimalEntity {
 
         public Gene crossover(Gene other, RandomSource rand) {
             Gene child = new Gene();
-            child.layAmount = Math.max(0, rand.nextBoolean() ? layAmount : other.layAmount + (float) rand.nextGaussian() * LAY_AMOUNT_SIGMA);
+            child.layAmount = Mth.clamp(rand.nextBoolean() ? layAmount : other.layAmount + (float) rand.nextGaussian() * LAY_AMOUNT_SIGMA, LAY_AMOUNT_MIN, LAY_AMOUNT_MAX);
             child.layRandomAmount = Math.max(0, rand.nextBoolean() ? layRandomAmount : other.layRandomAmount + (float) rand.nextGaussian() * LAY_RANDOM_AMOUNT_SIGMA);
-            child.layTime = Math.max(0, rand.nextBoolean() ? layTime : other.layTime + (float) rand.nextGaussian() * LAY_TIME_SIGMA);
+            child.layTime = Mth.clamp(rand.nextBoolean() ? layTime : other.layTime + (float) rand.nextGaussian() * LAY_TIME_SIGMA, LAY_TIME_MIN, LAY_TIME_MAX);
             child.layRandomTime = Math.max(0, rand.nextBoolean() ? layRandomTime : other.layRandomTime + (float) rand.nextGaussian() * LAY_RANDOM_TIME_SIGMA);
             child.fecundity = Math.max(0, rand.nextBoolean() ? fecundity : other.fecundity + (float) rand.nextGaussian() * FECUNDITY_SIGMA);
             child.dominance = rand.nextBoolean() ? dominance : other.dominance + (float) rand.nextGaussian() * DOMINANCE_SIGMA;
@@ -93,9 +93,9 @@ public class QuailEntity extends ModAnimalEntity {
         }
 
         public Gene readFromTag(CompoundTag nbt) {
-            layAmount = TagUtils.getOrDefault(nbt, "LayAmount", LAY_AMOUNT_RANGE / 2);
+            layAmount = TagUtils.getOrDefault(nbt, "LayAmount", LAY_AMOUNT_RANGE / 2 + LAY_AMOUNT_MIN);
             layRandomAmount = TagUtils.getOrDefault(nbt, "LayRandomAmount", 1f / 2);
-            layTime = TagUtils.getOrDefault(nbt, "LayTime", LAY_TIME_RANGE / 2);
+            layTime = TagUtils.getOrDefault(nbt, "LayTime", LAY_TIME_RANGE / 2 + LAY_TIME_MIN);
             layRandomTime = TagUtils.getOrDefault(nbt, "LayRandomTime", 1f / 2);
             fecundity = TagUtils.getOrDefault(nbt, "Fecundity", 0.5f);
             dominance = TagUtils.getOrDefault(nbt, "Dominance", 0.5f);
@@ -126,7 +126,6 @@ public class QuailEntity extends ModAnimalEntity {
 
     public QuailEntity(EntityType<? extends Animal> type, Level worldIn) {
         super(type, worldIn);
-        setBreed(QuailType.PAINTED);
         randomBreed();
         setAlleles(new Gene(level().random), new Gene(level().random));
     }
@@ -155,7 +154,7 @@ public class QuailEntity extends ModAnimalEntity {
 
     private void resetTimer() {
         layTimer = breed.layTime + random.nextInt(breed.layTime + 1);
-        layTimer *= gene.layTime + random.nextFloat() * gene.layRandomTime;
+        layTimer = (int) (layTimer * (gene.layTime + random.nextFloat() * gene.layRandomTime));
         layTimer = Math.max(600, layTimer);
     }
 
@@ -179,7 +178,7 @@ public class QuailEntity extends ModAnimalEntity {
 
     private void setBreed(QuailType breed) {
         this.breed = breed;
-        entityData.set(BREED_NAME, breed.name);
+        entityData.set(BREED_NAME, breed.name, true);
     }
 
     protected int getBreedingTimeout() {
@@ -317,7 +316,7 @@ public class QuailEntity extends ModAnimalEntity {
         if (this.isRemoved() || this.dead)
             return;
         super.die(source);
-        if (breed.deathItem == null || breed.deathItem.equals("") || breed.deathAmount <= 0)
+        if (breed.deathItem == null || breed.deathItem.isEmpty() || breed.deathAmount <= 0)
             return;
         int lootingLevel = ForgeHooks.getLootingLevel(this, source.getEntity(), source);
         int amount = breed.deathAmount + random.nextInt(Math.max(1, breed.deathAmount) + lootingLevel);

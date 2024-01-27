@@ -29,9 +29,8 @@ public class MeterItem extends Item {
     public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack stack, Player playerIn, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
         if (playerIn.level().isClientSide())
             return InteractionResult.FAIL;
-        if (!(target instanceof QuailEntity))
+        if (!(target instanceof QuailEntity quail))
             return InteractionResult.FAIL;
-        QuailEntity quail = (QuailEntity) target;
         QuailEntity.Gene gene = quail.getGene();
         int seconds = quail.getLayTimer() / 20;
         MutableComponent component =
@@ -65,9 +64,8 @@ public class MeterItem extends Item {
         if (world.isClientSide())
             return InteractionResult.FAIL;
         BlockEntity entity = world.getBlockEntity(pos);
-        if (!(entity instanceof NestTileEntity))
+        if (!(entity instanceof NestTileEntity nest))
             return InteractionResult.FAIL;
-        NestTileEntity nest = (NestTileEntity) entity;
         nest.printQuails(context.getPlayer());
         return InteractionResult.FAIL;
     }

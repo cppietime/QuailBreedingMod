@@ -10,7 +10,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -57,10 +56,9 @@ public class JailItem extends Item {
     @Override
     public @NotNull InteractionResult interactLivingEntity(ItemStack stack, @NotNull Player playerIn, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
         CompoundTag jailTag = stack.getTagElement(JAILED_TAG_KEY);
-        if(jailTag != null || !(target instanceof QuailEntity)){
+        if(jailTag != null || !(target instanceof QuailEntity quail)){
             return InteractionResult.FAIL;
         }
-        QuailEntity quail = (QuailEntity)target;
         ItemStack jailed = captureQuail(stack, quail);
         stack.shrink(1);
         if (!playerIn.addItem(jailed))
@@ -102,8 +100,7 @@ public class JailItem extends Item {
         BlockEntity tileEntity = world.getBlockEntity(clickedPos);
 
         if(world.isClientSide()) {
-            if (tileEntity instanceof NestTileEntity) {
-                NestTileEntity nest = (NestTileEntity) tileEntity;
+            if (tileEntity instanceof NestTileEntity nest) {
                 if (jailTag == null && nest.numQuails() > 0) {
                     player.playSound(SoundEvents.ITEM_PICKUP, 1.0f, 1.0f);
                 } else if (jailTag != null && nest.numQuails() < QuailConfig.COMMON.maxQuailsInNest.get()) {
@@ -123,7 +120,7 @@ public class JailItem extends Item {
             return InteractionResult.SUCCESS;
         }
 
-        if(!(tileEntity instanceof NestTileEntity)) { // When using to release a quail
+        if(!(tileEntity instanceof NestTileEntity nestEntity)) { // When using to release a quail
             BlockPos spawnPos = clickedPos.relative(context.getClickedFace());
             if (!releaseQuail(world, spawnPos, itemStack, player)) {
                 return InteractionResult.PASS;
@@ -137,7 +134,6 @@ public class JailItem extends Item {
             }
         }
         else{ // When using on a nest
-            NestTileEntity nestEntity = (NestTileEntity)tileEntity;
             if(jailTag == null){ // Withdraw quail
                 CompoundTag quail = nestEntity.getQuail();
                 if(quail == null) // Empty so just quit

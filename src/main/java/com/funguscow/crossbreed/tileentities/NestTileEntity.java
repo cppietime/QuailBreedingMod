@@ -34,7 +34,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.EnergyStorage;
 import org.jetbrains.annotations.NotNull;
@@ -120,10 +119,9 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
     }
 
     public static <T extends BlockEntity> void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull T self) {
-        if (!(self instanceof NestTileEntity)) {
+        if (!(self instanceof NestTileEntity me)) {
             return;
         }
-        NestTileEntity me = (NestTileEntity) self;
         me.selfTick(level, pos, state);
     }
 

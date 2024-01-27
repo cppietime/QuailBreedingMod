@@ -21,6 +21,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 
 public class GenericEggEntity extends ThrowableItemProjectile {
 
@@ -61,7 +63,7 @@ public class GenericEggEntity extends ThrowableItemProjectile {
 
     @Override
     protected @NotNull Item getDefaultItem() {
-        return ForgeRegistries.ITEMS.getValue(new ResourceLocation(entityData.get(ITEM_ID)));
+        return Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entityData.get(ITEM_ID))));
     }
 
     /**
@@ -99,7 +101,8 @@ public class GenericEggEntity extends ThrowableItemProjectile {
                 }
 
                 for (int j = 0; j < i; ++j) {
-                    Animal animalEntity = ((EntityType<? extends Animal>) ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(animal))).create(this.level());
+                    Animal animalEntity = ((EntityType<? extends Animal>) Objects.requireNonNull(ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(animal))))
+                            .create(this.level());
                     if (animalEntity == null)
                         continue;
                     animalEntity.setAge(-24000);

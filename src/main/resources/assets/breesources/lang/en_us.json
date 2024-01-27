@@ -244,5 +244,9 @@
   "text.breesources.breed.moss": "Moss Quail",
   "text.breesources.breed.glow": "Glowing Quail",
   "text.breesources.breed.sculk": "Sculk Quail",
-  "text.breesources.breed.sculk_sensor": "Deep Dark Quail"
+  "text.breesources.breed.sculk_sensor": "Deep Dark Quail",
+  "text.breesources.breed.cherry": "Cherry Quail",
+  "text.breesources.breed.sherd": "Pottery Quail",
+  "text.breesources.breed.torchflower": "Torchflower Quail",
+  "text.breesources.breed.pitcher": "Pitcher Plant Quail"
 }

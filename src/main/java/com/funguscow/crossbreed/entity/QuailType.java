@@ -18,8 +18,10 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class QuailType {
     public static Map<String, QuailType> Types = new HashMap<>();
@@ -92,7 +94,7 @@ public class QuailType {
         if ("#@".contains(id.substring(0, 1))) {
             TagKey<Item> tagkey = ItemTags.create(new ResourceLocation(id.substring(1)));
             ITag<Item> tag = ForgeRegistries.ITEMS.tags().getTag(tagkey);
-            List<Item> items = tag.stream().collect(Collectors.toList());
+            List<Item> items = tag.stream().toList();
             if (items.isEmpty())
                 return null;
             if (id.charAt(0) == '#') // First item
@@ -123,7 +125,7 @@ public class QuailType {
         List<Float> tiers = Arrays.stream(QuailConfig.COMMON.tierOdds)
                 .map(ForgeConfigSpec.DoubleValue::get)
                 .map(Double::floatValue)
-                .collect(Collectors.toList());
+                .toList();
         for (Map.Entry<String, QuailType> entry : Types.entrySet()) {
             QuailType type = entry.getValue();
             String key = entry.getKey();
@@ -144,7 +146,7 @@ public class QuailType {
             if (!type.deathItem.isEmpty() && getItem(type.deathItem.replace("@", "#"), null) == null) {
                 BreedMod.LOGGER.warn("Death item id " + type.deathItem + " does not exist");
             }
-            if (type.enabled && !type.parent1.equals("") && !type.parent2.equals("")) {
+            if (type.enabled && !type.parent1.isEmpty() && !type.parent2.isEmpty()) {
                 UnorderedPair<String> pair = new UnorderedPair<>(type.parent1, type.parent2);
                 if (Pairings.containsKey(pair)) {
                     throw new IllegalStateException("Pair " + type.parent1 + "+" + type.parent2 + " has already been registered.");
@@ -176,7 +178,7 @@ public class QuailType {
             extraType.tier = tier;
             extraType.parent1 = parent1;
             extraType.parent2 = parent2;
-            if (!parent1.equals("") && !parent2.equals("") && extraType.enabled) {
+            if (!parent1.isEmpty() && !parent2.isEmpty() && extraType.enabled) {
                 UnorderedPair<String> pair = new UnorderedPair<>(parent1, parent2);
                 if (Pairings.containsKey(pair)) {
                     throw new IllegalStateException("Pair " + extraType.parent1 + "+" + extraType.parent2 + " has already been registered.");

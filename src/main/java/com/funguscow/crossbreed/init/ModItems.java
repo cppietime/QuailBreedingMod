@@ -29,6 +29,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 public class ModItems {
 
@@ -93,7 +94,7 @@ public class ModItems {
     public static void registerDispenser() {
         DefaultDispenseItemBehavior bubbleBehavior = new DefaultDispenseItemBehavior() {
             @Override
-            protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+            protected @NotNull ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
                 BubbleItem bubble = (BubbleItem)itemStack.getItem();
                 BlockPos pos = blockSource.pos().relative(blockSource.state().getValue(DispenserBlock.FACING));
                 if (bubble.tryPlaceContainedLiquid(null, blockSource.level(), pos, null)) {
@@ -108,13 +109,13 @@ public class ModItems {
 
         OptionalDispenseItemBehavior jailBehavior = new OptionalDispenseItemBehavior() {
             @Override
-            protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+            protected @NotNull ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
                 JailItem item = (JailItem)itemStack.getItem();
                 CompoundTag jailedTag = itemStack.getTagElement(JailItem.JAILED_TAG_KEY);
                 BlockPos pos = blockSource.pos().relative(blockSource.state().getValue(DispenserBlock.FACING));
                 Level level = blockSource.level();
                 BlockEntity entity = level.getBlockEntity(pos);
-                if (!(entity instanceof NestTileEntity)) {
+                if (!(entity instanceof NestTileEntity nest)) {
                     if (jailedTag == null) {
                         // Attempt to capture a quail
                         for (QuailEntity quail : level.getEntitiesOfClass(QuailEntity.class, new AABB(pos), QuailEntity::isAlive)) {
@@ -134,7 +135,6 @@ public class ModItems {
                         }
                     }
                 } else {
-                    NestTileEntity nest = (NestTileEntity) entity;
                     // Nest is in front of dispenser
                     if (jailedTag == null) {
                         // Attempt to withdraw a quail

@@ -1,6 +1,5 @@
 package com.funguscow.crossbreed.tileentities;
 
-import com.funguscow.crossbreed.init.ModBlocks;
 import com.funguscow.crossbreed.init.ModItems;
 import com.funguscow.crossbreed.init.ModTileEntities;
 import com.funguscow.crossbreed.util.TagUtils;
@@ -20,7 +19,6 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
