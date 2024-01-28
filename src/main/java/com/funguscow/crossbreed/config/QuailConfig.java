@@ -3,6 +3,8 @@ package com.funguscow.crossbreed.config;
 import com.electronwill.nightconfig.core.Config;
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.entity.QuailType;
+import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -28,18 +30,29 @@ public class QuailConfig {
             public ForgeConfigSpec.BooleanValue enabled;
         }
 
+        public static class TreeSpeciesConfig {
+            public ForgeConfigSpec.ConfigValue<String> logBlock, leafBlock, trunkType, leafType, fruit, parent1, parent2;
+            public ForgeConfigSpec.IntValue width, minWidth, minHeight;
+            public ForgeConfigSpec.DoubleValue heightRange, hybridChance;
+            public ForgeConfigSpec.BooleanValue enabled;
+        }
+
         public Map<String, Common.QuailTypeConfig> quailTypes;
         public ForgeConfigSpec.DoubleValue[] tierOdds;
 
         public ForgeConfigSpec.IntValue quailEggChance, quailEggMultiChance,
                 quailWeight, quailMin, quailMax, quailBreedingTime,
                 maxSeedsInNest, maxQuailsInNest, seedsToBreed;
+
+        public Map<String, TreeSpeciesConfig> treeSpecies;
         public ForgeConfigSpec.DoubleValue nestTickRate, manureCompostValue;
 
         public ForgeConfigSpec.ConfigValue<List<Config>> extraQuails;
+        public ForgeConfigSpec.ConfigValue<List<Config>> extraTrees;
 
         public Common(ForgeConfigSpec.Builder builder) {
             quailTypes = new HashMap<>();
+            treeSpecies = new HashMap<>();
             tierOdds = new ForgeConfigSpec.DoubleValue[7];
 
             builder.comment("Nest-related config.").push("Nest");
@@ -157,6 +170,71 @@ public class QuailConfig {
                     .comment("Additional quail types, copy the format from default quails, but add a Name property.")
                     .worldRestart()
                     .define("Extras", new ArrayList<>());
+            builder.pop();
+
+            builder.comment("Settings for each tree species").push("TreeSpecies");
+            for (Map.Entry<String, TreeSpecies> type : TreeSpecies.Species.entrySet()) {
+                builder.comment("Config for tree species " + type.getKey()).push(type.getKey());
+                TreeSpeciesConfig config = new TreeSpeciesConfig();
+                config.logBlock = builder
+                        .comment("Resource key for log block")
+                        .worldRestart()
+                        .define("LogBlock", type.getValue().logBlock.toString());
+                config.leafBlock = builder
+                        .comment("Resource key for leaf block")
+                        .worldRestart()
+                        .define("LeafBlock", type.getValue().leafBlock.toString());
+                config.minWidth = builder
+                        .comment("Minimum width needed to grow")
+                        .worldRestart()
+                        .defineInRange("MinWidth", type.getValue().minWidth, 0, 20);
+                config.minHeight = builder
+                        .comment("Base height for tree")
+                        .worldRestart()
+                        .defineInRange("Height", type.getValue().defaultGene.minHeight, 1, 50);
+                config.heightRange = builder
+                        .comment("Variation in tree height")
+                        .worldRestart()
+                        .defineInRange("HeightRange", type.getValue().defaultGene.minHeight, 0f, 10f);
+                config.width = builder
+                        .comment("Width of trunk")
+                        .worldRestart()
+                        .defineInRange("Width", type.getValue().defaultGene.trunkWidth, 1, 8);
+                config.trunkType = builder
+                        .comment("Type of trunk generator")
+                        .worldRestart()
+                        .define("TrunkType", type.getValue().defaultGene.trunkType);
+                config.leafType = builder
+                        .comment("Type of leaf generator")
+                        .worldRestart()
+                        .define("LeafType", type.getValue().defaultGene.leafType);
+                config.fruit = builder
+                        .comment("Resource key of fruit item")
+                        .worldRestart()
+                        .define("Fruit", type.getValue().defaultGene.fruitItem);
+                config.parent1 = builder
+                        .comment("One parent for hybridization")
+                        .worldRestart()
+                        .define("Parent1", type.getValue().parent1);
+                config.parent2 = builder
+                        .comment("One parent for hybridization")
+                        .worldRestart()
+                        .define("Parent2", type.getValue().parent2);
+                config.enabled = builder
+                        .comment("Whether to use")
+                        .worldRestart()
+                        .define("Enabled", true);
+                config.hybridChance = builder
+                        .comment("Chance of successful hybridization")
+                        .worldRestart()
+                        .defineInRange("HybridChance", 0., 0., 1.);
+                builder.pop();
+                treeSpecies.put(type.getKey(), config);
+            }
+            extraTrees = builder
+                    .comment("Additional tree types")
+                    .worldRestart()
+                    .define("ExtraTrees", new ArrayList<>());
             builder.pop();
         }
     }
