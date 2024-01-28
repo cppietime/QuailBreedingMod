@@ -4,8 +4,10 @@ import com.electronwill.nightconfig.core.Config;
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.init.ModItems;
+import com.funguscow.crossbreed.jei.IngredientLike;
 import com.funguscow.crossbreed.util.RandomPool;
 import com.funguscow.crossbreed.util.UnorderedPair;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -13,17 +15,18 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class QuailType {
+/**
+ * A breed of quail.
+ */
+public class QuailType implements IngredientLike {
     public static Map<String, QuailType> Types = new HashMap<>();
     public static Map<UnorderedPair<String>, RandomPool<String>> Pairings = new HashMap<>();
 
@@ -33,13 +36,21 @@ public class QuailType {
         child.tier = tier;
     }
 
+    // Name of the quail type used for identification.
     public String name;
+    // ID of the item the quail type lays as an egg.
     public String layItem;
+    // ID of the item the quail type drops upon death.
     public String deathItem;
+    // The base amount of items dropped on death.
     public int deathAmount;
+    // The base amount of lay loot dropped as an egg.
     public int layAmount;
+    // Additional random range for lay loot.
     public int layRandomAmount;
+    // Base ticks between laying eggs.
     public int layTime;
+    // Probability of laying loot instead of manure.
     public float fecundity;
     public boolean enabled;
     public String parent1 = "", parent2 = "";
@@ -66,10 +77,6 @@ public class QuailType {
         this(name, itemID, amt, rAmt, fec, time, "", 0);
     }
 
-    public QuailType(String name, String itemID, int amt, int rAmt, int time) {
-        this(name, itemID, amt, rAmt, time, "", 0);
-    }
-
     public QuailType disable() {
         enabled = false;
         return this;
@@ -86,6 +93,12 @@ public class QuailType {
         return name;
     }
 
+    /**
+     * Get the item that represents an identifier.
+     * @param id An item ID, or a tag prepended by @ or #.
+     * @param rand A source of PRNG for selection.
+     * @return The item that shall be laid.
+     */
     public static Item getItem(String id, RandomSource rand) {
         if (id == null || id.isEmpty()) {
             return null;
@@ -93,7 +106,7 @@ public class QuailType {
         Item item;
         if ("#@".contains(id.substring(0, 1))) {
             TagKey<Item> tagkey = ItemTags.create(new ResourceLocation(id.substring(1)));
-            ITag<Item> tag = ForgeRegistries.ITEMS.tags().getTag(tagkey);
+            ITag<Item> tag = Objects.requireNonNull(ForgeRegistries.ITEMS.tags()).getTag(tagkey);
             List<Item> items = tag.stream().toList();
             if (items.isEmpty())
                 return null;
@@ -104,6 +117,42 @@ public class QuailType {
         } else
             item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(id));
         return item;
+    }
+
+    /**
+     * Get all possible items for a loot ID.
+     * @param id See getItem.
+     * @return A list of all possible items.
+     */
+    public static List<Item> getAllItems(String id) {
+        if (id == null || id.isEmpty()) {
+            return List.of();
+        }
+        if ("#@".contains(id.substring(0, 1))) {
+            TagKey<Item> tagkey = ItemTags.create(new ResourceLocation(id.substring(1)));
+            ITag<Item> tag = Objects.requireNonNull(ForgeRegistries.ITEMS.tags()).getTag(tagkey);
+            return tag.stream().toList();
+        }
+        return List.of(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(id))));
+    }
+
+    /**
+     *
+     * @return An Ingredient that can be displayed in JEI.
+     */
+    public Ingredient getIcon() {
+        List<Item> drop = getAllItems(layItem);
+        List<ItemStack> tagged = drop.stream().map(ItemStack::new).toList();
+        if (tagged.isEmpty()) {
+            BreedMod.LOGGER.warn(layItem + " yields null for output item");
+            tagged = List.of(new ItemStack(Items.BARRIER));
+        }
+        tagged.forEach(stack -> stack.addTagElement("display",
+                CompoundTag.builder()
+                        .put("Name",
+                                "{\"translate\":\"text." + BreedMod.MODID + ".breed." + name + "\"}")
+                        .build()));
+        return Ingredient.of(tagged.toArray(ItemStack[]::new));
     }
 
     public ItemStack getLoot(RandomSource rand, QuailEntity.Gene gene) {
