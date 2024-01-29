@@ -12,15 +12,14 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelWriter;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.TreeFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.shapes.BitSetDiscreteVoxelShape;
 import net.minecraft.world.phys.shapes.DiscreteVoxelShape;
@@ -43,6 +42,7 @@ public class GeneticTreeFeature extends Feature<NoneFeatureConfiguration> {
 
     /**
      * Update the distance block states of all leaves.
+     * This was taken from TreeFeature. See that class to see how to use it (later) to update the shapes of adjacent blocks.
      */
     private static DiscreteVoxelShape updateLeaves(LevelAccessor pLevel, BoundingBox pBox, Set<BlockPos> pRootPositions, Set<BlockPos> pTrunkPositions, Set<BlockPos> pFoliagePositions) {
         DiscreteVoxelShape discretevoxelshape = new BitSetDiscreteVoxelShape(pBox.getXSpan(), pBox.getYSpan(), pBox.getZSpan());
@@ -74,7 +74,7 @@ public class GeneticTreeFeature extends Feature<NoneFeatureConfiguration> {
                 if (pBox.isInside(position)) {
                     if (distance != 0) {
                         BlockState blockstate = pLevel.getBlockState(position);
-                        setBlockKnownShape(pLevel, position, blockstate.setValue(BlockStateProperties.DISTANCE, Integer.valueOf(distance)));
+                        setBlockKnownShape(pLevel, position, blockstate.setValue(BlockStateProperties.DISTANCE, distance));
                     }
 
                     discretevoxelshape.fill(position.getX() - pBox.minX(), position.getY() - pBox.minY(), position.getZ() - pBox.minZ());
@@ -105,6 +105,12 @@ public class GeneticTreeFeature extends Feature<NoneFeatureConfiguration> {
         }
     }
 
+    /**
+     * Updates a block position to a provided state, updating the block and clients, but not reshaping neighbors.
+     * @param pLevel
+     * @param pPos
+     * @param pState
+     */
     private static void setBlockKnownShape(LevelWriter pLevel, BlockPos pPos, BlockState pState) {
         pLevel.setBlock(pPos, pState, Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS);
     }
@@ -115,12 +121,17 @@ public class GeneticTreeFeature extends Feature<NoneFeatureConfiguration> {
         BlockPos origin = pContext.origin();
         RandomSource random = pContext.random();
 
+        // Get tile entity of sapling
         BlockEntity blockEntity = level.getBlockEntity(origin);
         if (!(blockEntity instanceof GeneticTreeTileEntity geneEntity)) {
             return false;
         }
 
+        // Retrieve the tree gene
         TreeGene gene = geneEntity.getGene();
+
+        // TODO check that the necessary saplings are present.
+
         GeneticTrunkPlacer trunkPlacer = GeneticTrunkPlacer.TrunkPlacers.get(gene.trunkType);
         OptionalInt height = trunkPlacer.heightAt(level, origin, random, gene);
         if (height.isEmpty()) {
@@ -131,7 +142,29 @@ public class GeneticTreeFeature extends Feature<NoneFeatureConfiguration> {
             return false;
         }
 
+        // From here on, we will grow the actual tree.
+        for (int x = 0; x < gene.trunkWidth; x++) {
+            for (int z = 0; z < gene.trunkWidth; z++) {
+                BlockPos saplingPos = origin.offset(x, 0, z);
+                BlockPos dirtPos = saplingPos.below();
+
+                // Get the sapling out of the way.
+                level.setBlock(saplingPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_INVISIBLE);
+
+                // Set the base block to dirt.
+                level.setBlock(dirtPos, Blocks.DIRT.defaultBlockState(), Block.UPDATE_INVISIBLE);
+            }
+        }
+
+        // Grow the trunk.
         trunkPlacer.placeTrunk(level, origin, random, treeHeight, gene);
         return true;
+    }
+
+    /**
+     * Register singleton instances of all interface implementations used by tree growing logic.
+     */
+    public static void register() {
+            GeneticTrunkPlacer.register();
     }
 }

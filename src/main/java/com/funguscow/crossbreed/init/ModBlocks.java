@@ -72,7 +72,7 @@ public class ModBlocks {
                     block -> new BlockItem(block, new Item.Properties()),
                     Optional.empty());
 
-    private static RegistryObject<Block> registerBlockAndItem(String name, Supplier<Block> block, Function<Block, Item> function, Optional<ModCreativeTabs.ModCreativeTab> creativeTab) {
+    public static RegistryObject<Block> registerBlockAndItem(String name, Supplier<Block> block, Function<Block, Item> function, Optional<ModCreativeTabs.ModCreativeTab> creativeTab) {
         RegistryObject<Block> registry = BLOCKS.register(name, block);
         if (function != null) {
             RegistryObject<Item> item = ModItems.ITEMS.register(name, () -> function.apply(registry.get()));

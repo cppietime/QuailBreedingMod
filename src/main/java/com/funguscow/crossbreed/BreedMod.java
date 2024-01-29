@@ -4,6 +4,8 @@ import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.entity.QuailType;
 import com.funguscow.crossbreed.init.*;
 import com.funguscow.crossbreed.item.GenericEggItem;
+import com.funguscow.crossbreed.worldgen.botany.GeneticTreeFeature;
+import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -43,6 +45,8 @@ public class BreedMod {
         ModTileEntities.register(bus);
         ModCreativeTabs.register(bus);
 
+        GeneticTreeFeature.register();
+
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -57,6 +61,7 @@ public class BreedMod {
             ModEntities.registerPlacements();
             ModContainers.registerScreens();
             GenericEggItem.registerDispenser();
+            TreeSpecies.matchConfig();
         });
     }
 }

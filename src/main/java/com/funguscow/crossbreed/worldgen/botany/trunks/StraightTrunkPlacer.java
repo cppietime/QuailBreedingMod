@@ -10,9 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class StraightTrunkPlacer extends GeneticTrunkPlacer {
 
-    public static final StraightTrunkPlacer Instance = new StraightTrunkPlacer();
-
-    private StraightTrunkPlacer() {
+    public StraightTrunkPlacer() {
         super("straight");
     }
 

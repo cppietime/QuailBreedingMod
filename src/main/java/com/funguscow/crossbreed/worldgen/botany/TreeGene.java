@@ -1,9 +1,7 @@
 package com.funguscow.crossbreed.worldgen.botany;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Items;
-
-import java.util.Optional;
+import com.funguscow.crossbreed.util.TagUtils;
+import net.minecraft.nbt.CompoundTag;
 
 public class TreeGene {
 
@@ -45,8 +43,31 @@ public class TreeGene {
         this(trunkWidth, minHeight, heightRange, species, trunkType, leafType, "");
     }
 
+    public static TreeGene of(CompoundTag nbt) {
+        int width = TagUtils.getOrDefault(nbt, "TrunkWidth", 1);
+        int height = nbt.getInt("MinHeight");
+        int heightRange = TagUtils.getOrDefault(nbt, "HeightRange", 0);
+        String species = nbt.getString("Species");
+        String trunkType = TagUtils.getOrDefault(nbt, "TrunkType", "straight");
+        String leafType = TagUtils.getOrDefault(nbt, "LeafType", "blob");
+        String fruit = TagUtils.getOrDefault(nbt, "Fruit", "");
+        return new TreeGene(width, height, heightRange, species, trunkType, leafType, fruit);
+    }
+
     public TreeSpecies species() {
         return TreeSpecies.Species.get(species);
+    }
+
+    public CompoundTag save() {
+        CompoundTag nbt = new CompoundTag();
+        nbt.putInt("TrunkWidth", trunkWidth);
+        nbt.putInt("MinHeight", minHeight);
+        nbt.putDouble("HeightRange", heightRange);
+        nbt.putString("Species", species);
+        nbt.putString("TrunkType", trunkType);
+        nbt.putString("LeafType", leafType);
+        nbt.putString("Fruit", fruitItem);
+        return nbt;
     }
 
 }

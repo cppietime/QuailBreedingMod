@@ -4,7 +4,6 @@ import com.electronwill.nightconfig.core.Config;
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.entity.QuailType;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -48,7 +47,6 @@ public class QuailConfig {
         public ForgeConfigSpec.DoubleValue nestTickRate, manureCompostValue;
 
         public ForgeConfigSpec.ConfigValue<List<Config>> extraQuails;
-        public ForgeConfigSpec.ConfigValue<List<Config>> extraTrees;
 
         public Common(ForgeConfigSpec.Builder builder) {
             quailTypes = new HashMap<>();
@@ -231,10 +229,6 @@ public class QuailConfig {
                 builder.pop();
                 treeSpecies.put(type.getKey(), config);
             }
-            extraTrees = builder
-                    .comment("Additional tree types")
-                    .worldRestart()
-                    .define("ExtraTrees", new ArrayList<>());
             builder.pop();
         }
     }

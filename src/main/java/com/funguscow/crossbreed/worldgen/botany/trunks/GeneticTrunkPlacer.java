@@ -25,6 +25,14 @@ public abstract class GeneticTrunkPlacer {
         TrunkPlacers.put(name, this);
     }
 
+    /**
+     *
+     * @param level
+     * @param startPos The minimum block position of all saplings growing into this tree
+     * @param random
+     * @param gene
+     * @return The height of the trunk of a tree generated at the provided position. or EMPTY if it cannot generate.
+     */
     public OptionalInt heightAt(WorldGenLevel level, BlockPos startPos, RandomSource random, TreeGene gene) {
         TreeSpecies species = gene.species();
         int baseHeight = gene.minHeight;
@@ -54,8 +62,25 @@ public abstract class GeneticTrunkPlacer {
         return OptionalInt.of(baseHeight + attemptHeight);
     }
 
+    /**
+     * This function shall handle all logic of placing the trunk of the tree.
+     * @param level
+     * @param startPos Minimum blockpos of saplings.
+     * @param random
+     * @param height Height the trunk shall generate.
+     * @param gene
+     * @return Returned result must contain all foliage attachment points and the set of all new log block positions.
+     */
     public abstract TrunkPlacementResult placeTrunk(WorldGenLevel level, BlockPos startPos, RandomSource random, int height, TreeGene gene);
 
+    /**
+     *
+     * @param level
+     * @param startPos Minimum block position of saplings.
+     * @param logPos Position to check whether the log can generate.
+     * @param gene
+     * @return True iff a log can be placed at logPos.
+     */
     public boolean canPlaceLog(WorldGenLevel level, BlockPos startPos, BlockPos logPos, TreeGene gene) {
         BlockState block = level.getBlockState(logPos);
         return block.isAir() || block.is(BlockTags.REPLACEABLE_BY_TREES) || block.is(BlockTags.LOGS);
@@ -86,6 +111,13 @@ public abstract class GeneticTrunkPlacer {
         public TrunkPlacementResult() {
             this(new ArrayList<>(), new HashSet<>());
         }
+    }
+
+    /**
+     * Apparently I need to put this logic in a function instead of a static block, or else it gets optimized away :(
+     */
+    public static void register() {
+        new StraightTrunkPlacer();
     }
 
 }

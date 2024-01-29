@@ -8,6 +8,7 @@ import com.funguscow.crossbreed.item.GenericEggItem;
 import com.funguscow.crossbreed.item.JailItem;
 import com.funguscow.crossbreed.item.MeterItem;
 import com.funguscow.crossbreed.tileentities.NestTileEntity;
+import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
@@ -74,6 +75,8 @@ public class ModItems {
     }
 
     public static void register(IEventBus bus) {
+        TreeSpecies.registerItems();
+
         ITEMS.register(bus);
         ModCreativeTabs.QUAIL_MOD_TAB.add(QUAIL_EGG);
         ModCreativeTabs.QUAIL_MOD_TAB.add(WATER_BUBBLE);

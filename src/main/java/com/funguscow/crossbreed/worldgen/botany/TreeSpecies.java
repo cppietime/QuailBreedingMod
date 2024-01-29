@@ -1,22 +1,30 @@
 package com.funguscow.crossbreed.worldgen.botany;
 
-import com.electronwill.nightconfig.core.Config;
 import com.funguscow.crossbreed.BreedMod;
+import com.funguscow.crossbreed.block.GeneticSaplingBlock;
 import com.funguscow.crossbreed.config.QuailConfig;
+import com.funguscow.crossbreed.init.ModBlocks;
+import com.funguscow.crossbreed.init.ModCreativeTabs;
 import com.funguscow.crossbreed.util.RandomPool;
 import com.funguscow.crossbreed.util.UnorderedPair;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Supplier;
 
 public class TreeSpecies {
 
     public static final Map<String, TreeSpecies> Species = new HashMap<>();
     public static final Map<UnorderedPair<String>, RandomPool<String>> Pairings = new HashMap<>();
+    public static final List<RegistryObject<Block>> Saplings = new ArrayList<>();
 
     public final String id;
 
@@ -80,27 +88,6 @@ public class TreeSpecies {
             gene.fruitItem = config.fruit.get();
             gene.species = key;
         }
-        for (Config config : QuailConfig.COMMON.extraTrees.get()) {
-            String name = config.get("Name");
-            String trunk = config.get("TrunkType");
-            String leaf = config.get("LeafType");
-            String fruit = config.getOrElse("Fruit", "");
-            String parent1 = config.getOrElse("Parent1", "");
-            String parent2 = config.getOrElse("Parent2", "");
-            ResourceLocation logBlock = new ResourceLocation(config.get("LogBlock"));
-            ResourceLocation leafBlock = new ResourceLocation(config.get("LeafBlock"));
-            ResourceLocation sapling = new ResourceLocation(BreedMod.MODID, name + "_sapling");
-            boolean enabled = config.getOrElse("Enabled", true);
-            int trunkWidth = config.getIntOrElse("Width", 1);
-            int baseHeight = config.getIntOrElse("Height", 4);
-            int minWidth = config.getIntOrElse("MinWidth", 1);
-            double heightRange = config.getOrElse("HeightRange", (double) 0);
-            TreeGene gene = new TreeGene(trunkWidth, baseHeight, heightRange, name, trunk, leaf, fruit);
-            TreeSpecies species = new TreeSpecies(name, logBlock, leafBlock, minWidth, gene).enabled(enabled);
-            species.parent1 = parent1;
-            species.parent2 = parent2;
-            species.hybridChance = config.getOrElse("HybridChance", 0.).floatValue();
-        }
         for (TreeSpecies species : Species.values()) {
             if (!species.parent1.isEmpty() && !species.parent2.isEmpty() && species.enabled) {
                 UnorderedPair<String> pair = new UnorderedPair<>(species.parent1, species.parent2);
@@ -116,5 +103,15 @@ public class TreeSpecies {
     public static final TreeSpecies
         TEST_TREE = new TreeSpecies("test", new ResourceLocation("coal_block"), new ResourceLocation("emerald_block"), 1,
             new TreeGene(1, 4, 2.0, "test", "straight", "blob", "minecraft:stick"));
+
+    public static void registerItems() {
+        for (TreeSpecies species : Species.values()) {
+            Supplier<Block> supplier = () -> new GeneticSaplingBlock(BlockBehaviour.Properties.copy(Blocks.OAK_SAPLING));
+            Saplings.add(ModBlocks.registerBlockAndItem(species.id + "_sapling",
+                    supplier,
+                    block -> new BlockItem(block, new Item.Properties()),
+                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)));
+        }
+    }
 
 }
