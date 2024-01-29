@@ -155,7 +155,7 @@ public class QuailType implements IngredientLike {
         return Ingredient.of(tagged.toArray(ItemStack[]::new));
     }
 
-    public ItemStack getLoot(RandomSource rand, QuailEntity.Gene gene) {
+    public ItemStack getLoot(RandomSource rand, QuailEntity.QuailGene gene) {
         float lootThreshold = fecundity * gene.fecundity;
         Item item = getItem(layItem, rand);
         if (item == null || rand.nextFloat() >= lootThreshold) {

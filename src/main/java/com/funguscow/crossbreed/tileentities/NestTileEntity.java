@@ -4,6 +4,7 @@ import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.entity.QuailEntity;
 import com.funguscow.crossbreed.entity.QuailType;
+import com.funguscow.crossbreed.genetics.Gene;
 import com.funguscow.crossbreed.init.ModEntities;
 import com.funguscow.crossbreed.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
@@ -48,15 +49,15 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
 
     public static class VirtualQuail {
         private final QuailType breed;
-        private final QuailEntity.Gene gene, alleleA, alleleB;
+        private final QuailEntity.QuailGene gene, alleleA, alleleB;
         private final CompoundTag extraNBT;
         private float layTimer;
 
         public VirtualQuail(CompoundTag nbt) {
             extraNBT = nbt.copy();
             breed = QuailType.Types.get(extraNBT.getString(QuailEntity.BREED_KEY));
-            alleleA = new QuailEntity.Gene().readFromTag(extraNBT.getCompound(QuailEntity.ALLELE_A_KEY));
-            alleleB = new QuailEntity.Gene().readFromTag(extraNBT.getCompound(QuailEntity.ALLELE_B_KEY));
+            alleleA = new QuailEntity.QuailGene().readFromTag(extraNBT.getCompound(QuailEntity.ALLELE_A_KEY));
+            alleleB = new QuailEntity.QuailGene().readFromTag(extraNBT.getCompound(QuailEntity.ALLELE_B_KEY));
             layTimer = extraNBT.getInt(QuailEntity.TIMER_KEY);
             extraNBT.remove(QuailEntity.TIMER_KEY);
             extraNBT.remove(QuailEntity.BREED_KEY);
@@ -274,8 +275,8 @@ public class NestTileEntity extends BlockEntity implements WorldlyContainer {
         QuailType breed = parentA.breed.getOffspring(parentB.breed, random);
         nbt.putInt(QuailEntity.TIMER_KEY, breed.layTime * 2); // Maximum, is this good tho?
         nbt.putString(QuailEntity.BREED_KEY, breed.name);
-        QuailEntity.Gene alleleA = parentA.alleleA.crossover(parentA.alleleB, random);
-        QuailEntity.Gene alleleB = parentB.alleleA.crossover(parentB.alleleB, random);
+        QuailEntity.QuailGene alleleA = Gene.crossover(parentA.alleleA, parentB.alleleB, random);
+        QuailEntity.QuailGene alleleB = Gene.crossover(parentB.alleleA, parentA.alleleB, random);
         nbt.put(QuailEntity.ALLELE_A_KEY, alleleA.writeToTag());
         nbt.put(QuailEntity.ALLELE_B_KEY, alleleB.writeToTag());
         VirtualQuail child = new VirtualQuail(nbt);

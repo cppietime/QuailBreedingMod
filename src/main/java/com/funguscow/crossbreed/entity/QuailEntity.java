@@ -1,6 +1,9 @@
 package com.funguscow.crossbreed.entity;
 
 import com.funguscow.crossbreed.config.QuailConfig;
+import com.funguscow.crossbreed.genetics.Chromosome;
+import com.funguscow.crossbreed.genetics.DoubleChromosome;
+import com.funguscow.crossbreed.genetics.Gene;
 import com.funguscow.crossbreed.init.ModEntities;
 import com.funguscow.crossbreed.init.ModSounds;
 import com.funguscow.crossbreed.util.TagUtils;
@@ -37,6 +40,8 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * A quail entity to be bred and produce various resources
  */
@@ -51,7 +56,7 @@ public class QuailEntity extends ModAnimalEntity {
 
     private static final Lazy<Integer> breedingTimeout = Lazy.of(QuailConfig.COMMON.quailBreedingTime);
 
-    public static class Gene {
+    public static class QuailGene implements Gene<QuailGene> {
         public static final float LAY_AMOUNT_MIN = 0.1f, LAY_AMOUNT_MAX = 2.5f, LAY_AMOUNT_RANGE = LAY_AMOUNT_MAX - LAY_AMOUNT_MIN;
         public static final float LAY_TIME_MIN = 0.1f, LAY_TIME_MAX = 4f, LAY_TIME_RANGE = LAY_TIME_MAX - LAY_TIME_MIN;
         public static final float FECUNDITY_RANGE = 4f;
@@ -69,7 +74,7 @@ public class QuailEntity extends ModAnimalEntity {
         public float fecundity;
         public float dominance;
 
-        public Gene(RandomSource rand) {
+        public QuailGene(RandomSource rand) {
             layAmount = rand.nextFloat() * LAY_AMOUNT_RANGE + LAY_AMOUNT_MIN;
             layRandomAmount = rand.nextFloat();
             layTime = rand.nextFloat() * LAY_TIME_RANGE + LAY_TIME_MIN;
@@ -78,11 +83,11 @@ public class QuailEntity extends ModAnimalEntity {
             dominance = rand.nextFloat();
         }
 
-        public Gene() {
+        public QuailGene() {
         }
 
-        public Gene crossover(Gene other, RandomSource rand) {
-            Gene child = new Gene();
+        public QuailGene crossover(QuailGene other, RandomSource rand) {
+            QuailGene child = new QuailGene();
             child.layAmount = Mth.clamp(rand.nextBoolean() ? layAmount : other.layAmount + (float) rand.nextGaussian() * LAY_AMOUNT_SIGMA, LAY_AMOUNT_MIN, LAY_AMOUNT_MAX);
             child.layRandomAmount = Math.max(0, rand.nextBoolean() ? layRandomAmount : other.layRandomAmount + (float) rand.nextGaussian() * LAY_RANDOM_AMOUNT_SIGMA);
             child.layTime = Mth.clamp(rand.nextBoolean() ? layTime : other.layTime + (float) rand.nextGaussian() * LAY_TIME_SIGMA, LAY_TIME_MIN, LAY_TIME_MAX);
@@ -92,7 +97,7 @@ public class QuailEntity extends ModAnimalEntity {
             return child;
         }
 
-        public Gene readFromTag(CompoundTag nbt) {
+        public QuailGene readFromTag(CompoundTag nbt) {
             layAmount = TagUtils.getOrDefault(nbt, "LayAmount", LAY_AMOUNT_RANGE / 2 + LAY_AMOUNT_MIN);
             layRandomAmount = TagUtils.getOrDefault(nbt, "LayRandomAmount", 1f / 2);
             layTime = TagUtils.getOrDefault(nbt, "LayTime", LAY_TIME_RANGE / 2 + LAY_TIME_MIN);
@@ -112,13 +117,38 @@ public class QuailEntity extends ModAnimalEntity {
             nbt.putFloat("Dominance", dominance);
             return nbt;
         }
+
+        @Override
+        public List<Chromosome<?>> chromosomes() {
+            return List.of(
+                    new DoubleChromosome(layAmount, LAY_AMOUNT_SIGMA, LAY_AMOUNT_MIN, LAY_AMOUNT_MAX),
+                    new DoubleChromosome(layRandomAmount, LAY_RANDOM_AMOUNT_SIGMA, 0, Double.MAX_VALUE),
+                    new DoubleChromosome(layTime, LAY_TIME_SIGMA, LAY_TIME_MIN, LAY_TIME_MAX),
+                    new DoubleChromosome(layRandomAmount, LAY_RANDOM_TIME_SIGMA, 0, Double.MAX_VALUE),
+                    new DoubleChromosome(fecundity, FECUNDITY_SIGMA, 0, FECUNDITY_RANGE),
+                    new DoubleChromosome(dominance, DOMINANCE_SIGMA)
+            );
+        }
+
+        @Override
+        public QuailGene reconstruct(List<Chromosome<?>> chromosomes) {
+            Double[] params = chromosomes.stream().map(q -> ((Chromosome<Double>)q).value()).toArray(Double[]::new);
+            QuailGene gene = new QuailGene();
+            gene.layAmount = params[0].floatValue();
+            gene.layRandomAmount = params[1].floatValue();
+            gene.layTime = params[2].floatValue();
+            gene.layRandomTime = params[3].floatValue();
+            gene.fecundity = params[4].floatValue();
+            gene.dominance = params[5].floatValue();
+            return gene;
+        }
     }
 
     private static final EntityDataAccessor<String> BREED_NAME = SynchedEntityData.defineId(QuailEntity.class, EntityDataSerializers.STRING);
 
     public static final Ingredient BREED_MATERIAL = Ingredient.of(Items.WHEAT_SEEDS, Items.PUMPKIN_SEEDS, Items.MELON_SEEDS, Items.BEETROOT_SEEDS);
 
-    private Gene gene, alleleA, alleleB;
+    private QuailGene gene, alleleA, alleleB;
     private QuailType breed;
     private int layTimer;
 
@@ -127,7 +157,7 @@ public class QuailEntity extends ModAnimalEntity {
     public QuailEntity(EntityType<? extends Animal> type, Level worldIn) {
         super(type, worldIn);
         randomBreed();
-        setAlleles(new Gene(level().random), new Gene(level().random));
+        setAlleles(new QuailGene(level().random), new QuailGene(level().random));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -136,7 +166,7 @@ public class QuailEntity extends ModAnimalEntity {
                 .add(Attributes.MOVEMENT_SPEED, 0.25);
     }
 
-    public Gene getGene() {
+    public QuailGene getGene() {
         return gene;
     }
 
@@ -145,7 +175,7 @@ public class QuailEntity extends ModAnimalEntity {
         this.gameEvent(GameEvent.ENTITY_PLACE);
     }
 
-    public void setAlleles(Gene a, Gene b) {
+    public void setAlleles(QuailGene a, QuailGene b) {
         alleleA = a;
         alleleB = b;
         gene = alleleA.dominance >= alleleB.dominance ? alleleA : alleleB;
@@ -214,8 +244,8 @@ public class QuailEntity extends ModAnimalEntity {
         QuailEntity child = ModEntities.QUAIL.get().create(world);
         if (child != null) {
             QuailEntity otherQuail = (QuailEntity) other;
-            Gene childA = alleleA.crossover(alleleB, random);
-            Gene childB = otherQuail.alleleA.crossover(otherQuail.alleleB, random);
+            QuailGene childA = Gene.crossover(alleleA, otherQuail.alleleB, world.random);
+            QuailGene childB = Gene.crossover(alleleB, otherQuail.alleleA, world.random);
             child.setAlleles(childA, childB);
             child.setBreed(breed.getOffspring(otherQuail.breed, random));
         }

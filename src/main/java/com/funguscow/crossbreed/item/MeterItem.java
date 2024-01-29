@@ -31,7 +31,7 @@ public class MeterItem extends Item {
             return InteractionResult.FAIL;
         if (!(target instanceof QuailEntity quail))
             return InteractionResult.FAIL;
-        QuailEntity.Gene gene = quail.getGene();
+        QuailEntity.QuailGene gene = quail.getGene();
         int seconds = quail.getLayTimer() / 20;
         MutableComponent component =
                 translatable("text." + BreedMod.MODID + ".breed." + quail.getBreedName())

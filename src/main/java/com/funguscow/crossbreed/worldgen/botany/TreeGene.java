@@ -2,6 +2,7 @@ package com.funguscow.crossbreed.worldgen.botany;
 
 import com.funguscow.crossbreed.util.TagUtils;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.RandomSource;
 
 public class TreeGene {
 
@@ -18,13 +19,16 @@ public class TreeGene {
 
     public String fruitItem; // String instead of ResourceLocation so it can be optional
 
+    public float dominance;
+
     public TreeGene(int trunkWidth,
                     int minHeight,
                     double heightRange,
                     String species,
                     String trunkType,
                     String leafType,
-                    String fruitItem) {
+                    String fruitItem,
+                    float dominance) {
         this.trunkWidth = trunkWidth;
         this.minHeight = minHeight;
         this.heightRange = heightRange;
@@ -32,6 +36,17 @@ public class TreeGene {
         this.trunkType = trunkType;
         this.leafType = leafType;
         this.fruitItem = fruitItem;
+        this.dominance = dominance;
+    }
+
+    public TreeGene(int trunkWidth,
+                    int minHeight,
+                    double heightRange,
+                    String species,
+                    String trunkType,
+                    String leafType,
+                    String fruitItem) {
+        this(trunkWidth, minHeight, heightRange, species, trunkType, leafType, fruitItem, 0.5f);
     }
 
     public TreeGene(int trunkWidth,
@@ -51,7 +66,8 @@ public class TreeGene {
         String trunkType = TagUtils.getOrDefault(nbt, "TrunkType", "straight");
         String leafType = TagUtils.getOrDefault(nbt, "LeafType", "blob");
         String fruit = TagUtils.getOrDefault(nbt, "Fruit", "");
-        return new TreeGene(width, height, heightRange, species, trunkType, leafType, fruit);
+        float dominance = TagUtils.getOrDefault(nbt, "Dominance", 0.5f);
+        return new TreeGene(width, height, heightRange, species, trunkType, leafType, fruit, dominance);
     }
 
     public TreeSpecies species() {
@@ -67,7 +83,26 @@ public class TreeGene {
         nbt.putString("TrunkType", trunkType);
         nbt.putString("LeafType", leafType);
         nbt.putString("Fruit", fruitItem);
+        nbt.putFloat("Dominance", dominance);
         return nbt;
+    }
+
+    public TreeGene readFromTag(CompoundTag nbt) {
+        trunkWidth = TagUtils.getOrDefault(nbt, "TrunkWidth", trunkWidth);
+        minHeight = TagUtils.getOrDefault(nbt, "MinHeight", minHeight);
+        heightRange = TagUtils.getOrDefault(nbt, "HeightRange", heightRange);
+        species = TagUtils.getOrDefault(nbt, "Species", species);
+        trunkType = TagUtils.getOrDefault(nbt, "TrunkType", trunkType);
+        leafType = TagUtils.getOrDefault(nbt, "LeafType", leafType);
+        fruitItem = TagUtils.getOrDefault(nbt, "Fruit", fruitItem);
+        dominance = TagUtils.getOrDefault(nbt, "Dominance", dominance);
+        return this;
+    }
+
+    public TreeGene crossover(TreeGene other, RandomSource rand) {
+        // TODO add mutation
+        int trunkWidth = rand.nextBoolean() ? this.trunkWidth : other.trunkWidth;
+        return null;
     }
 
 }

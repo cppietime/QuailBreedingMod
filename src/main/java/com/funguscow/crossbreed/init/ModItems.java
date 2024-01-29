@@ -75,6 +75,7 @@ public class ModItems {
     }
 
     public static void register(IEventBus bus) {
+        // Invoke procedural item registration from other classes.
         TreeSpecies.registerItems();
 
         ITEMS.register(bus);
