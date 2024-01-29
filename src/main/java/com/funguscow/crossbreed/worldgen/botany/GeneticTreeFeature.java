@@ -1,5 +1,6 @@
 package com.funguscow.crossbreed.worldgen.botany;
 
+import com.funguscow.crossbreed.block.GeneticSaplingBlock;
 import com.funguscow.crossbreed.tileentities.GeneticTreeTileEntity;
 import com.funguscow.crossbreed.worldgen.botany.trunks.GeneticTrunkPlacer;
 import com.google.common.collect.Lists;
@@ -115,6 +116,26 @@ public class GeneticTreeFeature extends Feature<NoneFeatureConfiguration> {
         pLevel.setBlock(pPos, pState, Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS);
     }
 
+    private static boolean validSaplings(WorldGenLevel level, BlockPos startPos, String species, int width) {
+        for (int x = 0; x < width; x++) {
+            for (int z = 0; z < width; z++) {
+                BlockPos pos = startPos.offset(x, 0, z);
+                Block block = level.getBlockState(pos).getBlock();
+                if (!(block instanceof GeneticSaplingBlock)) {
+                    return false;
+                }
+                BlockEntity blockEntity = level.getBlockEntity(pos);
+                if (!(blockEntity instanceof GeneticTreeTileEntity tree)) {
+                    return false;
+                }
+                if (!tree.getGene().species.equals(species)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> pContext) {
         WorldGenLevel level = pContext.level();
@@ -130,7 +151,20 @@ public class GeneticTreeFeature extends Feature<NoneFeatureConfiguration> {
         // Retrieve the tree gene
         TreeGene gene = geneEntity.getGene();
 
-        // TODO check that the necessary saplings are present.
+        int width = gene.trunkWidth;
+        outerLoop:
+        for (int x = 0; x < width; x++) {
+            for (int z = 0; z < width; z++) {
+                BlockPos minPos = origin.offset(-x, 0, -z);
+                if (validSaplings(level, minPos, gene.species, width)) {
+                    origin = minPos;
+                    break outerLoop;
+                }
+            }
+            if (x + 1 == width) {
+                return false;
+            }
+        }
 
         GeneticTrunkPlacer trunkPlacer = GeneticTrunkPlacer.TrunkPlacers.get(gene.trunkType);
         OptionalInt height = trunkPlacer.heightAt(level, origin, random, gene);

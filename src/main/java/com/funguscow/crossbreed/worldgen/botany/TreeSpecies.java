@@ -102,7 +102,15 @@ public class TreeSpecies {
 
     public static final TreeSpecies
         TEST_TREE = new TreeSpecies("test", new ResourceLocation("coal_block"), new ResourceLocation("emerald_block"), 1,
-            new TreeGene(1, 4, 2.0, "test", "straight", "blob", "minecraft:stick"));
+            new TreeGene(2,
+                    4,
+                    2.0,
+                    "test",
+                    "straight",
+                    "blob",
+                    "minecraft:stick",
+                    0.25,
+                    0.25));
 
     public static void registerItems() {
         for (TreeSpecies species : Species.values()) {

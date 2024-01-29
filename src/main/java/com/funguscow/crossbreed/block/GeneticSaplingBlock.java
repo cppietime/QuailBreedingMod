@@ -1,6 +1,5 @@
 package com.funguscow.crossbreed.block;
 
-import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.tileentities.GeneticTreeTileEntity;
 import com.funguscow.crossbreed.worldgen.botany.GeneticTreeFeature;
 import net.minecraft.core.BlockPos;
@@ -9,11 +8,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.block.grower.OakTreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GeneticSaplingBlock extends SaplingBlock implements EntityBlock {
@@ -22,7 +20,7 @@ public class GeneticSaplingBlock extends SaplingBlock implements EntityBlock {
     }
 
     @Override
-    public void advanceTree(ServerLevel pLevel, BlockPos pPos, BlockState pState, RandomSource pRandom) {
+    public void advanceTree(@NotNull ServerLevel pLevel, @NotNull BlockPos pPos, BlockState pState, @NotNull RandomSource pRandom) {
         if (pState.getValue(STAGE) == 0) {
             pLevel.setBlock(pPos, pState.cycle(STAGE), 4);
         } else {
@@ -32,7 +30,7 @@ public class GeneticSaplingBlock extends SaplingBlock implements EntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
         return new GeneticTreeTileEntity(pPos, pState);
     }
 }

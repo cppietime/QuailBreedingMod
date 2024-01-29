@@ -5,9 +5,13 @@ import com.funguscow.crossbreed.worldgen.botany.TreeGene;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class GeneticTreeTileEntity extends BlockEntity {
 
@@ -16,7 +20,8 @@ public class GeneticTreeTileEntity extends BlockEntity {
     public GeneticTreeTileEntity(BlockPos pPos, BlockState pBlockState) {
         // TODO everything
         super(ModTileEntities.GENETIC_TREE.get(), pPos, pBlockState);
-        alleleA = alleleB = TreeSpecies.TEST_TREE.defaultGene;
+        alleleA = TreeSpecies.TEST_TREE.defaultGene.copy();
+        alleleB = TreeSpecies.TEST_TREE.defaultGene.copy();
     }
 
     public TreeGene getGene() {
@@ -33,7 +38,25 @@ public class GeneticTreeTileEntity extends BlockEntity {
     @Override
     public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
-        alleleA.readFromTag(pTag.getCompound("AlleleA"));
-        alleleB.readFromTag(pTag.getCompound("AlleleB"));
+        if (pTag.contains("AlleleA")) {
+            alleleA.readFromTag(pTag.getCompound("AlleleA"));
+        }
+        if (pTag.contains("AlleleB")) {
+            alleleB.readFromTag(pTag.getCompound("AlleleB"));
+        }
+    }
+
+    @Override
+    @NotNull
+    public CompoundTag getUpdateTag() {
+        CompoundTag nbt = super.getUpdateTag();
+        saveAdditional(nbt);
+        return nbt;
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 }
