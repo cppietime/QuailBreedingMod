@@ -9,6 +9,7 @@ import com.funguscow.crossbreed.item.JailItem;
 import com.funguscow.crossbreed.item.MeterItem;
 import com.funguscow.crossbreed.tileentities.NestTileEntity;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
+import com.funguscow.crossbreed.worldgen.botany.leaves.GeneticLeafBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
@@ -77,6 +78,7 @@ public class ModItems {
     public static void register(IEventBus bus) {
         // Invoke procedural item registration from other classes.
         TreeSpecies.registerItems();
+        GeneticLeafBlock.registerItems();
 
         ITEMS.register(bus);
         ModCreativeTabs.QUAIL_MOD_TAB.add(QUAIL_EGG);

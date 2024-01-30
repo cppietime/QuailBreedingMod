@@ -57,11 +57,6 @@ public class TreeSpecies {
         Species.put(id, this);
     }
 
-    public TreeSpecies enabled(boolean enabled) {
-        this.enabled = enabled;
-        return this;
-    }
-
     public BlockState logBlock() {
         return Objects.requireNonNull(ForgeRegistries.BLOCKS.getValue(logBlock)).defaultBlockState();
     }
@@ -101,7 +96,7 @@ public class TreeSpecies {
     }
 
     public static final TreeSpecies
-        TEST_TREE = new TreeSpecies("test", new ResourceLocation("coal_block"), new ResourceLocation("emerald_block"), 1,
+        TEST_TREE = new TreeSpecies("test", new ResourceLocation("acacia_log"), new ResourceLocation("breesources", "test_leaves"), 1,
             new TreeGene(2,
                     4,
                     2.0,
@@ -110,12 +105,13 @@ public class TreeSpecies {
                     "blob",
                     "minecraft:stick",
                     0.25,
-                    0.25));
+                    0.25,
+                    1));
 
     public static void registerItems() {
         for (TreeSpecies species : Species.values()) {
             Supplier<Block> supplier = () -> new GeneticSaplingBlock(BlockBehaviour.Properties.copy(Blocks.OAK_SAPLING));
-            Saplings.add(ModBlocks.registerBlockAndItem(species.id + "_sapling",
+            Saplings.add(ModBlocks.registerBlockAndItem(species.sapling.getPath(),
                     supplier,
                     block -> new BlockItem(block, new Item.Properties()),
                     Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)));

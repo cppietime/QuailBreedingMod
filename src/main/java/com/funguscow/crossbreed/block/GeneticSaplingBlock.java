@@ -33,4 +33,16 @@ public class GeneticSaplingBlock extends SaplingBlock implements EntityBlock {
     public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
         return new GeneticTreeTileEntity(pPos, pState);
     }
+
+    public void randomTick(@NotNull BlockState pState, ServerLevel pLevel, @NotNull BlockPos pPos, @NotNull RandomSource pRandom) {
+        if (!pLevel.isAreaLoaded(pPos, 1)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light
+        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+        if (!(blockEntity instanceof GeneticTreeTileEntity treeEntity)) {
+            return;
+        }
+        if (pLevel.getMaxLocalRawBrightness(pPos.above()) >= 9 && pRandom.nextDouble() <= treeEntity.getGene().growthRate) {
+            this.advanceTree(pLevel, pPos, pState, pRandom);
+        }
+
+    }
 }

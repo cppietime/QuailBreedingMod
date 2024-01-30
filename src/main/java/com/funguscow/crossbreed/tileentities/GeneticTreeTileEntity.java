@@ -1,6 +1,8 @@
 package com.funguscow.crossbreed.tileentities;
 
+import com.funguscow.crossbreed.genetics.Gene;
 import com.funguscow.crossbreed.init.ModTileEntities;
+import com.funguscow.crossbreed.util.Pair;
 import com.funguscow.crossbreed.worldgen.botany.TreeGene;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import net.minecraft.core.BlockPos;
@@ -8,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +32,7 @@ public class GeneticTreeTileEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag pTag) {
+    public void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
         pTag.put("AlleleA", alleleA.save());
         pTag.put("AlleleB", alleleB.save());
@@ -58,5 +61,11 @@ public class GeneticTreeTileEntity extends BlockEntity {
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    public void recombine(RandomSource random) {
+        Pair<TreeGene, TreeGene> pair = Gene.diploid(alleleA, alleleB, alleleA, alleleB, random);
+        alleleA = pair.first;
+        alleleB = pair.second;
     }
 }

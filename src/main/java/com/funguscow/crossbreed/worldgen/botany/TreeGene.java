@@ -13,13 +13,15 @@ public class TreeGene implements Gene<TreeGene> {
         HEIGHT_RANGE_SIGMA = 0.1,
         YIELD_SIGMA = 0.1,
         FERTILITY_SIGMA = 0.1,
-        DOMINANCE_SIGMA = 0.05;
+        DOMINANCE_SIGMA = 0.05,
+        GROWTHRATE_SIGMA = 0.05;
 
     public static final int MAX_WIDTH = 8,
         MAX_HEIGHT = 50;
 
     public static final double MAX_YIELD = 0.25,
-        MAX_FERTILITY = 0.25;
+        MAX_FERTILITY = 0.25,
+        MIN_GROWTHRATE = 0.01;
 
     public int trunkWidth;
 
@@ -38,6 +40,8 @@ public class TreeGene implements Gene<TreeGene> {
 
     public double fertility;
 
+    public double growthRate;
+
     public float dominance;
 
     public TreeGene(int trunkWidth,
@@ -49,6 +53,7 @@ public class TreeGene implements Gene<TreeGene> {
                     String fruitItem,
                     double yield,
                     double fertility,
+                    double growthRate,
                     float dominance) {
         this.trunkWidth = trunkWidth;
         this.minHeight = minHeight;
@@ -59,6 +64,7 @@ public class TreeGene implements Gene<TreeGene> {
         this.fruitItem = fruitItem;
         this.yield = yield;
         this.fertility = fertility;
+        this.growthRate = growthRate;
         this.dominance = dominance;
     }
 
@@ -70,8 +76,9 @@ public class TreeGene implements Gene<TreeGene> {
                     String leafType,
                     String fruitItem,
                     double yield,
-                    double fertility) {
-        this(trunkWidth, minHeight, heightRange, species, trunkType, leafType, fruitItem, yield, fertility, 0.5f);
+                    double fertility,
+                    double growthRate) {
+        this(trunkWidth, minHeight, heightRange, species, trunkType, leafType, fruitItem, yield, fertility, growthRate, 0.5f);
     }
 
     public TreeGene(int trunkWidth,
@@ -80,8 +87,9 @@ public class TreeGene implements Gene<TreeGene> {
                     String species,
                     String trunkType,
                     String leafType,
-                    double fertility) {
-        this(trunkWidth, minHeight, heightRange, species, trunkType, leafType, "", 0, fertility);
+                    double fertility,
+                    double growthRate) {
+        this(trunkWidth, minHeight, heightRange, species, trunkType, leafType, "", 0, growthRate, fertility);
     }
 
     public static TreeGene of(CompoundTag nbt) {
@@ -94,8 +102,19 @@ public class TreeGene implements Gene<TreeGene> {
         String fruit = TagUtils.getOrDefault(nbt, "Fruit", "");
         double yield = TagUtils.getOrDefault(nbt, "Yield", 0.);
         double fertility = TagUtils.getOrDefault(nbt, "Fertility", 0.1);
+        double growthRate = TagUtils.getOrDefault(nbt, "GrowthRate", .14);
         float dominance = TagUtils.getOrDefault(nbt, "Dominance", 0.5f);
-        return new TreeGene(width, height, heightRange, species, trunkType, leafType, fruit, yield, fertility, dominance);
+        return new TreeGene(width,
+                height,
+                heightRange,
+                species,
+                trunkType,
+                leafType,
+                fruit,
+                yield,
+                fertility,
+                growthRate,
+                dominance);
     }
 
     public TreeSpecies species() {
@@ -114,6 +133,7 @@ public class TreeGene implements Gene<TreeGene> {
         nbt.putFloat("Dominance", dominance);
         nbt.putDouble("Yield", yield);
         nbt.putDouble("Fertility", fertility);
+        nbt.putDouble("GrowthRate", growthRate);
         return nbt;
     }
 
@@ -128,6 +148,7 @@ public class TreeGene implements Gene<TreeGene> {
         dominance = TagUtils.getOrDefault(nbt, "Dominance", dominance);
         yield = TagUtils.getOrDefault(nbt, "Yield", yield);
         fertility = TagUtils.getOrDefault(nbt, "Fertility", fertility);
+        growthRate = TagUtils.getOrDefault(nbt, "GrowthRate", growthRate);
         return this;
     }
 
@@ -143,7 +164,8 @@ public class TreeGene implements Gene<TreeGene> {
                 new StringChromosome(fruitItem),
                 new DoubleChromosome(dominance, DOMINANCE_SIGMA, 0, 1),
                 new DoubleChromosome(yield, YIELD_SIGMA, 0, MAX_YIELD),
-                new DoubleChromosome(fertility, FERTILITY_SIGMA, 0, MAX_FERTILITY)
+                new DoubleChromosome(fertility, FERTILITY_SIGMA, 0, MAX_FERTILITY),
+                new DoubleChromosome(growthRate, GROWTHRATE_SIGMA, MIN_GROWTHRATE, 1)
         );
     }
 
@@ -159,12 +181,23 @@ public class TreeGene implements Gene<TreeGene> {
         float dominance = ((DoubleChromosome)chromosomes.get(7)).value().floatValue();
         double yield = ((DoubleChromosome)chromosomes.get(8)).value();
         double fertility = ((DoubleChromosome)chromosomes.get(9)).value();
-        return new TreeGene(trunkWidth, minHeight, heightRange, species, trunkType, leafType, fruit, yield, fertility, dominance);
+        double growthRate = ((DoubleChromosome)chromosomes.get(10)).value();
+        return new TreeGene(trunkWidth,
+                minHeight,
+                heightRange,
+                species,
+                trunkType,
+                leafType,
+                fruit,
+                yield,
+                fertility,
+                growthRate,
+                dominance);
     }
 
     public TreeGene copy() {
         return new TreeGene(
-                trunkWidth, minHeight, heightRange, species, trunkType, leafType, fruitItem, yield, fertility, dominance
+                trunkWidth, minHeight, heightRange, species, trunkType, leafType, fruitItem, yield, fertility, growthRate, dominance
         );
     }
 }

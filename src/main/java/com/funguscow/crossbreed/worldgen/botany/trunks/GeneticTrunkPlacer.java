@@ -100,8 +100,8 @@ public abstract class GeneticTrunkPlacer {
     }
 
     public static class TrunkPlacementResult {
-        List<GeneticFoliageAttachment> attachments;
-        Set<BlockPos> trunkBlocks;
+        public final List<GeneticFoliageAttachment> attachments;
+        public final Set<BlockPos> trunkBlocks;
 
         public TrunkPlacementResult(List<GeneticFoliageAttachment> attachments, Set<BlockPos> trunkBlocks) {
             this.attachments = attachments;

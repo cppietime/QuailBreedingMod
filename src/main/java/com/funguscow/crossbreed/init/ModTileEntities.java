@@ -2,6 +2,7 @@ package com.funguscow.crossbreed.init;
 
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.tileentities.GeneratorTileEntity;
+import com.funguscow.crossbreed.tileentities.GeneticTreeTileEntity;
 import com.funguscow.crossbreed.tileentities.NestTileEntity;
 import com.funguscow.crossbreed.tileentities.VarChestTileEntity;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
@@ -37,7 +38,7 @@ public class ModTileEntities {
         GENERATOR = TILE_ENTITIES.register("quail_generator",
                 () -> BlockEntityType.Builder.of(GeneratorTileEntity::new, ModBlocks.GENERATOR.get()).build(fetchBlockEntityType("quail_generator"))),
         GENETIC_TREE = TILE_ENTITIES.register("genetic_tree",
-                () -> BlockEntityType.Builder.of(GeneratorTileEntity::new, TreeSpecies.Saplings.stream().map(RegistryObject::get).toArray(Block[]::new)).build(fetchBlockEntityType("genetic_tree")));
+                () -> BlockEntityType.Builder.of(GeneticTreeTileEntity::new, TreeSpecies.Saplings.stream().map(RegistryObject::get).toArray(Block[]::new)).build(fetchBlockEntityType("genetic_tree")));
 
     public static VarChestTileEntity newChestTileEntity(BlockPos pos, BlockState state, int rows) {
         return new VarChestTileEntity(CHEST_TYPES.get(rows).get(), pos, state, rows);

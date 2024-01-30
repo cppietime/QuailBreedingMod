@@ -26,7 +26,7 @@ public class StraightTrunkPlacer extends GeneticTrunkPlacer {
                 }
             }
         }
-        GeneticFoliageAttachment attachment = new GeneticFoliageAttachment(startPos.above(height), Direction.UP, gene.trunkWidth);
+        GeneticFoliageAttachment attachment = new GeneticFoliageAttachment(startPos.above(height - 1), Direction.UP, gene.trunkWidth);
         result.attachments.add(attachment);
         return result;
     }

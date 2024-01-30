@@ -2,7 +2,9 @@ package com.funguscow.crossbreed.worldgen.botany;
 
 import com.funguscow.crossbreed.block.GeneticSaplingBlock;
 import com.funguscow.crossbreed.tileentities.GeneticTreeTileEntity;
+import com.funguscow.crossbreed.worldgen.botany.leaves.GeneticLeafPlacer;
 import com.funguscow.crossbreed.worldgen.botany.trunks.GeneticTrunkPlacer;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mojang.serialization.Codec;
@@ -22,13 +24,11 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.shapes.BitSetDiscreteVoxelShape;
 import net.minecraft.world.phys.shapes.DiscreteVoxelShape;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.OptionalInt;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This is mostly a copy and paste of TreeFeature, but allowing for genetic placers that check the sapling block entity.
@@ -191,14 +191,27 @@ public class GeneticTreeFeature extends Feature<NoneFeatureConfiguration> {
         }
 
         // Grow the trunk.
-        trunkPlacer.placeTrunk(level, origin, random, treeHeight, gene);
-        return true;
+        GeneticTrunkPlacer.TrunkPlacementResult result = trunkPlacer.placeTrunk(level, origin, random, treeHeight, gene);
+        GeneticLeafPlacer leafPlacer = GeneticLeafPlacer.LeafPlacers.get(gene.leafType);
+        Set<BlockPos> leaves = new HashSet<>();
+        for (GeneticFoliageAttachment attachment : result.attachments) {
+            leaves.addAll(leafPlacer.placeLeaves(level, attachment, geneEntity));
+        }
+        if (result.trunkBlocks.isEmpty() && leaves.isEmpty()) {
+            return false;
+        }
+        return BoundingBox.encapsulatingPositions(Iterables.concat(result.trunkBlocks, leaves)).map(box -> {
+            DiscreteVoxelShape shape = updateLeaves(level, box, result.trunkBlocks, leaves, Set.of());
+            StructureTemplate.updateShapeAtEdge(level, Block.UPDATE_ALL, shape, box.minX(), box.minY(), box.minZ());
+            return true;
+        }).orElse(false);
     }
 
     /**
      * Register singleton instances of all interface implementations used by tree growing logic.
      */
     public static void register() {
-            GeneticTrunkPlacer.register();
+        GeneticTrunkPlacer.register();
+        GeneticLeafPlacer.register();
     }
 }
