@@ -1,4 +1,4 @@
-package com.funguscow.crossbreed.worldgen.botany.leaves;
+package com.funguscow.crossbreed.block;
 
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.init.ModBlocks;
@@ -6,15 +6,16 @@ import com.funguscow.crossbreed.init.ModCreativeTabs;
 import com.funguscow.crossbreed.tileentities.GeneticTreeTileEntity;
 import com.funguscow.crossbreed.worldgen.botany.TreeGene;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
+import com.funguscow.crossbreed.worldgen.botany.wood.ModWoodType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
@@ -151,4 +153,20 @@ public class GeneticLeafBlock extends LeavesBlock implements EntityBlock {
         treeEntity.saveToItem(stack);
         return List.of(stack);
     }
+
+    @Override
+    public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return true;
+    }
+
+    @Override
+    public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return 60;
+    }
+
+    @Override
+    public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return 60;
+    }
+
 }

@@ -1,16 +1,14 @@
 package com.funguscow.crossbreed.init;
 
 import com.funguscow.crossbreed.BreedMod;
-import com.funguscow.crossbreed.tileentities.GeneratorTileEntity;
-import com.funguscow.crossbreed.tileentities.GeneticTreeTileEntity;
-import com.funguscow.crossbreed.tileentities.NestTileEntity;
-import com.funguscow.crossbreed.tileentities.VarChestTileEntity;
+import com.funguscow.crossbreed.tileentities.*;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import com.mojang.datafixers.types.Type;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -38,7 +36,11 @@ public class ModTileEntities {
         GENERATOR = TILE_ENTITIES.register("quail_generator",
                 () -> BlockEntityType.Builder.of(GeneratorTileEntity::new, ModBlocks.GENERATOR.get()).build(fetchBlockEntityType("quail_generator"))),
         GENETIC_TREE = TILE_ENTITIES.register("genetic_tree",
-                () -> BlockEntityType.Builder.of(GeneticTreeTileEntity::new, TreeSpecies.Saplings.stream().map(RegistryObject::get).toArray(Block[]::new)).build(fetchBlockEntityType("genetic_tree")));
+                () -> BlockEntityType.Builder.of(GeneticTreeTileEntity::new, TreeSpecies.Saplings.stream().map(RegistryObject::get).toArray(Block[]::new)).build(fetchBlockEntityType("genetic_tree"))),
+        SIGN = TILE_ENTITIES.register("sign",
+                () -> BlockEntityType.Builder.of(ModSignTileEntity::new, Blocks.AIR).build(fetchBlockEntityType("sign"))),
+        HANGING_SIGN = TILE_ENTITIES.register("hanging_sign",
+                () -> BlockEntityType.Builder.of(ModHangingSignTileEntity::new, Blocks.AIR).build(fetchBlockEntityType("sign")));
 
     public static VarChestTileEntity newChestTileEntity(BlockPos pos, BlockState state, int rows) {
         return new VarChestTileEntity(CHEST_TYPES.get(rows).get(), pos, state, rows);

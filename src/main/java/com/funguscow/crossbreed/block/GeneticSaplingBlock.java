@@ -43,6 +43,5 @@ public class GeneticSaplingBlock extends SaplingBlock implements EntityBlock {
         if (pLevel.getMaxLocalRawBrightness(pPos.above()) >= 9 && pRandom.nextDouble() <= treeEntity.getGene().growthRate) {
             this.advanceTree(pLevel, pPos, pState, pRandom);
         }
-
     }
 }

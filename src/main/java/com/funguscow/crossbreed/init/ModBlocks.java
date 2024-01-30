@@ -36,38 +36,24 @@ public class ModBlocks {
             QUAIL_NEST_BLOCK = () -> new NestBlock(BlockBehaviour.Properties.copy(Blocks.HAY_BLOCK)),
             GENERATOR_BLOCK = () -> new GeneratorBlock(BlockBehaviour.Properties.copy(Blocks.STONE));
 
-    public static final RegistryObject<Block> VOIDER = registerBlockAndItem("voider",
+    public static final RegistryObject<Block> VOIDER = registerSimpleBlockAndItem("voider",
             () -> new VoiderBlock(BlockBehaviour.Properties
                     .copy(Blocks.STONE)
                     .destroyTime(3.0f)
                     .explosionResistance(4.0f)
                     .sound(SoundType.STONE)
-                    .requiresCorrectToolForDrops()),
-            block -> new BlockItem(block, new Item.Properties()),
-            Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
-            CHEST4 = registerBlockAndItem("chest4",
-                    CHEST4_BLOCK,
-                    block -> new BlockItem(block, new Item.Properties()),
-                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
-            CHEST5 = registerBlockAndItem("chest5",
-                    CHEST5_BLOCK,
-                    block -> new BlockItem(block, new Item.Properties()),
-                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
-            CHEST6 = registerBlockAndItem("chest6",
-                    CHEST6_BLOCK,
-                    block -> new BlockItem(block, new Item.Properties()),
-                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
-            CHEST7 = registerBlockAndItem("chest7",
-                    CHEST7_BLOCK,
-                    block -> new BlockItem(block, new Item.Properties()),
-                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
-            CHEST8 = registerBlockAndItem("chest8",
-                    CHEST8_BLOCK,
-                    block -> new BlockItem(block, new Item.Properties()),
-                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
-            QUAIL_NEST = registerBlockAndItem("quail_nest", QUAIL_NEST_BLOCK,
-                    block -> new BlockItem(block, new Item.Properties()),
-                    Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)),
+                    .requiresCorrectToolForDrops())),
+            CHEST4 = registerSimpleBlockAndItem("chest4",
+                    CHEST4_BLOCK),
+            CHEST5 = registerSimpleBlockAndItem("chest5",
+                    CHEST5_BLOCK),
+            CHEST6 = registerSimpleBlockAndItem("chest6",
+                    CHEST6_BLOCK),
+            CHEST7 = registerSimpleBlockAndItem("chest7",
+                    CHEST7_BLOCK),
+            CHEST8 = registerSimpleBlockAndItem("chest8",
+                    CHEST8_BLOCK),
+            QUAIL_NEST = registerSimpleBlockAndItem("quail_nest", QUAIL_NEST_BLOCK),
             GENERATOR = registerBlockAndItem("quail_generator", GENERATOR_BLOCK,
                     block -> new BlockItem(block, new Item.Properties()),
                     Optional.empty());
@@ -79,6 +65,10 @@ public class ModBlocks {
             creativeTab.ifPresent(modCreativeTab -> modCreativeTab.add(item));
         }
         return registry;
+    }
+
+    public static RegistryObject<Block> registerSimpleBlockAndItem(String name, Supplier<Block> block) {
+        return registerBlockAndItem(name, block, b -> new BlockItem(b, new Item.Properties()), Optional.of(ModCreativeTabs.QUAIL_MOD_TAB));
     }
 
     public static void register(IEventBus bus) {

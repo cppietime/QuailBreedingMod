@@ -1,5 +1,6 @@
 package com.funguscow.crossbreed.worldgen.botany.leaves;
 
+import com.funguscow.crossbreed.block.GeneticLeafBlock;
 import com.funguscow.crossbreed.tileentities.GeneticTreeTileEntity;
 import com.funguscow.crossbreed.worldgen.botany.GeneticFoliageAttachment;
 import com.funguscow.crossbreed.worldgen.botany.TreeGene;
@@ -54,7 +55,9 @@ public abstract class GeneticLeafPlacer {
                 geneEntity.saveAdditional(nbt);
                 newTreeEntity.load(nbt);
 
-                newTreeEntity.recombine(level.getRandom());
+                // I'm disabling this because it makes too many sapling item stacks.
+                // The player can recombine by pollinating.
+                // newTreeEntity.recombine(level.getRandom());
             }
         }
     }
