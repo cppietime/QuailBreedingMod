@@ -4,8 +4,11 @@ import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.client.model.QuailModel;
 import com.funguscow.crossbreed.client.renderer.QuailRenderer;
 import com.funguscow.crossbreed.init.ModEntities;
+import com.funguscow.crossbreed.init.ModTileEntities;
 import com.funguscow.crossbreed.worldgen.botany.wood.ModWoodType;
 import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
+import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -20,6 +23,9 @@ public class ClientEventBusSubscriber {
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.QUAIL.get(), QuailRenderer::new);
         event.registerEntityRenderer(ModEntities.GENERIC_EGG.get(), ThrownItemRenderer::new);
+
+        event.registerBlockEntityRenderer(ModTileEntities.SIGN.get(), SignRenderer::new);
+        event.registerBlockEntityRenderer(ModTileEntities.HANGING_SIGN.get(), HangingSignRenderer::new);
     }
 
     @SubscribeEvent

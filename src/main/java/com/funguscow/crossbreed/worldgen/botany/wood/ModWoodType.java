@@ -17,8 +17,8 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Each wood type will need the following:
@@ -69,6 +69,28 @@ public class ModWoodType {
     public final String name;
     public final WoodType woodType;
 
+    private RegistryObject<Block> logBlock,
+        strippedLogBlock,
+        woodBlock,
+        strippedWoodBlock,
+        planksBlock,
+        slabBlock,
+        stairsBlock,
+        fenceBlock,
+        fenceGateBlock,
+        buttonBlock,
+        pressurePlateBlock,
+        doorBlock,
+        trapdoorBlock,
+        standingSignBlock,
+        wallSignBlock,
+        ceilingHangingSignBlock,
+        wallHangingSignBlock;
+
+    private RegistryObject<Item> doorItem,
+        signItem,
+        hangingSignItem;
+
     public ModWoodType(String name) {
         this.name = name;
         woodType = WoodType.register(new WoodType(BreedMod.MODID + ":" + name, BlockSetType.OAK));
@@ -77,68 +99,160 @@ public class ModWoodType {
 
     public void register() {
         // Register log block
-        ModBlocks.registerSimpleBlockAndItem(name + "_log",
+        logBlock = ModBlocks.registerSimpleBlockAndItem(name + "_log",
                 () -> new FlammableRotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
         // Register stripped log block
-        RegistryObject<Block> strippedLog = ModBlocks.registerSimpleBlockAndItem(name + "_stripped_log",
+        strippedLogBlock = ModBlocks.registerSimpleBlockAndItem(name + "_stripped_log",
                 () -> new FlammableRotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
-        Strippables.put(new ResourceLocation(BreedMod.MODID, name + "_log"), strippedLog);
+        Strippables.put(new ResourceLocation(BreedMod.MODID, name + "_log"), strippedLogBlock);
         // Register wood block
-        ModBlocks.registerSimpleBlockAndItem(name + "_wood",
+        woodBlock = ModBlocks.registerSimpleBlockAndItem(name + "_wood",
                 () -> new FlammableRotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
         // Register stripped wood block
-        RegistryObject<Block> strippedWood = ModBlocks.registerSimpleBlockAndItem(name + "_stripped_wood",
+        strippedWoodBlock = ModBlocks.registerSimpleBlockAndItem(name + "_stripped_wood",
                 () -> new FlammableRotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
-        Strippables.put(new ResourceLocation(BreedMod.MODID, name + "_wood"), strippedWood);
+        Strippables.put(new ResourceLocation(BreedMod.MODID, name + "_wood"), strippedWoodBlock);
         // Register planks
-        RegistryObject<Block> planks = ModBlocks.registerSimpleBlockAndItem(name + "_planks",
+        planksBlock = ModBlocks.registerSimpleBlockAndItem(name + "_planks",
                 () -> new FlammableBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
         // Register slab
-        ModBlocks.registerSimpleBlockAndItem(name + "_slab",
+        slabBlock = ModBlocks.registerSimpleBlockAndItem(name + "_slab",
                 () -> new FlammableSlabBlock(BlockBehaviour.Properties.copy(Blocks.OAK_SLAB)));
         // Register stairs
-        ModBlocks.registerSimpleBlockAndItem(name + "_stairs",
-                () -> new FlammableStairBlock(() -> planks.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.OAK_STAIRS)));
+        stairsBlock = ModBlocks.registerSimpleBlockAndItem(name + "_stairs",
+                () -> new FlammableStairBlock(() -> planksBlock.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.OAK_STAIRS)));
         // Register fence
-        ModBlocks.registerSimpleBlockAndItem(name + "_fence",
+        fenceBlock = ModBlocks.registerSimpleBlockAndItem(name + "_fence",
                 () -> new FlammableFenceBlock(BlockBehaviour.Properties.copy(Blocks.OAK_FENCE)));
         // Register fence gate
-        ModBlocks.registerSimpleBlockAndItem(name + "_fence_gate",
+        fenceGateBlock = ModBlocks.registerSimpleBlockAndItem(name + "_fence_gate",
                 () -> new FlammableFenceGateBlock(BlockBehaviour.Properties.copy(Blocks.OAK_FENCE_GATE)));
         // Register button
-        ModBlocks.registerSimpleBlockAndItem(name + "_button",
+        buttonBlock = ModBlocks.registerSimpleBlockAndItem(name + "_button",
                 () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.OAK_BUTTON), BlockSetType.OAK, 30, true));
         // Register pressure plate
-        ModBlocks.registerSimpleBlockAndItem(name + "_pressure_plate",
+        pressurePlateBlock = ModBlocks.registerSimpleBlockAndItem(name + "_pressure_plate",
                 () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.OAK_PRESSURE_PLATE), BlockSetType.OAK));
         // Register door
-        ModBlocks.registerBlockAndItem(name + "_door",
-                () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.OAK_DOOR), BlockSetType.OAK),
-                block -> new DoubleHighBlockItem(block, new Item.Properties()),
-                Optional.of(ModCreativeTabs.QUAIL_MOD_TAB));
+        doorBlock = ModBlocks.BLOCKS.register(name + "_door",
+                () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.OAK_DOOR), BlockSetType.OAK));
+        doorItem = ModItems.ITEMS.register(name + "_door",
+                () -> new DoubleHighBlockItem(doorBlock.get(), new Item.Properties()));
+        ModCreativeTabs.QUAIL_MOD_TAB.add(doorItem);
         // Register trapdoor
-        ModBlocks.registerSimpleBlockAndItem(name + "_trapdoor",
+        trapdoorBlock = ModBlocks.registerSimpleBlockAndItem(name + "_trapdoor",
                 () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.OAK_TRAPDOOR), BlockSetType.OAK));
         // Register wall sign block
-        RegistryObject<Block> wallSign = ModBlocks.BLOCKS.register(name + "_wall_sign",
+        wallSignBlock = ModBlocks.BLOCKS.register(name + "_wall_sign",
                 () -> new ModWallSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WALL_SIGN), woodType));
         // Register standing sign block
-        RegistryObject<Block> standingSign = ModBlocks.BLOCKS.register(name + "_standing_sign",
+        standingSignBlock = ModBlocks.BLOCKS.register(name + "_standing_sign",
                 () -> new ModStandingSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_SIGN), woodType));
         // Register sign item
-        RegistryObject<Item> signItem = ModItems.ITEMS.register(name + "_sign",
-                () -> new SignItem(new Item.Properties().stacksTo(16), standingSign.get(), wallSign.get()));
+        signItem = ModItems.ITEMS.register(name + "_sign",
+                () -> new SignItem(new Item.Properties().stacksTo(16), standingSignBlock.get(), wallSignBlock.get()));
         ModCreativeTabs.QUAIL_MOD_TAB.add(signItem);
         // Register wall-hanging sign block
-        RegistryObject<Block> wallHangingSign = ModBlocks.BLOCKS.register(name + "_wall_hanging_sign",
+        wallHangingSignBlock = ModBlocks.BLOCKS.register(name + "_wall_hanging_sign",
                 () -> new ModWallHangingSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WALL_HANGING_SIGN), woodType));
         // Register ceiling-hanging sign block
-        RegistryObject<Block> ceilingHangingSign = ModBlocks.BLOCKS.register(name + "_ceiling_hanging_sign",
+        ceilingHangingSignBlock = ModBlocks.BLOCKS.register(name + "_ceiling_hanging_sign",
                 () -> new ModCeilingHangingSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_HANGING_SIGN), woodType));
         // Register hanging sign item
-        RegistryObject<Item> hangingSignItem = ModItems.ITEMS.register(name + "_hanging_sign",
-                () -> new HangingSignItem(ceilingHangingSign.get(), wallHangingSign.get(), new Item.Properties().stacksTo(16)));
+        hangingSignItem = ModItems.ITEMS.register(name + "_hanging_sign",
+                () -> new HangingSignItem(ceilingHangingSignBlock.get(), wallHangingSignBlock.get(), new Item.Properties().stacksTo(16)));
         ModCreativeTabs.QUAIL_MOD_TAB.add(hangingSignItem);
+    }
+
+    public RegistryObject<Block> getLogBlock() {
+        return logBlock;
+    }
+
+    public RegistryObject<Block> getStrippedLogBlock() {
+        return strippedLogBlock;
+    }
+
+    public RegistryObject<Block> getWoodBlock() {
+        return woodBlock;
+    }
+
+    public RegistryObject<Block> getStrippedWoodBlock() {
+        return strippedWoodBlock;
+    }
+
+    public RegistryObject<Block> getPlanksBlock() {
+        return planksBlock;
+    }
+
+    public RegistryObject<Block> getSlabBlock() {
+        return slabBlock;
+    }
+
+    public RegistryObject<Block> getStairsBlock() {
+        return stairsBlock;
+    }
+
+    public RegistryObject<Block> getFenceBlock() {
+        return fenceBlock;
+    }
+
+    public RegistryObject<Block> getFenceGateBlock() {
+        return fenceGateBlock;
+    }
+
+    public RegistryObject<Block> getButtonBlock() {
+        return buttonBlock;
+    }
+
+    public RegistryObject<Block> getPressurePlateBlock() {
+        return pressurePlateBlock;
+    }
+
+    public RegistryObject<Block> getDoorBlock() {
+        return doorBlock;
+    }
+
+    public RegistryObject<Block> getTrapdoorBlock() {
+        return trapdoorBlock;
+    }
+
+    public RegistryObject<Block> getStandingSignBlock() {
+        return standingSignBlock;
+    }
+
+    public RegistryObject<Block> getWallSignBlock() {
+        return wallSignBlock;
+    }
+
+    public RegistryObject<Block> getCeilingHangingSignBlock() {
+        return ceilingHangingSignBlock;
+    }
+
+    public RegistryObject<Block> getWallHangingSignBlock() {
+        return wallHangingSignBlock;
+    }
+
+    public RegistryObject<Item> getDoorItem() {
+        return doorItem;
+    }
+
+    public RegistryObject<Item> getSignItem() {
+        return signItem;
+    }
+
+    public RegistryObject<Item> getHangingSignItem() {
+        return hangingSignItem;
+    }
+
+    public List<RegistryObject<Block>> getAllBlocks() {
+        return List.of(
+                logBlock, strippedLogBlock, woodBlock, strippedWoodBlock,
+                planksBlock, stairsBlock, slabBlock,
+                buttonBlock, pressurePlateBlock,
+                fenceBlock, fenceGateBlock,
+                doorBlock, trapdoorBlock,
+                standingSignBlock, wallSignBlock, ceilingHangingSignBlock, wallHangingSignBlock
+        );
     }
 
     public static final ModWoodType TESTWOOD = new ModWoodType("testwood");

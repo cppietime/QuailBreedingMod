@@ -1,6 +1,6 @@
 package com.funguscow.crossbreed.block;
 
-import com.funguscow.crossbreed.tileentities.ModSignTileEntity;
+import com.funguscow.crossbreed.tileentities.ModHangingSignTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.WallHangingSignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -14,6 +14,6 @@ public class ModWallHangingSignBlock extends WallHangingSignBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new ModSignTileEntity(pPos, pState);
+        return new ModHangingSignTileEntity(pPos, pState);
     }
 }
