@@ -3,6 +3,8 @@ package com.funguscow.crossbreed.tileentities;
 import com.funguscow.crossbreed.genetics.Gene;
 import com.funguscow.crossbreed.init.ModTileEntities;
 import com.funguscow.crossbreed.util.Pair;
+import com.funguscow.crossbreed.util.RandomPool;
+import com.funguscow.crossbreed.util.UnorderedPair;
 import com.funguscow.crossbreed.worldgen.botany.TreeGene;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import net.minecraft.core.BlockPos;
@@ -11,10 +13,13 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class GeneticTreeTileEntity extends BlockEntity {
 
@@ -67,5 +72,42 @@ public class GeneticTreeTileEntity extends BlockEntity {
         Pair<TreeGene, TreeGene> pair = Gene.diploid(alleleA, alleleB, alleleA, alleleB, random);
         alleleA = pair.first;
         alleleB = pair.second;
+    }
+
+    public TreeGene getAlleleA() {
+        return alleleA;
+    }
+
+    public TreeGene getAlleleB() {
+        return alleleB;
+    }
+
+    public void sendUpdate() {
+        setChanged();
+
+        if (level != null) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        }
+    }
+
+    public void pollinate(TreeGene pollen, RandomSource random) {
+        UnorderedPair<String> pair = new UnorderedPair<>(pollen.species, getGene().species);
+        RandomPool<String> pool = TreeSpecies.Pairings.get(pair);
+        if (pool != null) {
+            float p = random.nextFloat();
+            String hybrid = pool.get(p);
+            if (hybrid != null) {
+                TreeSpecies species = Objects.requireNonNull(TreeSpecies.Species.get(hybrid));
+                alleleA = species.defaultGene.copy();
+                alleleB = species.defaultGene.copy();
+                sendUpdate();
+                return;
+            }
+        }
+
+        Pair<TreeGene, TreeGene> alleles = Gene.diploid(alleleA, alleleB, pollen, pollen, random);
+        alleleA = alleles.first;
+        alleleB = alleles.second;
+        sendUpdate();
     }
 }

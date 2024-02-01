@@ -43,6 +43,8 @@
   "text.breesources.stat.timeRandom": "Egg Cooldown Modifier Variation: x%s",
   "text.breesources.stat.fecundity": "Fecundity: x%s",
   "text.breesources.stat.eggTimer": "Time Until Next Egg: %s",
+  "text.breesources.stat.species": "Species: %s",
+  "text.breesources.stat.trunkWidth": "Trunk Width: %1$sx%1$s",
   "text.breesources.empty": "Empty",
   "text.breesources.onetime": "One-time use",
   "text.breesources.recipe_category.quail_breeding": "Quail Breeding",
@@ -249,5 +251,6 @@
   "text.breesources.breed.cherry": "Cherry Quail",
   "text.breesources.breed.sherd": "Pottery Quail",
   "text.breesources.breed.torchflower": "Torchflower Quail",
-  "text.breesources.breed.pitcher": "Pitcher Plant Quail"
+  "text.breesources.breed.pitcher": "Pitcher Plant Quail",
+  "text.breesources.species.test": "Test Tree"
 }

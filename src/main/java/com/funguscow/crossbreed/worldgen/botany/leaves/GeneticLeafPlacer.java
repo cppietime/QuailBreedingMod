@@ -47,7 +47,7 @@ public abstract class GeneticLeafPlacer {
         if (leafState.hasProperty(GeneticLeafBlock.POLLINATED)) {
             leafState = leafState.setValue(GeneticLeafBlock.POLLINATED, Boolean.FALSE);
         }
-        level.setBlock(pos, leafState, Block.UPDATE_ALL);
+        level.setBlock(pos, leafState, Block.UPDATE_ALL | Block.UPDATE_KNOWN_SHAPE);
         if (leafState.getBlock() instanceof GeneticLeafBlock) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof GeneticTreeTileEntity newTreeEntity) {

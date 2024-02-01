@@ -68,11 +68,11 @@ public class GeneticLeafBlock extends LeavesBlock implements EntityBlock {
         }
 
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-        if (blockEntity instanceof GeneticTreeTileEntity tree) {
+        if (!pLevel.isClientSide && blockEntity instanceof GeneticTreeTileEntity tree) {
             TreeGene gene = tree.getGene();
 
             // Drop sapling and/or fruit, possibly.
-            tryDropSapling(pLevel, pPos, tree);
+            tryDropSapling(pLevel, pPos, tree, pState);
             tryDropFruit(pLevel, pPos, gene);
         }
 
@@ -94,10 +94,13 @@ public class GeneticLeafBlock extends LeavesBlock implements EntityBlock {
         super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
     }
 
-    protected void tryDropSapling(Level level, BlockPos pos, GeneticTreeTileEntity tree) {
+    protected void tryDropSapling(Level level, BlockPos pos, GeneticTreeTileEntity tree, BlockState state) {
         RandomSource random = level.random;
         TreeGene gene = tree.getGene();
-        if (random.nextFloat() > gene.fertility) {
+        if (!(state.getBlock() instanceof GeneticLeafBlock)) {
+            return;
+        }
+        if (!state.getValue(POLLINATED) && random.nextFloat() > gene.fertility) {
             return;
         }
 

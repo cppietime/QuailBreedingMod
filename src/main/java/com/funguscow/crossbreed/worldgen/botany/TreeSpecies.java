@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 public class TreeSpecies {
 
     public static final Map<String, TreeSpecies> Species = new HashMap<>();
+    public static final Map<Block, TreeSpecies> VanillaSpecies = new HashMap<>();
     public static final Map<UnorderedPair<String>, RandomPool<String>> Pairings = new HashMap<>();
     public static final List<RegistryObject<Block>> Saplings = new ArrayList<>();
 
@@ -116,6 +117,8 @@ public class TreeSpecies {
                     block -> new BlockItem(block, new Item.Properties()),
                     Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)));
         }
+
+        VanillaSpecies.put(Blocks.OAK_LEAVES, TEST_TREE);
     }
 
 }

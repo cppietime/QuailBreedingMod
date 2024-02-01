@@ -3,10 +3,7 @@ package com.funguscow.crossbreed.init;
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.entity.QuailEntity;
-import com.funguscow.crossbreed.item.BubbleItem;
-import com.funguscow.crossbreed.item.GenericEggItem;
-import com.funguscow.crossbreed.item.JailItem;
-import com.funguscow.crossbreed.item.MeterItem;
+import com.funguscow.crossbreed.item.*;
 import com.funguscow.crossbreed.tileentities.NestTileEntity;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import com.funguscow.crossbreed.block.GeneticLeafBlock;
@@ -69,7 +66,9 @@ public class ModItems {
             QUAIL_SPAWN_EGG = ITEMS.register("quail_spawn_egg",
                     () -> new ForgeSpawnEggItem(ModEntities.QUAIL, 0x734011, 0xa4b5bd, new Item.Properties().stacksTo(16))),
             MANURE = ITEMS.register("manure",
-                    () -> new Item(new Item.Properties()));
+                    () -> new Item(new Item.Properties())),
+            SWAB = ITEMS.register("swab",
+                    () -> new SwabItem(new Item.Properties().stacksTo(1)));
 
     public static void matchConfig() {
         GenericEggItem quailEgg = (GenericEggItem) QUAIL_EGG.get();
@@ -95,6 +94,7 @@ public class ModItems {
         ModCreativeTabs.QUAIL_MOD_TAB.add(QUAIL_METER);
         ModCreativeTabs.QUAIL_MOD_TAB.add(QUAIL_SPAWN_EGG);
         ModCreativeTabs.QUAIL_MOD_TAB.add(MANURE);
+        ModCreativeTabs.QUAIL_MOD_TAB.add(SWAB);
 
         ModCreativeTabs.addItemToVanillaTab(CreativeModeTabs.SPAWN_EGGS, QUAIL_SPAWN_EGG);
     }
