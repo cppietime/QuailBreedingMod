@@ -6,15 +6,16 @@ import com.funguscow.crossbreed.init.ModCreativeTabs;
 import com.funguscow.crossbreed.tileentities.GeneticTreeTileEntity;
 import com.funguscow.crossbreed.worldgen.botany.TreeGene;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
-import com.funguscow.crossbreed.worldgen.botany.wood.ModWoodType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -26,30 +27,42 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class GeneticLeafBlock extends LeavesBlock implements EntityBlock {
 
+    public static class LeafSpec {
+        public final String name;
+        public final boolean foliageColored;
+
+        public LeafSpec(String name, boolean color) {
+            this.name = name;
+            foliageColored = color;
+        }
+    }
+
     public static final BooleanProperty POLLINATED = BooleanProperty.create("pollinated");
 
     public static final List<RegistryObject<Block>> Leaves = new ArrayList<>();
-    public static final Set<String> LEAF_TYPES = Set.of(
-            "test_leaves",
-            "g_oak_leaves",
-            "g_birch_leaves",
-            "g_spruce_leaves",
-            "g_jungle_leaves",
-            "g_dark_oak_leaves",
-            "g_acacia_leaves",
-            "g_mangrove_leaves",
-            "g_cherry_leaves"
+    public static final List<LeafSpec> LEAF_TYPES = List.of(
+            new LeafSpec("test_leaves", false),
+            new LeafSpec("g_oak_leaves", true),
+            new LeafSpec("g_birch_leaves", true),
+            new LeafSpec("g_spruce_leaves", true),
+            new LeafSpec("g_jungle_leaves", true),
+            new LeafSpec("g_dark_oak_leaves", true),
+            new LeafSpec("g_acacia_leaves", true),
+            new LeafSpec("g_mangrove_leaves", true),
+            new LeafSpec("g_cherry_leaves", false)
     );
 
     public GeneticLeafBlock(Properties pProperties) {
@@ -144,8 +157,8 @@ public class GeneticLeafBlock extends LeavesBlock implements EntityBlock {
 
     public static void registerItems() {
         Supplier<Block> supplier = () -> new GeneticLeafBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LEAVES));
-        for (String leafType : LEAF_TYPES) {
-            Leaves.add(ModBlocks.registerBlockAndItem(leafType,
+        for (LeafSpec leafSpec : LEAF_TYPES) {
+            Leaves.add(ModBlocks.registerBlockAndItem(leafSpec.name,
                     supplier,
                     block -> new BlockItem(block, new Item.Properties()),
                     Optional.of(ModCreativeTabs.QUAIL_MOD_TAB)));

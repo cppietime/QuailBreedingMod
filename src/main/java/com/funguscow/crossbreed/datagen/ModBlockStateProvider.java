@@ -68,11 +68,12 @@ public class ModBlockStateProvider extends BlockStateProvider {
             ResourceLocation texture = ForgeRegistries.BLOCKS.containsKey(vanilla) ? blockTexture(ForgeRegistries.BLOCKS.getValue(vanilla)) : blockTexture(sapling.get());
             simpleBlock(sapling.get(), models().cross(sapling.getId().getPath(), texture).renderType("cutout"));
         }
-        for (String leafType : GeneticLeafBlock.LEAF_TYPES) {
-            ResourceLocation location = new ResourceLocation(BreedMod.MODID, leafType);
+        for (GeneticLeafBlock.LeafSpec leafSpec : GeneticLeafBlock.LEAF_TYPES) {
+            String leafName = leafSpec.name;
+            ResourceLocation location = new ResourceLocation(BreedMod.MODID, leafName);
             Block block = ForgeRegistries.BLOCKS.getValue(location);
-            ResourceLocation texture = leafType.startsWith("g_") ? blockTexture(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(leafType.substring(2)))) : blockTexture(block);
-            simpleBlockWithItem(block, models().singleTexture(leafType, new ResourceLocation("block/leaves"), "all", texture).renderType("cutout"));
+            ResourceLocation texture = leafName.startsWith("g_") ? blockTexture(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(leafName.substring(2)))) : blockTexture(block);
+            simpleBlockWithItem(block, models().singleTexture(leafName, new ResourceLocation("block/leaves"), "all", texture).renderType("cutout"));
         }
     }
 
