@@ -1,5 +1,6 @@
 package com.funguscow.crossbreed.tileentities;
 
+import com.funguscow.crossbreed.block.GeneticSaplingBlock;
 import com.funguscow.crossbreed.genetics.Gene;
 import com.funguscow.crossbreed.init.ModTileEntities;
 import com.funguscow.crossbreed.util.Pair;
@@ -16,6 +17,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,10 +28,18 @@ public class GeneticTreeTileEntity extends BlockEntity {
     private TreeGene alleleA, alleleB;
 
     public GeneticTreeTileEntity(BlockPos pPos, BlockState pBlockState) {
-        // TODO everything
         super(ModTileEntities.GENETIC_TREE.get(), pPos, pBlockState);
-        alleleA = TreeSpecies.TEST_TREE.defaultGene.copy();
-        alleleB = TreeSpecies.TEST_TREE.defaultGene.copy();
+        Block block = pBlockState.getBlock();
+        if (block instanceof GeneticSaplingBlock) {
+            String saplingName = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).getPath();
+            String speciesName = saplingName.substring(0, saplingName.length() - "_sapling".length());
+            TreeSpecies species = TreeSpecies.Species.get(speciesName);
+            alleleA = species.defaultGene.copy();
+            alleleB = species.defaultGene.copy();
+        } else {
+            alleleA = TreeSpecies.TEST_TREE.defaultGene.copy();
+            alleleB = TreeSpecies.TEST_TREE.defaultGene.copy();
+        }
     }
 
     public TreeGene getGene() {

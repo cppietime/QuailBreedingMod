@@ -1,5 +1,13 @@
 {
   "values": [
-    "breesources:test_sapling"
+    "breesources:cherry_sapling",
+    "breesources:test_sapling",
+    "breesources:birch_sapling",
+    "breesources:oak_sapling",
+    "breesources:acacia_sapling",
+    "breesources:jungle_sapling",
+    "breesources:dark_oak_sapling",
+    "breesources:mangrove_sapling",
+    "breesources:spruce_sapling"
   ]
 }

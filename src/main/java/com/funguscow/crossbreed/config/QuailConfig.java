@@ -193,7 +193,7 @@ public class QuailConfig {
                 config.heightRange = builder
                         .comment("Variation in tree height")
                         .worldRestart()
-                        .defineInRange("HeightRange", type.getValue().defaultGene.minHeight, 0f, 10f);
+                        .defineInRange("HeightRange", type.getValue().defaultGene.heightRange, 0f, 10f);
                 config.width = builder
                         .comment("Width of trunk")
                         .worldRestart()

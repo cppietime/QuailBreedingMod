@@ -1,6 +1,7 @@
 package com.funguscow.crossbreed.datagen;
 
 import com.funguscow.crossbreed.BreedMod;
+import com.funguscow.crossbreed.block.GeneticLeafBlock;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import com.funguscow.crossbreed.worldgen.botany.wood.ModWoodType;
 import net.minecraft.data.PackOutput;
@@ -63,7 +64,15 @@ public class ModBlockStateProvider extends BlockStateProvider {
             simpleBlock(woodType.getWallHangingSignBlock().get(), hangingSignModel);
         }
         for (RegistryObject<Block> sapling : TreeSpecies.Saplings) {
-            simpleBlock(sapling.get(), models().cross(sapling.getId().getPath(), blockTexture(sapling.get())).renderType("cutout"));
+            ResourceLocation vanilla = new ResourceLocation(sapling.getId().getPath());
+            ResourceLocation texture = ForgeRegistries.BLOCKS.containsKey(vanilla) ? blockTexture(ForgeRegistries.BLOCKS.getValue(vanilla)) : blockTexture(sapling.get());
+            simpleBlock(sapling.get(), models().cross(sapling.getId().getPath(), texture).renderType("cutout"));
+        }
+        for (String leafType : GeneticLeafBlock.LEAF_TYPES) {
+            ResourceLocation location = new ResourceLocation(BreedMod.MODID, leafType);
+            Block block = ForgeRegistries.BLOCKS.getValue(location);
+            ResourceLocation texture = leafType.startsWith("g_") ? blockTexture(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(leafType.substring(2)))) : blockTexture(block);
+            simpleBlockWithItem(block, models().singleTexture(leafType, new ResourceLocation("block/leaves"), "all", texture).renderType("cutout"));
         }
     }
 

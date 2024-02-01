@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "breesources:block/test_sapling"
-  }
+  "parent": "breesources:block/test_sapling"
 }

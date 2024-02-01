@@ -33,7 +33,8 @@ public class ModItemModelProvider extends ItemModelProvider {
             defaultItem(woodType.getDoorItem());
         }
         for (RegistryObject<Block> sapling : TreeSpecies.Saplings) {
-            generatedBlockItem(sapling);
+            //generatedBlockItem(sapling);
+            defaultBlockItem(sapling);
         }
     }
 

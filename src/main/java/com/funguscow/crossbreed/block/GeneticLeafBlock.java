@@ -41,7 +41,15 @@ public class GeneticLeafBlock extends LeavesBlock implements EntityBlock {
 
     public static final List<RegistryObject<Block>> Leaves = new ArrayList<>();
     public static final Set<String> LEAF_TYPES = Set.of(
-            "test_leaves"
+            "test_leaves",
+            "g_oak_leaves",
+            "g_birch_leaves",
+            "g_spruce_leaves",
+            "g_jungle_leaves",
+            "g_dark_oak_leaves",
+            "g_acacia_leaves",
+            "g_mangrove_leaves",
+            "g_cherry_leaves"
     );
 
     public GeneticLeafBlock(Properties pProperties) {
