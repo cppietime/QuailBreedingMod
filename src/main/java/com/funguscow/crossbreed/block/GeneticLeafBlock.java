@@ -167,7 +167,6 @@ public class GeneticLeafBlock extends LeavesBlock implements EntityBlock {
 
     @Override
     public @NotNull List<ItemStack> onSheared(@Nullable Player player, @NotNull ItemStack item, Level level, BlockPos pos, int fortune) {
-        BreedMod.LOGGER.debug("Shearing...");
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (!(blockEntity instanceof GeneticTreeTileEntity treeEntity)) {
             return List.of();

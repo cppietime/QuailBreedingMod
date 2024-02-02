@@ -74,6 +74,9 @@ public abstract class GeneticLeafPlacer {
         new CubeLeafPlacer();
         new ConeLeafPlacer();
         new SphereLeafPlacer();
+        new BlobLeafPlacer();
+        new SnakeLeafPlacer();
+        new FlatLeafPlacer();
     }
 
 }

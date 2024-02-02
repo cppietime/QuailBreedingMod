@@ -64,7 +64,6 @@ public class SwabItem extends Item {
                 // Sample leaves
                 TreeGene gene = random.nextBoolean() ? treeEntity.getAlleleA() : treeEntity.getAlleleB();
                 itemStack.addTagElement("Allele", gene.save());
-                return InteractionResult.SUCCESS;
             } else {
                 // Attempt to pollinate leaves
                 if (!(leaf instanceof GeneticLeafBlock)) {
@@ -78,8 +77,8 @@ public class SwabItem extends Item {
                 TreeGene allele = TreeGene.of(pollen);
                 treeEntity.pollinate(allele, random);
                 itemStack.removeTagKey("Allele");
-                return InteractionResult.SUCCESS;
             }
+            return InteractionResult.SUCCESS;
         } else {
             // Vanilla leaves
             TreeSpecies species = TreeSpecies.VanillaSpecies.get(blockState.getBlock());
@@ -94,7 +93,11 @@ public class SwabItem extends Item {
             } else {
                 ResourceLocation leafKey = species.leafBlock;
                 Block leafBlock = Objects.requireNonNull(ForgeRegistries.BLOCKS.getValue(leafKey));
-                level.setBlock(position, leafBlock.defaultBlockState().trySetValue(GeneticLeafBlock.POLLINATED, Boolean.TRUE), Block.UPDATE_ALL | Block.UPDATE_KNOWN_SHAPE);
+                level.setBlock(position,
+                        leafBlock.defaultBlockState()
+                                .trySetValue(GeneticLeafBlock.POLLINATED, Boolean.TRUE)
+                                .trySetValue(LeavesBlock.DISTANCE, blockState.getValue(LeavesBlock.DISTANCE)),
+                        Block.UPDATE_ALL | Block.UPDATE_KNOWN_SHAPE);
                 BlockEntity newEntity = level.getBlockEntity(position);
                 if (newEntity instanceof GeneticTreeTileEntity treeEntity) {
                     CompoundTag nbt = new CompoundTag();

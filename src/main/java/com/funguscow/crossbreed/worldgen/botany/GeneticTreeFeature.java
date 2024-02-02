@@ -183,10 +183,10 @@ public class GeneticTreeFeature extends Feature<NoneFeatureConfiguration> {
                 BlockPos dirtPos = saplingPos.below();
 
                 // Get the sapling out of the way.
-                level.setBlock(saplingPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_INVISIBLE);
+                level.setBlock(saplingPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
 
                 // Set the base block to dirt.
-                level.setBlock(dirtPos, Blocks.DIRT.defaultBlockState(), Block.UPDATE_INVISIBLE);
+                level.setBlock(dirtPos, Blocks.DIRT.defaultBlockState(), Block.UPDATE_ALL);
             }
         }
 

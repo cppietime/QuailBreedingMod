@@ -118,6 +118,14 @@ public abstract class GeneticTrunkPlacer {
      */
     public static void register() {
         new StraightTrunkPlacer();
+        new HollowTrunkPlacer();
+        new SpiralTrunkPlacer();
+        new RottenTrunkPlacer();
+        new HourglassTrunkPlacer();
+        new BulgeTrunkPlacer();
+        new CrossTrunkPlacer();
+        new BranchTrunkPlacer();
+        new RunnerTrunkPlacer();
     }
 
 }

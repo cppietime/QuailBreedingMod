@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -51,6 +52,15 @@ public class ClientEventBusSubscriber {
     public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
         BlockColor colorizer = (state, level, pos, index) -> level.getBlockTint(pos, BiomeColors.FOLIAGE_COLOR_RESOLVER);
         event.register(colorizer,
+                GeneticLeafBlock.LEAF_TYPES.stream()
+                        .filter(spec -> spec.foliageColored)
+                        .map(spec -> ForgeRegistries.BLOCKS.getValue(new ResourceLocation(BreedMod.MODID, spec.name)))
+                        .toArray(Block[]::new));
+    }
+
+    @SubscribeEvent
+    public static void registerItemColors(RegisterColorHandlersEvent.Item event) {
+        event.register((stack, index) -> FoliageColor.getDefaultColor(),
                 GeneticLeafBlock.LEAF_TYPES.stream()
                         .filter(spec -> spec.foliageColored)
                         .map(spec -> ForgeRegistries.BLOCKS.getValue(new ResourceLocation(BreedMod.MODID, spec.name)))
