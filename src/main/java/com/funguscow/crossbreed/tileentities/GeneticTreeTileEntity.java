@@ -37,8 +37,8 @@ public class GeneticTreeTileEntity extends BlockEntity {
             alleleA = species.defaultGene.copy();
             alleleB = species.defaultGene.copy();
         } else {
-            alleleA = TreeSpecies.TEST_TREE.defaultGene.copy();
-            alleleB = TreeSpecies.TEST_TREE.defaultGene.copy();
+            alleleA = TreeSpecies.PINE.defaultGene.copy();
+            alleleB = TreeSpecies.PINE.defaultGene.copy();
         }
     }
 

@@ -8,8 +8,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -50,6 +52,8 @@ public class SwabItem extends Item {
     public InteractionResult useOn(UseOnContext pContext) {
         BlockPos position = pContext.getClickedPos();
         Level level = pContext.getLevel();
+        Player player = Objects.requireNonNull(pContext.getPlayer());
+
         BlockState blockState = level.getBlockState(position);
         ItemStack itemStack = pContext.getItemInHand();
         RandomSource random = level.random;
@@ -60,23 +64,33 @@ public class SwabItem extends Item {
         CompoundTag pollen = itemStack.getTagElement("Allele");
         if (blockEntity instanceof GeneticTreeTileEntity treeEntity) {
             // Modded leaves
+            if (!(leaf instanceof GeneticLeafBlock)) {
+                return InteractionResult.FAIL;
+            }
+            if (blockState.getValue(GeneticLeafBlock.POLLINATED)) {
+                // Already pollinated, quit
+                return InteractionResult.FAIL;
+            }
             if (pollen == null) {
                 // Sample leaves
+                if (level.isClientSide()) {
+                    player.playSound(SoundEvents.ITEM_PICKUP);
+                    return InteractionResult.SUCCESS;
+                }
                 TreeGene gene = random.nextBoolean() ? treeEntity.getAlleleA() : treeEntity.getAlleleB();
                 itemStack.addTagElement("Allele", gene.save());
             } else {
                 // Attempt to pollinate leaves
-                if (!(leaf instanceof GeneticLeafBlock)) {
-                    return InteractionResult.FAIL;
-                }
-                if (blockState.getValue(GeneticLeafBlock.POLLINATED)) {
-                    // Already pollinated, quit
-                    return InteractionResult.FAIL;
+                if (level.isClientSide()) {
+                    if (!player.isCreative()) {
+                        player.playSound(SoundEvents.ITEM_BREAK);
+                    }
+                    return InteractionResult.SUCCESS;
                 }
                 level.setBlock(position, blockState.setValue(GeneticLeafBlock.POLLINATED, Boolean.TRUE), Block.UPDATE_ALL | Block.UPDATE_KNOWN_SHAPE);
                 TreeGene allele = TreeGene.of(pollen);
                 treeEntity.pollinate(allele, random);
-                itemStack.removeTagKey("Allele");
+                itemStack.shrink(1);
             }
             return InteractionResult.SUCCESS;
         } else {
@@ -88,6 +102,10 @@ public class SwabItem extends Item {
             TreeGene defaultGene = species.defaultGene;
             if (pollen == null) {
                 // Create pollen
+                if (level.isClientSide()) {
+                    player.playSound(SoundEvents.ITEM_PICKUP);
+                    return InteractionResult.SUCCESS;
+                }
                 itemStack.addTagElement("Allele", defaultGene.save());
                 return InteractionResult.SUCCESS;
             } else {
@@ -100,13 +118,19 @@ public class SwabItem extends Item {
                         Block.UPDATE_ALL | Block.UPDATE_KNOWN_SHAPE);
                 BlockEntity newEntity = level.getBlockEntity(position);
                 if (newEntity instanceof GeneticTreeTileEntity treeEntity) {
+                    if (level.isClientSide()) {
+                        if (!player.isCreative()) {
+                            player.playSound(SoundEvents.ITEM_BREAK);
+                        }
+                        return InteractionResult.SUCCESS;
+                    }
                     CompoundTag nbt = new CompoundTag();
                     treeEntity.saveAdditional(nbt);
                     nbt.put("AlleleA", defaultGene.save());
                     nbt.put("AlleleB", defaultGene.save());
                     treeEntity.load(nbt);
                     treeEntity.pollinate(TreeGene.of(pollen), random);
-                    itemStack.removeTagKey("Allele");
+                    itemStack.shrink(1);
                     return InteractionResult.SUCCESS;
                 }
             }

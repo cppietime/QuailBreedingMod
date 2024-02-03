@@ -30,6 +30,26 @@ public class ModItemTagProvider extends ItemTagsProvider {
                     woodType.getStrippedWoodBlock().get().asItem()
             );
             tag(ItemTags.PLANKS).add(woodType.getPlanksBlock().get().asItem());
+
+            tag(ItemTags.WOODEN_BUTTONS).add(woodType.getButtonBlock().get().asItem());
+            tag(ItemTags.WOODEN_PRESSURE_PLATES).add(woodType.getPressurePlateBlock().get().asItem());
+
+            tag(ItemTags.WOODEN_DOORS).add(woodType.getDoorItem().get());
+            tag(ItemTags.WOODEN_TRAPDOORS).add(woodType.getTrapdoorBlock().get().asItem());
+
+            tag(ItemTags.WOODEN_FENCES).add(woodType.getFenceBlock().get().asItem());
+            tag(ItemTags.FENCE_GATES).add(woodType.getFenceGateBlock().get().asItem());
+
+            tag(ItemTags.WOODEN_SLABS).add(woodType.getSlabBlock().get().asItem());
+            tag(ItemTags.WOODEN_STAIRS).add(woodType.getStairsBlock().get().asItem());
+
+            tag(ItemTags.SIGNS).add(woodType.getSignItem().get());
+            tag(ItemTags.HANGING_SIGNS).add(woodType.getHangingSignItem().get());
+
+            tag(woodType.craftsToPlanks).add(woodType.getLogBlock().get().asItem(),
+                    woodType.getStrippedLogBlock().get().asItem(),
+                    woodType.getWoodBlock().get().asItem(),
+                    woodType.getStrippedWoodBlock().get().asItem());
         }
         tag(ItemTags.SAPLINGS).add(TreeSpecies.Saplings.stream().map(ro -> ro.get().asItem()).toArray(Item[]::new));
     }

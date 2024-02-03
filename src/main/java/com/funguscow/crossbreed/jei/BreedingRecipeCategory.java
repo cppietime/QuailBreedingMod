@@ -12,6 +12,8 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -24,15 +26,27 @@ public class BreedingRecipeCategory<TIngredient extends IngredientLike, TRecipe 
     public static final RecipeType<QuailBreedingRecipe> QUAIL_BREEDING_RECIPE_TYPE = RecipeType.create(BreedMod.MODID,
             "quail_breeding_recipe_type",
             QuailBreedingRecipe.class);
+    public static final RecipeType<TreeBreedingRecipe> TREE_BREEDING_RECIPE_TYPE = RecipeType.create(BreedMod.MODID,
+                "tree_breeding_recipe_type",
+                TreeBreedingRecipe.class);
 
     public static final ResourceLocation GUI = new ResourceLocation(BreedMod.MODID, "textures/gui/breeding_recipe_bg.png");
 
     private final IDrawable background, icon;
+    private final String name;
     private final RecipeType<TRecipe> recipeType;
 
+    private static ItemLike getIcon(String name) {
+        return switch (name) {
+            case "tree_breeding_recipe_type" -> Items.OAK_SAPLING;
+            default -> ModItems.QUAIL_EGG.get();
+        };
+    }
+
     public BreedingRecipeCategory(IGuiHelper helper, RecipeType<TRecipe> recipeType) {
+        name = recipeType.getUid().getPath();
         background = helper.createDrawable(GUI, 0, 0, 176, 87);
-        icon = helper.createDrawableItemStack(new ItemStack(ModItems.QUAIL_EGG.get()));
+        icon = helper.createDrawableItemStack(new ItemStack(getIcon(name)));
         this.recipeType = recipeType;
     }
 
@@ -43,7 +57,7 @@ public class BreedingRecipeCategory<TIngredient extends IngredientLike, TRecipe 
 
     @Override
     public @NotNull Component getTitle() {
-        return Component.translatable("text." + BreedMod.MODID + ".recipe_category.quail_breeding");
+        return Component.translatable("text." + BreedMod.MODID + ".recipe_category." + name);
     }
 
     @Override

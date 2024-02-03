@@ -1,8 +1,8 @@
 {
   "values": [
-    "breesources:testwood_log",
-    "breesources:testwood_wood",
-    "breesources:testwood_stripped_log",
-    "breesources:testwood_stripped_wood"
+    "breesources:pine_log",
+    "breesources:pine_wood",
+    "breesources:pine_stripped_log",
+    "breesources:pine_stripped_wood"
   ]
 }

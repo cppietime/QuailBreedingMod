@@ -5,11 +5,13 @@ import com.funguscow.crossbreed.block.GeneticSaplingBlock;
 import com.funguscow.crossbreed.config.QuailConfig;
 import com.funguscow.crossbreed.init.ModBlocks;
 import com.funguscow.crossbreed.init.ModCreativeTabs;
+import com.funguscow.crossbreed.jei.IngredientLike;
 import com.funguscow.crossbreed.util.RandomPool;
 import com.funguscow.crossbreed.util.UnorderedPair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -20,7 +22,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class TreeSpecies {
+public class TreeSpecies implements IngredientLike {
 
     public static final Map<String, TreeSpecies> Species = new HashMap<>();
     public static final Map<Block, TreeSpecies> VanillaSpecies = new HashMap<>();
@@ -62,6 +64,11 @@ public class TreeSpecies {
         return Objects.requireNonNull(ForgeRegistries.BLOCKS.getValue(logBlock)).defaultBlockState();
     }
 
+    @Override
+    public Ingredient getIcon() {
+        return Ingredient.of(Objects.requireNonNull(ForgeRegistries.BLOCKS.getValue(sapling)).asItem());
+    }
+
     public static void matchConfig() {
         for (Map.Entry<String, TreeSpecies> entry : Species.entrySet()) {
             String key = entry.getKey();
@@ -97,17 +104,15 @@ public class TreeSpecies {
     }
 
     public static final TreeSpecies
-        TEST_TREE = new TreeSpecies("test", new ResourceLocation("acacia_log"), new ResourceLocation("breesources", "test_leaves"), 1,
-            new TreeGene(2,
+            PINE = new TreeSpecies("pine", new ResourceLocation(BreedMod.MODID, "pine_log"), new ResourceLocation(BreedMod.MODID, "g_spruce_leaves"), 2,
+            new TreeGene(1,
                     4,
-                    2.0,
-                    "test",
-                    "straight",
-                    "blob",
-                    "minecraft:stick",
-                    0.25,
-                    0.25,
-                    1)),
+                    1.0,
+                    "pine",
+                    "cross",
+                    "cone",
+                    0.05,
+                    0.14)),
             OAK = new TreeSpecies("oak",
                     new ResourceLocation("oak_log"),
                     new ResourceLocation(BreedMod.MODID, "g_oak_leaves"),
@@ -210,6 +215,16 @@ public class TreeSpecies {
                             "cube",
                             0.05,
                             0.14));
+
+    public static void registerPair(TreeSpecies a, TreeSpecies b, TreeSpecies child, float chance) {
+        child.parent1 = a.id;
+        child.parent2 = b.id;
+        child.hybridChance = chance;
+    }
+
+    static {
+        registerPair(SPRUCE, DARK_OAK, PINE, 0.5f);
+    }
 
     public static void registerItems() {
         for (TreeSpecies species : Species.values()) {

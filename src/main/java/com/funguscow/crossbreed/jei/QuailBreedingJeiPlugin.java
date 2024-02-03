@@ -2,6 +2,7 @@ package com.funguscow.crossbreed.jei;
 
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.entity.QuailType;
+import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -27,6 +28,7 @@ public class QuailBreedingJeiPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(new BreedingRecipeCategory<>(registration.getJeiHelpers().getGuiHelper(), BreedingRecipeCategory.QUAIL_BREEDING_RECIPE_TYPE));
+        registration.addRecipeCategories(new BreedingRecipeCategory<>(registration.getJeiHelpers().getGuiHelper(), BreedingRecipeCategory.TREE_BREEDING_RECIPE_TYPE));
     }
 
     @Override
@@ -45,7 +47,22 @@ public class QuailBreedingJeiPlugin implements IModPlugin {
             QuailBreedingRecipe recipe = new QuailBreedingRecipe(p1type, p2type, quailType);
             quailBreedingRecipes.add(recipe);
         }
-
         registration.addRecipes(BreedingRecipeCategory.QUAIL_BREEDING_RECIPE_TYPE, quailBreedingRecipes);
+
+        List<TreeBreedingRecipe> treeBreedingRecipes = new ArrayList<>();
+        for (TreeSpecies species : TreeSpecies.Species.values()) {
+            if (!species.enabled) {
+                continue;
+            }
+            String p1key = species.parent1, p2key = species.parent2;
+            if (p1key.isEmpty() || p2key.isEmpty()) {
+                continue;
+            }
+            TreeSpecies p1type = TreeSpecies.Species.get(p1key);
+            TreeSpecies p2type = TreeSpecies.Species.get(p2key);
+            TreeBreedingRecipe recipe = new TreeBreedingRecipe(p1type, p2type, species);
+            treeBreedingRecipes.add(recipe);
+        }
+        registration.addRecipes(BreedingRecipeCategory.TREE_BREEDING_RECIPE_TYPE, treeBreedingRecipes);
     }
 }

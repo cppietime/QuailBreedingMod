@@ -32,8 +32,22 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 
             tag(BlockTags.PLANKS).add(woodType.getPlanksBlock().get());
 
-            tag(BlockTags.FENCES).add(woodType.getFenceBlock().get());
+            tag(BlockTags.WOODEN_FENCES).add(woodType.getFenceBlock().get());
             tag(BlockTags.FENCE_GATES).add(woodType.getFenceGateBlock().get());
+
+            tag(BlockTags.WOODEN_DOORS).add(woodType.getDoorBlock().get());
+            tag(BlockTags.WOODEN_TRAPDOORS).add(woodType.getTrapdoorBlock().get());
+
+            tag(BlockTags.WOODEN_BUTTONS).add(woodType.getButtonBlock().get());
+            tag(BlockTags.WOODEN_PRESSURE_PLATES).add(woodType.getPressurePlateBlock().get());
+
+            tag(BlockTags.WOODEN_SLABS).add(woodType.getSlabBlock().get());
+            tag(BlockTags.WOODEN_STAIRS).add(woodType.getStairsBlock().get());
+
+            tag(BlockTags.STANDING_SIGNS).add(woodType.getStandingSignBlock().get());
+            tag(BlockTags.WALL_SIGNS).add(woodType.getWallSignBlock().get());
+            tag(BlockTags.CEILING_HANGING_SIGNS).add(woodType.getCeilingHangingSignBlock().get());
+            tag(BlockTags.WALL_HANGING_SIGNS).add(woodType.getWallHangingSignBlock().get());
         }
         tag(BlockTags.SAPLINGS).add(TreeSpecies.Saplings.stream().map(RegistryObject::get).toArray(Block[]::new));
     }

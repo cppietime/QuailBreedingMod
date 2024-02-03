@@ -1,6 +1,7 @@
 package com.funguscow.crossbreed.datagen;
 
 import com.funguscow.crossbreed.BreedMod;
+import com.funguscow.crossbreed.init.ModItems;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import com.funguscow.crossbreed.worldgen.botany.wood.ModWoodType;
 import net.minecraft.data.PackOutput;
@@ -32,9 +33,13 @@ public class ModLangProvider extends LanguageProvider {
     protected void addTranslations() {
         JsonReader old = Json.createReader(new StringReader(OriginalLang));
         JsonObject obj = old.readObject();
-        obj.forEach((key, value) -> {
-            add(key, ((JsonString)value).getString());
-        });
+        obj.forEach((key, value) -> add(key, ((JsonString)value).getString()));
+
+        add("text.breesources.recipe_category.quail_breeding_recipe_type", "Quail Breeding");
+        add("text.breesources.recipe_category.tree_breeding_recipe_type", "Tree Breeding");
+
+        add(ModItems.SWAB.get(), "Pollen Swab");
+
         for (ModWoodType woodType : ModWoodType.WoodTypes.values()) {
             String properName = toProperCase(woodType.name);
             add(woodType.getLogBlock().get(), properName + " Log");
@@ -74,7 +79,6 @@ public class ModLangProvider extends LanguageProvider {
               "item.breesources.cooked_quail": "Cooked Quail",
               "item.breesources.quail_meter": "Quail Meter",
               "item.breesources.manure": "Manure",
-              "item.breesources.swab": "Pollen Swab",
               "block.breesources.voider": "Voider",
               "block.breesources.chest4": "4-Shelf Rack",
               "block.breesources.chest5": "5-Shelf Rack",
@@ -117,7 +121,6 @@ public class ModLangProvider extends LanguageProvider {
               "text.breesources.stat.trunkWidth": "Trunk Width: %1$sx%1$s",
               "text.breesources.empty": "Empty",
               "text.breesources.onetime": "One-time use",
-              "text.breesources.recipe_category.quail_breeding": "Quail Breeding",
               "text.breesources.breed.painted": "Painted Quail",
               "text.breesources.breed.brown": "Brown Quail",
               "text.breesources.breed.elegant": "Elegant Quail",

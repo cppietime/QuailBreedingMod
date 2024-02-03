@@ -225,7 +225,7 @@ public class QuailConfig {
                 config.hybridChance = builder
                         .comment("Chance of successful hybridization")
                         .worldRestart()
-                        .defineInRange("HybridChance", 0., 0., 1.);
+                        .defineInRange("HybridChance", type.getValue().hybridChance, 0., 1.);
                 builder.pop();
                 treeSpecies.put(type.getKey(), config);
             }

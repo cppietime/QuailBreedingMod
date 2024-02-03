@@ -6,6 +6,8 @@ import com.funguscow.crossbreed.init.ModBlocks;
 import com.funguscow.crossbreed.init.ModCreativeTabs;
 import com.funguscow.crossbreed.init.ModItems;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DoubleHighBlockItem;
 import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
@@ -91,10 +93,14 @@ public class ModWoodType {
         signItem,
         hangingSignItem;
 
+    public final TagKey<Item> craftsToPlanks;
+
     public ModWoodType(String name) {
         this.name = name;
         woodType = WoodType.register(new WoodType(BreedMod.MODID + ":" + name, BlockSetType.OAK));
         WoodTypes.put(name, this);
+
+        craftsToPlanks = ItemTags.create(new ResourceLocation(BreedMod.MODID, name + "_crafts_to_planks"));
     }
 
     public void register() {
@@ -255,7 +261,7 @@ public class ModWoodType {
         );
     }
 
-    public static final ModWoodType TESTWOOD = new ModWoodType("testwood");
+    public static final ModWoodType PINE = new ModWoodType("pine");
 
     public static void registerAll() {
         for (ModWoodType woodType : WoodTypes.values()) {
