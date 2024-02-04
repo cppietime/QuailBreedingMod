@@ -1,5 +1,16 @@
 {
   "values": [
-    "breesources:pine_stairs"
+    "breesources:ebony_stairs",
+    "breesources:plum_stairs",
+    "breesources:walnut_stairs",
+    "breesources:mahogany_stairs",
+    "breesources:apple_stairs",
+    "breesources:pine_stairs",
+    "breesources:sumac_stairs",
+    "breesources:eucalyptus_stairs",
+    "breesources:carob_stairs",
+    "breesources:maple_stairs",
+    "breesources:alder_stairs",
+    "breesources:citrus_stairs"
   ]
 }

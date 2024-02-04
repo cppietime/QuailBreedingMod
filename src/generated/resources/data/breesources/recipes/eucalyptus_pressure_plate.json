@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "X": {
+      "item": "breesources:eucalyptus_planks"
+    }
+  },
+  "pattern": [
+    "XX"
+  ],
+  "result": {
+    "item": "breesources:eucalyptus_pressure_plate"
+  },
+  "show_notification": true
+}

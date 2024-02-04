@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "breesources:apple_planks"
+    }
+  ],
+  "result": {
+    "item": "breesources:apple_button"
+  }
+}

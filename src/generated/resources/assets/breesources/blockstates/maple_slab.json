@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "breesources:block/maple_slab"
+    },
+    "type=double": {
+      "model": "breesources:block/maple_planks"
+    },
+    "type=top": {
+      "model": "breesources:block/maple_slab_top"
+    }
+  }
+}

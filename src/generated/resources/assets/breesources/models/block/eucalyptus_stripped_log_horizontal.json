@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column_horizontal",
+  "textures": {
+    "end": "breesources:block/eucalyptus_log_top",
+    "side": "breesources:block/eucalyptus_stripped_log"
+  }
+}

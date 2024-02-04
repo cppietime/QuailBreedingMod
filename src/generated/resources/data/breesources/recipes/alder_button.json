@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "breesources:alder_planks"
+    }
+  ],
+  "result": {
+    "item": "breesources:alder_button"
+  }
+}

@@ -1,5 +1,16 @@
 {
   "values": [
-    "breesources:pine_trapdoor"
+    "breesources:ebony_trapdoor",
+    "breesources:plum_trapdoor",
+    "breesources:walnut_trapdoor",
+    "breesources:mahogany_trapdoor",
+    "breesources:apple_trapdoor",
+    "breesources:pine_trapdoor",
+    "breesources:sumac_trapdoor",
+    "breesources:eucalyptus_trapdoor",
+    "breesources:carob_trapdoor",
+    "breesources:maple_trapdoor",
+    "breesources:alder_trapdoor",
+    "breesources:citrus_trapdoor"
   ]
 }

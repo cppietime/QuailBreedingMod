@@ -1,0 +1,8 @@
+{
+  "values": [
+    "breesources:eucalyptus_log",
+    "breesources:eucalyptus_stripped_log",
+    "breesources:eucalyptus_wood",
+    "breesources:eucalyptus_stripped_wood"
+  ]
+}

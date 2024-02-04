@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "breesources:block/plum_slab"
+    },
+    "type=double": {
+      "model": "breesources:block/plum_planks"
+    },
+    "type=top": {
+      "model": "breesources:block/plum_slab_top"
+    }
+  }
+}

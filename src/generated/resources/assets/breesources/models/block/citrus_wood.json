@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "breesources:block/citrus_log",
+    "side": "breesources:block/citrus_log"
+  }
+}

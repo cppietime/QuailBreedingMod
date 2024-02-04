@@ -1,13 +1,18 @@
 {
   "values": [
+    "breesources:hornbeam_sapling",
     "breesources:cherry_sapling",
     "breesources:pine_sapling",
+    "breesources:white_oak_sapling",
     "breesources:birch_sapling",
+    "breesources:mangrove_sapling",
+    "breesources:alder_sapling",
+    "breesources:hazel_sapling",
+    "breesources:beech_sapling",
     "breesources:oak_sapling",
     "breesources:acacia_sapling",
     "breesources:jungle_sapling",
     "breesources:dark_oak_sapling",
-    "breesources:mangrove_sapling",
     "breesources:spruce_sapling"
   ]
 }

@@ -262,6 +262,17 @@ public class ModWoodType {
     }
 
     public static final ModWoodType PINE = new ModWoodType("pine");
+    public static final ModWoodType ALDER = new ModWoodType("alder");
+    public static final ModWoodType MAPLE = new ModWoodType("maple");
+    public static final ModWoodType CITRUS = new ModWoodType("citrus");
+    public static final ModWoodType WALNUT = new ModWoodType("walnut");
+    public static final ModWoodType EUCALYPTUS = new ModWoodType("eucalyptus");
+    public static final ModWoodType EBONY = new ModWoodType("ebony");
+    public static final ModWoodType MAHOGANY = new ModWoodType("mahogany");
+    public static final ModWoodType SUMAC = new ModWoodType("sumac");
+    public static final ModWoodType CAROB = new ModWoodType("carob");
+    public static final ModWoodType APPLE = new ModWoodType("apple");
+    public static final ModWoodType PLUM = new ModWoodType("plum");
 
     public static void registerAll() {
         for (ModWoodType woodType : WoodTypes.values()) {

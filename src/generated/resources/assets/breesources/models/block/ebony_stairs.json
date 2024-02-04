@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "breesources:block/ebony_planks",
+    "side": "breesources:block/ebony_planks",
+    "top": "breesources:block/ebony_planks"
+  }
+}

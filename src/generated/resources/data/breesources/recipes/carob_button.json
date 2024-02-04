@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "breesources:carob_planks"
+    }
+  ],
+  "result": {
+    "item": "breesources:carob_button"
+  }
+}

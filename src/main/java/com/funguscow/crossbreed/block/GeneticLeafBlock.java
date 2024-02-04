@@ -1,6 +1,5 @@
 package com.funguscow.crossbreed.block;
 
-import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.init.ModBlocks;
 import com.funguscow.crossbreed.init.ModCreativeTabs;
 import com.funguscow.crossbreed.tileentities.GeneticTreeTileEntity;
@@ -62,7 +61,11 @@ public class GeneticLeafBlock extends LeavesBlock implements EntityBlock {
             new LeafSpec("g_dark_oak_leaves", true),
             new LeafSpec("g_acacia_leaves", true),
             new LeafSpec("g_mangrove_leaves", true),
-            new LeafSpec("g_cherry_leaves", false)
+            new LeafSpec("g_cherry_leaves", false),
+            // New leaf types
+            new LeafSpec("apple_leaves", false),
+            new LeafSpec("nut_leaves", false),
+            new LeafSpec("red_maple_leaves", false)
     );
 
     public GeneticLeafBlock(Properties pProperties) {

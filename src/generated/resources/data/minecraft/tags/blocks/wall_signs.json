@@ -1,5 +1,16 @@
 {
   "values": [
-    "breesources:pine_wall_sign"
+    "breesources:ebony_wall_sign",
+    "breesources:plum_wall_sign",
+    "breesources:walnut_wall_sign",
+    "breesources:mahogany_wall_sign",
+    "breesources:apple_wall_sign",
+    "breesources:pine_wall_sign",
+    "breesources:sumac_wall_sign",
+    "breesources:eucalyptus_wall_sign",
+    "breesources:carob_wall_sign",
+    "breesources:maple_wall_sign",
+    "breesources:alder_wall_sign",
+    "breesources:citrus_wall_sign"
   ]
 }

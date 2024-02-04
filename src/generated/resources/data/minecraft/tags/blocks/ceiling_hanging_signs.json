@@ -1,5 +1,16 @@
 {
   "values": [
-    "breesources:pine_ceiling_hanging_sign"
+    "breesources:ebony_ceiling_hanging_sign",
+    "breesources:plum_ceiling_hanging_sign",
+    "breesources:walnut_ceiling_hanging_sign",
+    "breesources:mahogany_ceiling_hanging_sign",
+    "breesources:apple_ceiling_hanging_sign",
+    "breesources:pine_ceiling_hanging_sign",
+    "breesources:sumac_ceiling_hanging_sign",
+    "breesources:eucalyptus_ceiling_hanging_sign",
+    "breesources:carob_ceiling_hanging_sign",
+    "breesources:maple_ceiling_hanging_sign",
+    "breesources:alder_ceiling_hanging_sign",
+    "breesources:citrus_ceiling_hanging_sign"
   ]
 }

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "breesources:block/plum_planks",
+    "side": "breesources:block/plum_planks",
+    "top": "breesources:block/plum_planks"
+  }
+}

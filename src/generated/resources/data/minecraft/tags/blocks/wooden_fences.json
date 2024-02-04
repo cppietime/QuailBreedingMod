@@ -1,5 +1,16 @@
 {
   "values": [
-    "breesources:pine_fence"
+    "breesources:ebony_fence",
+    "breesources:plum_fence",
+    "breesources:walnut_fence",
+    "breesources:mahogany_fence",
+    "breesources:apple_fence",
+    "breesources:pine_fence",
+    "breesources:sumac_fence",
+    "breesources:eucalyptus_fence",
+    "breesources:carob_fence",
+    "breesources:maple_fence",
+    "breesources:alder_fence",
+    "breesources:citrus_fence"
   ]
 }

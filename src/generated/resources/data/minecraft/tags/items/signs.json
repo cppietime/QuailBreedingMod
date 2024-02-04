@@ -1,5 +1,16 @@
 {
   "values": [
-    "breesources:pine_sign"
+    "breesources:ebony_sign",
+    "breesources:plum_sign",
+    "breesources:walnut_sign",
+    "breesources:mahogany_sign",
+    "breesources:apple_sign",
+    "breesources:pine_sign",
+    "breesources:sumac_sign",
+    "breesources:eucalyptus_sign",
+    "breesources:carob_sign",
+    "breesources:maple_sign",
+    "breesources:alder_sign",
+    "breesources:citrus_sign"
   ]
 }

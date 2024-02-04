@@ -1,5 +1,16 @@
 {
   "values": [
-    "breesources:pine_door"
+    "breesources:ebony_door",
+    "breesources:plum_door",
+    "breesources:walnut_door",
+    "breesources:mahogany_door",
+    "breesources:apple_door",
+    "breesources:pine_door",
+    "breesources:sumac_door",
+    "breesources:eucalyptus_door",
+    "breesources:carob_door",
+    "breesources:maple_door",
+    "breesources:alder_door",
+    "breesources:citrus_door"
   ]
 }

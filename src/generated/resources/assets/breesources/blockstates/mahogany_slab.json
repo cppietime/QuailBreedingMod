@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "breesources:block/mahogany_slab"
+    },
+    "type=double": {
+      "model": "breesources:block/mahogany_planks"
+    },
+    "type=top": {
+      "model": "breesources:block/mahogany_slab_top"
+    }
+  }
+}

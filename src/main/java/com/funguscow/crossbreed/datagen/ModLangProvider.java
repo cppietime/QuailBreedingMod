@@ -40,6 +40,10 @@ public class ModLangProvider extends LanguageProvider {
 
         add(ModItems.SWAB.get(), "Pollen Swab");
 
+        add("block.breesources.apple_leaves", "Apple Leaves");
+        add("block.breesources.nut_leaves", "Nut Leaves");
+        add("block.breesources.red_maple_leaves", "Red Maple Leaves");
+
         for (ModWoodType woodType : ModWoodType.WoodTypes.values()) {
             String properName = toProperCase(woodType.name);
             add(woodType.getLogBlock().get(), properName + " Log");

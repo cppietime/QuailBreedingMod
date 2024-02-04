@@ -1,5 +1,16 @@
 {
   "values": [
-    "breesources:pine_standing_sign"
+    "breesources:ebony_standing_sign",
+    "breesources:plum_standing_sign",
+    "breesources:walnut_standing_sign",
+    "breesources:mahogany_standing_sign",
+    "breesources:apple_standing_sign",
+    "breesources:pine_standing_sign",
+    "breesources:sumac_standing_sign",
+    "breesources:eucalyptus_standing_sign",
+    "breesources:carob_standing_sign",
+    "breesources:maple_standing_sign",
+    "breesources:alder_standing_sign",
+    "breesources:citrus_standing_sign"
   ]
 }

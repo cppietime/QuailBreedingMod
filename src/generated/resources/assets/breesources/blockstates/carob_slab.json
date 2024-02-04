@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "breesources:block/carob_slab"
+    },
+    "type=double": {
+      "model": "breesources:block/carob_planks"
+    },
+    "type=top": {
+      "model": "breesources:block/carob_slab_top"
+    }
+  }
+}

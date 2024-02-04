@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "breesources:block/eucalyptus_pressure_plate"
+    },
+    "powered=true": {
+      "model": "breesources:block/eucalyptus_pressure_plate_down"
+    }
+  }
+}

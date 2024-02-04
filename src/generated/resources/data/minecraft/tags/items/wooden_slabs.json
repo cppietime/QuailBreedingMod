@@ -1,5 +1,16 @@
 {
   "values": [
-    "breesources:pine_slab"
+    "breesources:ebony_slab",
+    "breesources:plum_slab",
+    "breesources:walnut_slab",
+    "breesources:mahogany_slab",
+    "breesources:apple_slab",
+    "breesources:pine_slab",
+    "breesources:sumac_slab",
+    "breesources:eucalyptus_slab",
+    "breesources:carob_slab",
+    "breesources:maple_slab",
+    "breesources:alder_slab",
+    "breesources:citrus_slab"
   ]
 }

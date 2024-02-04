@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "breesources:block/walnut_slab"
+    },
+    "type=double": {
+      "model": "breesources:block/walnut_planks"
+    },
+    "type=top": {
+      "model": "breesources:block/walnut_slab_top"
+    }
+  }
+}

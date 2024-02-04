@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "breesources:ebony_planks"
+    }
+  },
+  "pattern": [
+    "XIX",
+    "XIX"
+  ],
+  "result": {
+    "count": 3,
+    "item": "breesources:ebony_fence"
+  },
+  "show_notification": true
+}

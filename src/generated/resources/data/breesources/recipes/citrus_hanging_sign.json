@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:chain"
+    },
+    "X": {
+      "item": "breesources:citrus_stripped_log"
+    }
+  },
+  "pattern": [
+    "I I",
+    "XXX",
+    "XXX"
+  ],
+  "result": {
+    "count": 6,
+    "item": "breesources:citrus_hanging_sign"
+  },
+  "show_notification": true
+}

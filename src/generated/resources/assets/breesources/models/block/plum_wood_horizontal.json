@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column_horizontal",
+  "textures": {
+    "end": "breesources:block/plum_log",
+    "side": "breesources:block/plum_log"
+  }
+}

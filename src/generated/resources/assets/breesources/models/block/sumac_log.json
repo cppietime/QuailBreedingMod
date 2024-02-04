@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "breesources:block/sumac_log_top",
+    "side": "breesources:block/sumac_log"
+  }
+}

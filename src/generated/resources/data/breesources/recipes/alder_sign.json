@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "breesources:alder_planks"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "XXX",
+    " I "
+  ],
+  "result": {
+    "count": 3,
+    "item": "breesources:alder_sign"
+  },
+  "show_notification": true
+}

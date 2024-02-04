@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "breesources:block/sumac_planks",
+    "side": "breesources:block/sumac_planks",
+    "top": "breesources:block/sumac_planks"
+  }
+}

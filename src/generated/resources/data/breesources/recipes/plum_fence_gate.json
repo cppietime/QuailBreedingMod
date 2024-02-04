@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "I": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "breesources:plum_planks"
+    }
+  },
+  "pattern": [
+    "IXI",
+    "IXI"
+  ],
+  "result": {
+    "item": "breesources:plum_fence_gate"
+  },
+  "show_notification": true
+}

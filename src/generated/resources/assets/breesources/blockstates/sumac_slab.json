@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "breesources:block/sumac_slab"
+    },
+    "type=double": {
+      "model": "breesources:block/sumac_planks"
+    },
+    "type=top": {
+      "model": "breesources:block/sumac_slab_top"
+    }
+  }
+}

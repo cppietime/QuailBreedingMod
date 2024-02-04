@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "X": {
+      "item": "breesources:carob_planks"
+    }
+  },
+  "pattern": [
+    "XX"
+  ],
+  "result": {
+    "item": "breesources:carob_pressure_plate"
+  },
+  "show_notification": true
+}

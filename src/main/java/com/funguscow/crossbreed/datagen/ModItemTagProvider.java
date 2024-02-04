@@ -1,6 +1,7 @@
 package com.funguscow.crossbreed.datagen;
 
 import com.funguscow.crossbreed.BreedMod;
+import com.funguscow.crossbreed.block.GeneticLeafBlock;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import com.funguscow.crossbreed.worldgen.botany.wood.ModWoodType;
 import net.minecraft.core.HolderLookup;
@@ -10,6 +11,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,5 +54,6 @@ public class ModItemTagProvider extends ItemTagsProvider {
                     woodType.getStrippedWoodBlock().get().asItem());
         }
         tag(ItemTags.SAPLINGS).add(TreeSpecies.Saplings.stream().map(ro -> ro.get().asItem()).toArray(Item[]::new));
+        tag(ItemTags.LEAVES).add(GeneticLeafBlock.Leaves.stream().map(ro -> ro.get().asItem()).toArray(Item[]::new));
     }
 }

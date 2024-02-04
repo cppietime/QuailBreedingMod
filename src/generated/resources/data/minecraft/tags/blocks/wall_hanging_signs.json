@@ -1,5 +1,16 @@
 {
   "values": [
-    "breesources:pine_wall_hanging_sign"
+    "breesources:ebony_wall_hanging_sign",
+    "breesources:plum_wall_hanging_sign",
+    "breesources:walnut_wall_hanging_sign",
+    "breesources:mahogany_wall_hanging_sign",
+    "breesources:apple_wall_hanging_sign",
+    "breesources:pine_wall_hanging_sign",
+    "breesources:sumac_wall_hanging_sign",
+    "breesources:eucalyptus_wall_hanging_sign",
+    "breesources:carob_wall_hanging_sign",
+    "breesources:maple_wall_hanging_sign",
+    "breesources:alder_wall_hanging_sign",
+    "breesources:citrus_wall_hanging_sign"
   ]
 }

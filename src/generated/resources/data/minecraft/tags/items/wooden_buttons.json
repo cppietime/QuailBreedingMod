@@ -1,5 +1,16 @@
 {
   "values": [
-    "breesources:pine_button"
+    "breesources:ebony_button",
+    "breesources:plum_button",
+    "breesources:walnut_button",
+    "breesources:mahogany_button",
+    "breesources:apple_button",
+    "breesources:pine_button",
+    "breesources:sumac_button",
+    "breesources:eucalyptus_button",
+    "breesources:carob_button",
+    "breesources:maple_button",
+    "breesources:alder_button",
+    "breesources:citrus_button"
   ]
 }

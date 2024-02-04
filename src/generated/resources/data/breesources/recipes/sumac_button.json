@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "breesources:sumac_planks"
+    }
+  ],
+  "result": {
+    "item": "breesources:sumac_button"
+  }
+}

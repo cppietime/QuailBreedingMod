@@ -1,6 +1,7 @@
 package com.funguscow.crossbreed.datagen;
 
 import com.funguscow.crossbreed.BreedMod;
+import com.funguscow.crossbreed.block.GeneticLeafBlock;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import com.funguscow.crossbreed.worldgen.botany.wood.ModWoodType;
 import net.minecraft.core.HolderLookup;
@@ -50,5 +51,6 @@ public class ModBlockTagProvider extends BlockTagsProvider {
             tag(BlockTags.WALL_HANGING_SIGNS).add(woodType.getWallHangingSignBlock().get());
         }
         tag(BlockTags.SAPLINGS).add(TreeSpecies.Saplings.stream().map(RegistryObject::get).toArray(Block[]::new));
+        tag(BlockTags.LEAVES).add(GeneticLeafBlock.Leaves.stream().map(RegistryObject::get).toArray(Block[]::new));
     }
 }

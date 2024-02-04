@@ -1,5 +1,16 @@
 {
   "values": [
-    "breesources:pine_planks"
+    "breesources:ebony_planks",
+    "breesources:plum_planks",
+    "breesources:walnut_planks",
+    "breesources:mahogany_planks",
+    "breesources:apple_planks",
+    "breesources:pine_planks",
+    "breesources:sumac_planks",
+    "breesources:eucalyptus_planks",
+    "breesources:carob_planks",
+    "breesources:maple_planks",
+    "breesources:alder_planks",
+    "breesources:citrus_planks"
   ]
 }

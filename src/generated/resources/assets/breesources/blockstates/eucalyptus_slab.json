@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "breesources:block/eucalyptus_slab"
+    },
+    "type=double": {
+      "model": "breesources:block/eucalyptus_planks"
+    },
+    "type=top": {
+      "model": "breesources:block/eucalyptus_slab_top"
+    }
+  }
+}

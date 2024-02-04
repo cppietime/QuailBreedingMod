@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "breesources:maple_crafts_to_planks"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "item": "breesources:maple_planks"
+  }
+}

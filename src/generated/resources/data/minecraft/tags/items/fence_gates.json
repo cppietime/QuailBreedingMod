@@ -1,5 +1,16 @@
 {
   "values": [
-    "breesources:pine_fence_gate"
+    "breesources:ebony_fence_gate",
+    "breesources:plum_fence_gate",
+    "breesources:walnut_fence_gate",
+    "breesources:mahogany_fence_gate",
+    "breesources:apple_fence_gate",
+    "breesources:pine_fence_gate",
+    "breesources:sumac_fence_gate",
+    "breesources:eucalyptus_fence_gate",
+    "breesources:carob_fence_gate",
+    "breesources:maple_fence_gate",
+    "breesources:alder_fence_gate",
+    "breesources:citrus_fence_gate"
   ]
 }
