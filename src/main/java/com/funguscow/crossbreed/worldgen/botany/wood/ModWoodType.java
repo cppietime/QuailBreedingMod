@@ -68,7 +68,7 @@ public class ModWoodType {
     public static final Map<String, ModWoodType> WoodTypes = new HashMap<>();
     public static final Map<ResourceLocation, RegistryObject<Block>> Strippables = new HashMap<>();
 
-    public final String name;
+    public final String name, displayName;
     public final WoodType woodType;
 
     private RegistryObject<Block> logBlock,
@@ -95,12 +95,17 @@ public class ModWoodType {
 
     public final TagKey<Item> craftsToPlanks;
 
-    public ModWoodType(String name) {
+    public ModWoodType(String name, String displayName) {
         this.name = name;
+        this.displayName = displayName;
         woodType = WoodType.register(new WoodType(BreedMod.MODID + ":" + name, BlockSetType.OAK));
         WoodTypes.put(name, this);
 
         craftsToPlanks = ItemTags.create(new ResourceLocation(BreedMod.MODID, name + "_crafts_to_planks"));
+    }
+
+    public ModWoodType(String name) {
+        this(name, "");
     }
 
     public void register() {
@@ -261,7 +266,7 @@ public class ModWoodType {
         );
     }
 
-    public static final ModWoodType PINE = new ModWoodType("pine");
+    public static final ModWoodType PINE = new ModWoodType("pine", "Yellow Pine");
     public static final ModWoodType ALDER = new ModWoodType("alder");
     public static final ModWoodType MAPLE = new ModWoodType("maple");
     public static final ModWoodType CITRUS = new ModWoodType("citrus");

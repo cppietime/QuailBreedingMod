@@ -30,7 +30,7 @@ public class QuailConfig {
         }
 
         public static class TreeSpeciesConfig {
-            public ForgeConfigSpec.ConfigValue<String> logBlock, leafBlock, trunkType, leafType, fruit, parent1, parent2;
+            public ForgeConfigSpec.ConfigValue<String> logBlock, leafBlock, trunkType, leafType, fruit, parent1, parent2, lang;
             public ForgeConfigSpec.IntValue width, minWidth, minHeight;
             public ForgeConfigSpec.DoubleValue heightRange, hybridChance;
             public ForgeConfigSpec.BooleanValue enabled;
@@ -226,6 +226,10 @@ public class QuailConfig {
                         .comment("Chance of successful hybridization")
                         .worldRestart()
                         .defineInRange("HybridChance", type.getValue().hybridChance, 0., 1.);
+                config.lang = builder
+                        .comment("Display name")
+                        .worldRestart()
+                        .define("DisplayName", type.getValue().lang);
                 builder.pop();
                 treeSpecies.put(type.getKey(), config);
             }

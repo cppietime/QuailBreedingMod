@@ -45,7 +45,7 @@ public class ModLangProvider extends LanguageProvider {
         add("block.breesources.red_maple_leaves", "Red Maple Leaves");
 
         for (ModWoodType woodType : ModWoodType.WoodTypes.values()) {
-            String properName = toProperCase(woodType.name);
+            String properName = woodType.displayName.isEmpty() ? toProperCase(woodType.name) : woodType.displayName;
             add(woodType.getLogBlock().get(), properName + " Log");
             add(woodType.getStrippedLogBlock().get(), "Stripped " + properName + " Log");
             add(woodType.getWoodBlock().get(), properName + " Wood");
@@ -63,8 +63,9 @@ public class ModLangProvider extends LanguageProvider {
             add(woodType.getHangingSignItem().get(), properName + " Hanging Sign");
         }
         for (TreeSpecies species : TreeSpecies.Species.values()) {
-            add(Objects.requireNonNull(ForgeRegistries.BLOCKS.getValue(species.sapling)), toProperCase(species.id) + " Sapling");
-            add("text.breesources.species." + species.id, toProperCase(species.id));
+            String display = species.lang.isEmpty() ? toProperCase(species.id) : species.lang;
+            add(Objects.requireNonNull(ForgeRegistries.BLOCKS.getValue(species.sapling)), display + " Sapling");
+            add("text.breesources.species." + species.id, display);
         }
     }
 
