@@ -1,6 +1,7 @@
 package com.funguscow.crossbreed.datagen;
 
 import com.funguscow.crossbreed.BreedMod;
+import com.funguscow.crossbreed.item.FruitItem;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import com.funguscow.crossbreed.worldgen.botany.wood.ModWoodType;
 import net.minecraft.data.PackOutput;
@@ -32,10 +33,8 @@ public class ModItemModelProvider extends ItemModelProvider {
             defaultItem(woodType.getHangingSignItem());
             defaultItem(woodType.getDoorItem());
         }
-        for (RegistryObject<Block> sapling : TreeSpecies.Saplings) {
-            //generatedBlockItem(sapling);
-            defaultBlockItem(sapling);
-        }
+        TreeSpecies.Saplings.forEach(this::defaultBlockItem);
+        FruitItem.Fruits.forEach(this::defaultItem);
     }
 
     private void defaultBlockItem(RegistryObject<Block> block) {

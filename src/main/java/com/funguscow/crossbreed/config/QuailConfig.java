@@ -3,6 +3,7 @@ package com.funguscow.crossbreed.config;
 import com.electronwill.nightconfig.core.Config;
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.entity.QuailType;
+import com.funguscow.crossbreed.item.FruitItem;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,6 +37,12 @@ public class QuailConfig {
             public ForgeConfigSpec.BooleanValue enabled;
         }
 
+        public static class FruitItemConfig {
+            public ForgeConfigSpec.BooleanValue alwaysEat, enabled, fast;
+            public ForgeConfigSpec.IntValue nutrition;
+            public ForgeConfigSpec.DoubleValue saturationMod;
+        }
+
         public Map<String, Common.QuailTypeConfig> quailTypes;
         public ForgeConfigSpec.DoubleValue[] tierOdds;
 
@@ -48,9 +55,12 @@ public class QuailConfig {
 
         public ForgeConfigSpec.ConfigValue<List<Config>> extraQuails;
 
+        public Map<String, FruitItemConfig> fruitItems;
+
         public Common(ForgeConfigSpec.Builder builder) {
             quailTypes = new HashMap<>();
             treeSpecies = new HashMap<>();
+            fruitItems = new HashMap<>();
             tierOdds = new ForgeConfigSpec.DoubleValue[7];
 
             builder.comment("Nest-related config.").push("Nest");
@@ -232,6 +242,36 @@ public class QuailConfig {
                         .define("DisplayName", type.getValue().lang);
                 builder.pop();
                 treeSpecies.put(type.getKey(), config);
+            }
+            builder.pop();
+
+            builder.comment("Fruit type configurations").push("FruitItems");
+            for (FruitItem.FruitDef fruitDef : FruitItem.FruitDefs) {
+                String name = fruitDef.name;
+                builder.comment("Config for fruit: " + name).push(name);
+                FruitItemConfig config = new FruitItemConfig();
+                config.enabled = builder
+                        .comment("Allow food to be eaten")
+                        .worldRestart()
+                        .define("Enabled", fruitDef.enabled);
+                config.nutrition = builder
+                        .comment("Hunger restored")
+                        .worldRestart()
+                        .defineInRange("Hunger", fruitDef.nutrition, 0, 20);
+                config.saturationMod = builder
+                        .comment("Saturation multiplier")
+                        .worldRestart()
+                        .defineInRange("SaturationMod", fruitDef.saturation, 0, 10);
+                config.alwaysEat = builder
+                        .comment("Can always eat?")
+                        .worldRestart()
+                        .define("AlwaysEat", fruitDef.alwaysEdible);
+                config.fast = builder
+                        .comment("Eat fast")
+                        .worldRestart()
+                        .define("FastEat", fruitDef.fast);
+                builder.pop();
+                fruitItems.put(name, config);
             }
             builder.pop();
         }

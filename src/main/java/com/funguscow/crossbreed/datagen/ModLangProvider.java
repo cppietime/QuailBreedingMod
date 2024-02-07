@@ -2,11 +2,14 @@ package com.funguscow.crossbreed.datagen;
 
 import com.funguscow.crossbreed.BreedMod;
 import com.funguscow.crossbreed.init.ModItems;
+import com.funguscow.crossbreed.item.FruitItem;
 import com.funguscow.crossbreed.worldgen.botany.TreeSpecies;
 import com.funguscow.crossbreed.worldgen.botany.wood.ModWoodType;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -66,6 +69,11 @@ public class ModLangProvider extends LanguageProvider {
             String display = species.lang.isEmpty() ? toProperCase(species.id) : species.lang;
             add(Objects.requireNonNull(ForgeRegistries.BLOCKS.getValue(species.sapling)), display + " Sapling");
             add("text.breesources.species." + species.id, display);
+        }
+        for (RegistryObject<Item> fruit : FruitItem.Fruits) {
+            String name = fruit.getId().getPath();
+            String display = toProperCase(name);
+            add(fruit.get(), display);
         }
     }
 
