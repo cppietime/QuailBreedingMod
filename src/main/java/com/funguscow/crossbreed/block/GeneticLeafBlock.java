@@ -65,7 +65,8 @@ public class GeneticLeafBlock extends LeavesBlock implements EntityBlock {
             // New leaf types
             new LeafSpec("apple_leaves", false),
             new LeafSpec("nut_leaves", false),
-            new LeafSpec("red_maple_leaves", false)
+            new LeafSpec("red_maple_leaves", false),
+            new LeafSpec("citrus_leaves", false)
     );
 
     public GeneticLeafBlock(Properties pProperties) {
