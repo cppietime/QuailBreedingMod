@@ -118,7 +118,9 @@ public class FruitItem extends Item {
             new FruitDef("carob_bean", 1, .3f),
             new FruitDef("durian", 6, .3f),
             new FruitDef("horse_chestnut", 0, 0f).addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0), 1f),
-            new FruitDef("beech_nut", 2, .3f)
+            new FruitDef("beech_nut", 2, .3f),
+            new FruitDef("juniper_berry", 1, .3f),
+            new FruitDef("hibiscus_flower", 1, .3f)
     );
 
     public static final List<RegistryObject<Item>> Fruits = FruitDefs.stream().map(

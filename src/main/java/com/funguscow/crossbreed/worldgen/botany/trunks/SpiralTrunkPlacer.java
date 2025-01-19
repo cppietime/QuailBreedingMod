@@ -24,6 +24,9 @@ public class SpiralTrunkPlacer extends GeneticTrunkPlacer {
         for (int y = 0; y < height; y++) {
             logPos = startPos.offset(x, y, z);
             tryPutLogBlock(level, startPos, logPos, logBlock, gene, Direction.Axis.Y, result);
+            if (y > 0) {
+                tryPutLogBlock(level, startPos, logPos.below(), logBlock, gene, Direction.Axis.Y, result);
+            }
             if (gene.trunkWidth > 1) {
                 switch (state) {
                     case 0: // +X

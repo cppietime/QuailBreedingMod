@@ -31,6 +31,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class ModItems {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BreedMod.MODID);
@@ -175,6 +177,9 @@ public class ModItems {
 
     public static void registerCompost() {
         ComposterBlock.COMPOSTABLES.put(MANURE.get(), QuailConfig.COMMON.manureCompostValue.get().floatValue());
+        TreeSpecies.Species.values()
+                .forEach(species -> ComposterBlock.COMPOSTABLES.put(Objects.requireNonNull(ForgeRegistries.BLOCKS.getValue(species.sapling)).asItem(),
+                        0.3f));
     }
 
 }

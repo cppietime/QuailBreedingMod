@@ -157,7 +157,7 @@ public class TreeGene implements Gene<TreeGene> {
         return List.of(
                 new IntChromosome(trunkWidth, WIDTH_SIGMA, 0, MAX_WIDTH),
                 new IntChromosome(minHeight, HEIGHT_SIGMA, 1, MAX_HEIGHT),
-                new DoubleChromosome(heightRange, HEIGHT_RANGE_SIGMA, 0, 2),
+                new DoubleChromosome(heightRange, HEIGHT_RANGE_SIGMA, 0, 5),
                 new StringChromosome(species),
                 new StringChromosome(trunkType),
                 new StringChromosome(leafType),

@@ -2,15 +2,18 @@
   "values": [
     "breesources:ebony_door",
     "breesources:plum_door",
-    "breesources:walnut_door",
     "breesources:mahogany_door",
-    "breesources:apple_door",
     "breesources:pine_door",
     "breesources:sumac_door",
+    "breesources:redwood_door",
     "breesources:eucalyptus_door",
     "breesources:carob_door",
-    "breesources:maple_door",
     "breesources:alder_door",
-    "breesources:citrus_door"
+    "breesources:citrus_door",
+    "breesources:walnut_door",
+    "breesources:apple_door",
+    "breesources:rainbow_eucalyptus_door",
+    "breesources:baobab_door",
+    "breesources:maple_door"
   ]
 }

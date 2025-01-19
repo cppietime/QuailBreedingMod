@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "breesources:rainbow_eucalyptus_planks"
+    }
+  ],
+  "result": {
+    "item": "breesources:rainbow_eucalyptus_button"
+  }
+}

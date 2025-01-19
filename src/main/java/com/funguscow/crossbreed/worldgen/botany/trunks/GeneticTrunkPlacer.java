@@ -126,6 +126,7 @@ public abstract class GeneticTrunkPlacer {
         new CrossTrunkPlacer();
         new BranchTrunkPlacer();
         new RunnerTrunkPlacer();
+        new SlantTrunkPlacer();
     }
 
 }

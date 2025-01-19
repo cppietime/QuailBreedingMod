@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "breesources:block/redwood_slab"
+    },
+    "type=double": {
+      "model": "breesources:block/redwood_planks"
+    },
+    "type=top": {
+      "model": "breesources:block/redwood_slab_top"
+    }
+  }
+}

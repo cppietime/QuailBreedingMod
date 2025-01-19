@@ -2,15 +2,18 @@
   "values": [
     "breesources:ebony_hanging_sign",
     "breesources:plum_hanging_sign",
-    "breesources:walnut_hanging_sign",
     "breesources:mahogany_hanging_sign",
-    "breesources:apple_hanging_sign",
     "breesources:pine_hanging_sign",
     "breesources:sumac_hanging_sign",
+    "breesources:redwood_hanging_sign",
     "breesources:eucalyptus_hanging_sign",
     "breesources:carob_hanging_sign",
-    "breesources:maple_hanging_sign",
     "breesources:alder_hanging_sign",
-    "breesources:citrus_hanging_sign"
+    "breesources:citrus_hanging_sign",
+    "breesources:walnut_hanging_sign",
+    "breesources:apple_hanging_sign",
+    "breesources:rainbow_eucalyptus_hanging_sign",
+    "breesources:baobab_hanging_sign",
+    "breesources:maple_hanging_sign"
   ]
 }

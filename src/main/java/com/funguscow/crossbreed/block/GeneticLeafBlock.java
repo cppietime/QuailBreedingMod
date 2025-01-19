@@ -31,10 +31,7 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class GeneticLeafBlock extends LeavesBlock implements EntityBlock {
@@ -47,12 +44,25 @@ public class GeneticLeafBlock extends LeavesBlock implements EntityBlock {
             this.name = name;
             foliageColored = color;
         }
+
+        @Override
+        public int hashCode() {
+            return name.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof LeafSpec other)) {
+                return false;
+            }
+            return name.equals(other.name);
+        }
     }
 
     public static final BooleanProperty POLLINATED = BooleanProperty.create("pollinated");
 
     public static final List<RegistryObject<Block>> Leaves = new ArrayList<>();
-    public static final List<LeafSpec> LEAF_TYPES = List.of(
+    public static final Set<LeafSpec> LEAF_TYPES = Set.of(
 //            new LeafSpec("test_leaves", false),
             new LeafSpec("g_oak_leaves", true),
             new LeafSpec("g_birch_leaves", true),
@@ -66,7 +76,59 @@ public class GeneticLeafBlock extends LeavesBlock implements EntityBlock {
             new LeafSpec("apple_leaves", false),
             new LeafSpec("nut_leaves", false),
             new LeafSpec("red_maple_leaves", false),
-            new LeafSpec("citrus_leaves", false)
+            new LeafSpec("citrus_leaves", false),
+            new LeafSpec("hibiscus_leaves", false),
+            new LeafSpec("baobab_leaves", false),
+            new LeafSpec("mandarin_leaves", false),
+            new LeafSpec("pomelo_leaves", false),
+            new LeafSpec("citron_leaves", false),
+            new LeafSpec("papeda_leaves", false),
+            new LeafSpec("orange_leaves", false),
+            new LeafSpec("bitter_orange_leaves", false),
+            new LeafSpec("lemon_leaves", false),
+            new LeafSpec("lime_leaves", false),
+            new LeafSpec("kumquat_leaves", false),
+            new LeafSpec("grapefruit_leaves", false),
+            new LeafSpec("plum_leaves", false),
+            new LeafSpec("almond_leaves", false),
+            new LeafSpec("peach_leaves", false),
+            new LeafSpec("apricot_leaves", false),
+            new LeafSpec("cashew_leaves", false),
+            new LeafSpec("mango_leaves", false),
+            new LeafSpec("sumac_leaves", false),
+            new LeafSpec("pistachio_leaves", false),
+            new LeafSpec("horse_chestnut_leaves", false),
+            new LeafSpec("lychee_leaves", false),
+            new LeafSpec("rambutan_leaves", false),
+            new LeafSpec("ackee_leaves", false),
+            new LeafSpec("alder_leaves", false),
+            new LeafSpec("hazel_leaves", false),
+            new LeafSpec("white_oak_leaves", false),
+            new LeafSpec("hickory_leaves", false),
+            new LeafSpec("hornbeam_leaves", false),
+            new LeafSpec("beech_leaves", false),
+            new LeafSpec("pine_leaves", false),
+            new LeafSpec("yew_leaves", false),
+            new LeafSpec("hemlock_leaves", false),
+            new LeafSpec("fir_leaves", false),
+            new LeafSpec("cedar_leaves", false),
+            new LeafSpec("juniper_leaves", false),
+            new LeafSpec("redwood_leaves", false),
+            new LeafSpec("myrtle_leaves", false),
+            new LeafSpec("clove_leaves", false),
+            new LeafSpec("pomegranate_leaves", false),
+            new LeafSpec("allspice_leaves", false),
+            new LeafSpec("eucalyptus_leaves", false),
+            new LeafSpec("mimosa_leaves", false),
+            new LeafSpec("black_locust_leaves", false),
+            new LeafSpec("carob_leaves", false),
+            new LeafSpec("cacao_leaves", false),
+            new LeafSpec("durian_leaves", false),
+            new LeafSpec("ebony_leaves", false),
+            new LeafSpec("persimmon_leaves", false),
+            new LeafSpec("mahogany_leaves", false),
+            new LeafSpec("pear_leaves", false),
+            new LeafSpec("quince_leaves", false)
     );
 
     public GeneticLeafBlock(Properties pProperties) {

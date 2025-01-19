@@ -2,15 +2,18 @@
   "values": [
     "breesources:ebony_pressure_plate",
     "breesources:plum_pressure_plate",
-    "breesources:walnut_pressure_plate",
     "breesources:mahogany_pressure_plate",
-    "breesources:apple_pressure_plate",
     "breesources:pine_pressure_plate",
     "breesources:sumac_pressure_plate",
+    "breesources:redwood_pressure_plate",
     "breesources:eucalyptus_pressure_plate",
     "breesources:carob_pressure_plate",
-    "breesources:maple_pressure_plate",
     "breesources:alder_pressure_plate",
-    "breesources:citrus_pressure_plate"
+    "breesources:citrus_pressure_plate",
+    "breesources:walnut_pressure_plate",
+    "breesources:apple_pressure_plate",
+    "breesources:rainbow_eucalyptus_pressure_plate",
+    "breesources:baobab_pressure_plate",
+    "breesources:maple_pressure_plate"
   ]
 }

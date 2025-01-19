@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/fence_side",
+  "textures": {
+    "texture": "breesources:block/rainbow_eucalyptus_planks"
+  }
+}

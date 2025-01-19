@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "breesources:redwood_planks"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "XXX",
+    " I "
+  ],
+  "result": {
+    "count": 3,
+    "item": "breesources:redwood_sign"
+  },
+  "show_notification": true
+}

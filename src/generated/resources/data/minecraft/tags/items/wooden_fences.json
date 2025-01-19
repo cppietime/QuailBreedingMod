@@ -2,15 +2,18 @@
   "values": [
     "breesources:ebony_fence",
     "breesources:plum_fence",
-    "breesources:walnut_fence",
     "breesources:mahogany_fence",
-    "breesources:apple_fence",
     "breesources:pine_fence",
     "breesources:sumac_fence",
+    "breesources:redwood_fence",
     "breesources:eucalyptus_fence",
     "breesources:carob_fence",
-    "breesources:maple_fence",
     "breesources:alder_fence",
-    "breesources:citrus_fence"
+    "breesources:citrus_fence",
+    "breesources:walnut_fence",
+    "breesources:apple_fence",
+    "breesources:rainbow_eucalyptus_fence",
+    "breesources:baobab_fence",
+    "breesources:maple_fence"
   ]
 }

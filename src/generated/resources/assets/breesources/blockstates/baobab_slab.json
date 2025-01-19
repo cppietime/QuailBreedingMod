@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "breesources:block/baobab_slab"
+    },
+    "type=double": {
+      "model": "breesources:block/baobab_planks"
+    },
+    "type=top": {
+      "model": "breesources:block/baobab_slab_top"
+    }
+  }
+}

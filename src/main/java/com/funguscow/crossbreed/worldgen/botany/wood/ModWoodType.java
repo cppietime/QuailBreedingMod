@@ -278,6 +278,9 @@ public class ModWoodType {
     public static final ModWoodType CAROB = new ModWoodType("carob");
     public static final ModWoodType APPLE = new ModWoodType("apple");
     public static final ModWoodType PLUM = new ModWoodType("plum");
+    public static final ModWoodType REDWOOD = new ModWoodType("redwood");
+    public static final ModWoodType BAOBAB = new ModWoodType("baobab");
+    public static final ModWoodType RAINBOW_EUCALYPTUS = new ModWoodType("rainbow_eucalyptus");
 
     public static void registerAll() {
         for (ModWoodType woodType : WoodTypes.values()) {
